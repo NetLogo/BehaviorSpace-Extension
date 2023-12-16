@@ -416,7 +416,7 @@ bspace:goto-bspace-extension-documentation
 
 #### bspace:get-default-parallel-runs
 
-Returns the default number of parallel runs for the current device.
+Reports the default number of parallel runs for the current device.
 
 Example:
 
@@ -428,7 +428,7 @@ print bspace:get-default-parallel-runs
 
 #### bspace:get-recommended-max-parallel-runs
 
-Returns the recommended maximum number of parallel runs for the current device.
+Reports the recommended maximum number of parallel runs for the current device.
 
 Example:
 
