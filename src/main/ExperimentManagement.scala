@@ -6,7 +6,7 @@ import org.nlogo.api.{ Argument, Command, Context, LabProtocol, LabRunOptions }
 import org.nlogo.core.I18N
 import org.nlogo.core.Syntax._
 import org.nlogo.lab.gui.Supervisor
-import org.nlogo.window.GUIWorkspace
+import org.nlogo.workspace.AbstractWorkspace
 
 object CreateExperiment extends Command {
   override def getSyntax = {
@@ -42,8 +42,6 @@ object RunExperiment extends Command {
   }
 
   def perform(args: Array[Argument], context: Context) {
-    val ws = context.workspace.asInstanceOf[GUIWorkspace]
-
     val protocol = BehaviorSpaceExtension.experimentType(args(0).getString, context) match {
       case ExperimentType.GUI =>
         context.workspace.getBehaviorSpaceExperiments.find(x => x.name == args(0).getString).get
@@ -67,8 +65,7 @@ object RunExperiment extends Command {
     }
 
     javax.swing.SwingUtilities.invokeLater(() => {
-      Supervisor.runFromExtension(protocol, context.workspace.asInstanceOf[GUIWorkspace],
-                                  org.nlogo.app.App.app.workspaceFactory, (protocol) => {
+      Supervisor.runFromExtension(protocol, context.workspace.asInstanceOf[AbstractWorkspace], (protocol) => {
         if (BehaviorSpaceExtension.savedExperiments.contains(protocol.name)) {
           if (protocol.runsCompleted == 0)
             BehaviorSpaceExtension.savedExperiments -= protocol.name
@@ -77,7 +74,7 @@ object RunExperiment extends Command {
         }
         else if (protocol.runsCompleted != 0)
           BehaviorSpaceExtension.savedExperiments += ((protocol.name, protocol))
-      })
+      }, if (context.workspace.isHeadless) Supervisor.Headless else Supervisor.Extension)
     })
   }
 }
