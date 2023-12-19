@@ -2,10 +2,12 @@
 
 package org.nlogo.extensions.bspace
 
-import org.nlogo.api.{ Argument, Command, Context, LabProtocol, LabRunOptions }
+import org.nlogo.api.{ Argument, Command, Context }
 import org.nlogo.core.I18N
 import org.nlogo.core.Syntax._
+import org.nlogo.fileformat.{ LabLoader, LabSaver }
 import org.nlogo.lab.gui.Supervisor
+import org.nlogo.window.GUIWorkspace
 import org.nlogo.workspace.AbstractWorkspace
 
 object CreateExperiment extends Command {
@@ -48,19 +50,8 @@ object RunExperiment extends Command {
       case ExperimentType.Code =>
         if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
           BehaviorSpaceExtension.savedExperiments(args(0).getString)
-        else {
-          val data = BehaviorSpaceExtension.experiments(args(0).getString)
-
-          new LabProtocol(data.name, data.preExperimentCommands, data.setupCommands, data.goCommands,
-                                          data.postRunCommands, data.postExperimentCommands, data.repetitions,
-                                          data.sequentialRunOrder, data.runMetricsEveryStep, data.runMetricsCondition,
-                                          data.timeLimit, data.exitCondition, data.metrics, data.constants,
-                                          data.subExperiments, data.returnReporters.toMap,
-                                          runOptions = new LabRunOptions(data.threadCount, data.table,
-                                                                            data.spreadsheet, data.stats, data.lists,
-                                                                            data.updateView,
-                                                                            data.updatePlotsAndMonitors))
-        }
+        else
+          BehaviorSpaceExtension.protocolFromData(BehaviorSpaceExtension.experiments(args(0).getString))
       case _ => return BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.noExperiment", args(0).getString), context)
     }
 
@@ -122,5 +113,65 @@ object DuplicateExperiment extends Command {
     data.name = args(1).getString
 
     BehaviorSpaceExtension.experiments += ((args(1).getString, data))
+  }
+}
+
+object ImportExperiment extends Command {
+  override def getSyntax = {
+    commandSyntax(right = List(StringType))
+  }
+
+  def perform(args: Array[Argument], context: Context) {
+    try {
+      for (protocol <- new LabLoader(context.workspace.asInstanceOf[AbstractWorkspace].compiler.utilities)
+                                    (scala.io.Source.fromFile(args(0).getString).mkString, true,
+                                     scala.collection.mutable.Set[String]()))
+      {
+        if (BehaviorSpaceExtension.experimentType(protocol.name, context) != ExperimentType.None)
+          return BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.alreadyExists",
+                                                                protocol.name), context)
+        
+        BehaviorSpaceExtension.experiments += ((protocol.name, BehaviorSpaceExtension.dataFromProtocol(protocol)))
+      }
+    } catch {
+      case e: org.xml.sax.SAXParseException => {
+        if (!context.workspace.isHeadless) {
+          javax.swing.JOptionPane.showMessageDialog(context.workspace.asInstanceOf[GUIWorkspace].getFrame,
+                                                    I18N.gui.getN("tools.behaviorSpace.error.import",
+                                                                  args(0).getString),
+                                                    I18N.gui.get("tools.behaviorSpace.invalid"),
+                                                    javax.swing.JOptionPane.ERROR_MESSAGE)
+        }
+      }
+    }
+  }
+}
+
+object ExportExperiment extends Command {
+  override def getSyntax = {
+    commandSyntax(right = List(StringType, StringType, BooleanType))
+  }
+
+  def perform(args: Array[Argument], context: Context) {
+    val protocol = BehaviorSpaceExtension.experimentType(args(0).getString, context) match {
+      case ExperimentType.GUI =>
+        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == args(0).getString).get
+      case ExperimentType.Code =>
+        BehaviorSpaceExtension.protocolFromData(BehaviorSpaceExtension.experiments(args(0).getString))
+      case _ =>
+        return BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.noExperiment",
+                                                              args(0).getString), context)
+    }
+
+    if (!args(2).getBooleanValue && new java.io.File(args(1).getString).exists)
+      return BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.fileExists",
+                                                            args(1).getString), context)
+
+    val out = new java.io.PrintWriter(args(1).getString)
+
+    out.write(s"${LabLoader.XMLVER}\n${LabLoader.DOCTYPE}\n")
+    out.write(LabSaver.save(List(protocol)))
+
+    out.close()
   }
 }
