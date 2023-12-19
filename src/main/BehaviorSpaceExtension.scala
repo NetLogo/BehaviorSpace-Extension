@@ -47,10 +47,10 @@ object BehaviorSpaceExtension {
   val savedExperiments = Map[String, LabProtocol]()
 
   def experimentType(name: String, context: Context): ExperimentType.ExperimentType = {
-    if (context.workspace.getBehaviorSpaceExperiments.find(x => x.name == name).isDefined)
-      ExperimentType.GUI
-    else if (experiments.contains(name))
+    if (experiments.contains(name))
       ExperimentType.Code
+    else if (context.workspace.getBehaviorSpaceExperiments.find(x => x.name == name).isDefined)
+      ExperimentType.GUI
     else
       ExperimentType.None
   }
