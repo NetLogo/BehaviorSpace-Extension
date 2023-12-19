@@ -16,6 +16,9 @@ object SetPreExperimentCommands extends Command {
     if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
 
     BehaviorSpaceExtension.experiments(args(0).getString).preExperimentCommands = args(1).getString
+
+    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
+      BehaviorSpaceExtension.savedExperiments -= args(0).getString
   }
 }
 
@@ -28,6 +31,9 @@ object SetSetupCommands extends Command {
     if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
 
     BehaviorSpaceExtension.experiments(args(0).getString).setupCommands = args(1).getString
+
+    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
+      BehaviorSpaceExtension.savedExperiments -= args(0).getString
   }
 }
 
@@ -40,6 +46,9 @@ object SetGoCommands extends Command {
     if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
 
     BehaviorSpaceExtension.experiments(args(0).getString).goCommands = args(1).getString
+
+    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
+      BehaviorSpaceExtension.savedExperiments -= args(0).getString
   }
 }
 
@@ -52,6 +61,9 @@ object SetPostRunCommands extends Command {
     if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
 
     BehaviorSpaceExtension.experiments(args(0).getString).postRunCommands = args(1).getString
+
+    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
+      BehaviorSpaceExtension.savedExperiments -= args(0).getString
   }
 }
 
@@ -64,6 +76,9 @@ object SetPostExperimentCommands extends Command {
     if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
 
     BehaviorSpaceExtension.experiments(args(0).getString).postExperimentCommands = args(1).getString
+
+    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
+      BehaviorSpaceExtension.savedExperiments -= args(0).getString
   }
 }
 
@@ -76,6 +91,9 @@ object SetRepetitions extends Command {
     if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
 
     BehaviorSpaceExtension.experiments(args(0).getString).repetitions = args(1).getIntValue
+
+    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
+      BehaviorSpaceExtension.savedExperiments -= args(0).getString
   }
 }
 
@@ -88,6 +106,9 @@ object SetSequentialRunOrder extends Command {
     if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
 
     BehaviorSpaceExtension.experiments(args(0).getString).sequentialRunOrder = args(1).getBooleanValue
+
+    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
+      BehaviorSpaceExtension.savedExperiments -= args(0).getString
   }
 }
 
@@ -100,6 +121,9 @@ object SetRunMetricsEveryStep extends Command {
     if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
 
     BehaviorSpaceExtension.experiments(args(0).getString).runMetricsEveryStep = args(1).getBooleanValue
+
+    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
+      BehaviorSpaceExtension.savedExperiments -= args(0).getString
   }
 }
 
@@ -112,6 +136,9 @@ object SetRunMetricsCondition extends Command {
     if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
 
     BehaviorSpaceExtension.experiments(args(0).getString).runMetricsCondition = args(1).getString
+
+    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
+      BehaviorSpaceExtension.savedExperiments -= args(0).getString
   }
 }
 
@@ -124,6 +151,9 @@ object SetTimeLimit extends Command {
     if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
 
     BehaviorSpaceExtension.experiments(args(0).getString).timeLimit = args(1).getIntValue
+
+    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
+      BehaviorSpaceExtension.savedExperiments -= args(0).getString
   }
 }
 
@@ -136,6 +166,9 @@ object SetStopCondition extends Command {
     if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
 
     BehaviorSpaceExtension.experiments(args(0).getString).exitCondition = args(1).getString
+
+    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
+      BehaviorSpaceExtension.savedExperiments -= args(0).getString
   }
 }
 
@@ -148,6 +181,9 @@ object SetMetrics extends Command {
     if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
 
     BehaviorSpaceExtension.experiments(args(0).getString).metrics = args(1).getList.toList.map(_.toString)
+
+    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
+      BehaviorSpaceExtension.savedExperiments -= args(0).getString
   }
 }
 
@@ -169,6 +205,9 @@ object SetVariables extends Command {
       case (None, message: String) =>
         BehaviorSpaceExtension.nameError(message, context)
     }
+
+    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
+      BehaviorSpaceExtension.savedExperiments -= args(0).getString
   }
 }
 
@@ -184,6 +223,9 @@ object SetReturnReporter extends Command {
       BehaviorSpaceExtension.experiments(args(0).getString).returnReporters(args(1).getString) = args(2).getString
     else
       BehaviorSpaceExtension.experiments(args(0).getString).returnReporters += ((args(1).getString, args(2).getString))
+
+    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
+      BehaviorSpaceExtension.savedExperiments -= args(0).getString
   }
 }
 
@@ -196,6 +238,9 @@ object SetParallelRuns extends Command {
     if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
 
     BehaviorSpaceExtension.experiments(args(0).getString).threadCount = args(1).getIntValue
+
+    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
+      BehaviorSpaceExtension.savedExperiments -= args(0).getString
   }
 }
 
@@ -208,6 +253,9 @@ object SetTable extends Command {
     if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
 
     BehaviorSpaceExtension.experiments(args(0).getString).table = args(1).getString
+
+    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
+      BehaviorSpaceExtension.savedExperiments -= args(0).getString
   }
 }
 
@@ -220,6 +268,9 @@ object SetSpreadsheet extends Command {
     if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
 
     BehaviorSpaceExtension.experiments(args(0).getString).spreadsheet = args(1).getString
+
+    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
+      BehaviorSpaceExtension.savedExperiments -= args(0).getString
   }
 }
 
@@ -232,6 +283,9 @@ object SetStats extends Command {
     if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
 
     BehaviorSpaceExtension.experiments(args(0).getString).stats = args(1).getString
+
+    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
+      BehaviorSpaceExtension.savedExperiments -= args(0).getString
   }
 }
 
@@ -244,6 +298,9 @@ object SetLists extends Command {
     if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
 
     BehaviorSpaceExtension.experiments(args(0).getString).lists = args(1).getString
+
+    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
+      BehaviorSpaceExtension.savedExperiments -= args(0).getString
   }
 }
 
@@ -256,6 +313,9 @@ object SetUpdateView extends Command {
     if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
 
     BehaviorSpaceExtension.experiments(args(0).getString).updateView = args(1).getBooleanValue
+
+    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
+      BehaviorSpaceExtension.savedExperiments -= args(0).getString
   }
 }
 
@@ -268,5 +328,8 @@ object SetUpdatePlots extends Command {
     if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
 
     BehaviorSpaceExtension.experiments(args(0).getString).updatePlotsAndMonitors = args(1).getBooleanValue
+
+    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
+      BehaviorSpaceExtension.savedExperiments -= args(0).getString
   }
 }
