@@ -122,7 +122,7 @@ object DuplicateExperiment extends Command {
   }
 }
 
-object ImportExperiment extends Command {
+object ImportExperiments extends Command {
   override def getSyntax = {
     commandSyntax(right = List(StringType))
   }
