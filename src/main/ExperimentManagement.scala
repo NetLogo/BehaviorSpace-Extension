@@ -134,10 +134,10 @@ object ImportExperiments extends Command {
                                      scala.collection.mutable.Set[String]()))
       {
         if (BehaviorSpaceExtension.experimentType(protocol.name, context) != ExperimentType.None)
-          return BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.alreadyExists",
-                                                                protocol.name), context)
-        
-        BehaviorSpaceExtension.experiments += ((protocol.name, BehaviorSpaceExtension.dataFromProtocol(protocol)))
+          BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.alreadyExists",
+                                                         protocol.name), context)
+        else
+          BehaviorSpaceExtension.experiments += ((protocol.name, BehaviorSpaceExtension.dataFromProtocol(protocol)))
       }
     } catch {
       case e: org.xml.sax.SAXParseException => {
