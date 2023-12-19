@@ -3,7 +3,7 @@
 package org.nlogo.extensions.bspace
 
 import org.nlogo.api.{ Argument, Command, Context, DefaultClassManager, LabDefaultValues, LabProtocol,
-                       PrimitiveManager, RefValueSet }
+                       LabRunOptions, PrimitiveManager, RefValueSet }
 import org.nlogo.core.I18N
 import org.nlogo.window.GUIWorkspace
 
@@ -73,6 +73,44 @@ object BehaviorSpaceExtension {
                                   I18N.gui.get("tools.behaviorSpace.invalid"),
                                   JOptionPane.ERROR_MESSAGE)
   }
+
+  def dataFromProtocol(protocol: LabProtocol): ExperimentData = {
+    val data = new ExperimentData()
+
+    data.name = protocol.name
+    data.preExperimentCommands = protocol.preExperimentCommands
+    data.setupCommands = protocol.setupCommands
+    data.goCommands = protocol.goCommands
+    data.postRunCommands = protocol.postRunCommands
+    data.postExperimentCommands = protocol.postExperimentCommands
+    data.repetitions = protocol.repetitions
+    data.sequentialRunOrder = protocol.sequentialRunOrder
+    data.runMetricsEveryStep = protocol.runMetricsEveryStep
+    data.runMetricsCondition = protocol.runMetricsCondition
+    data.timeLimit = protocol.timeLimit
+    data.exitCondition = protocol.exitCondition
+    data.metrics = protocol.metrics
+    data.constants = protocol.constants
+    data.subExperiments = protocol.subExperiments
+    data.threadCount = protocol.runOptions.threadCount
+    data.table = protocol.runOptions.table
+    data.spreadsheet = protocol.runOptions.spreadsheet
+    data.stats = protocol.runOptions.stats
+    data.lists = protocol.runOptions.lists
+    data.updateView = protocol.runOptions.updateView
+    data.updatePlotsAndMonitors = protocol.runOptions.updatePlotsAndMonitors
+
+    data
+  }
+
+  def protocolFromData(data: ExperimentData): LabProtocol = {
+    new LabProtocol(data.name, data.preExperimentCommands, data.setupCommands, data.goCommands, data.postRunCommands,
+                    data.postExperimentCommands, data.repetitions, data.sequentialRunOrder, data.runMetricsEveryStep,
+                    data.runMetricsCondition, data.timeLimit, data.exitCondition, data.metrics, data.constants,
+                    data.subExperiments, data.returnReporters.toMap,
+                    runOptions = new LabRunOptions(data.threadCount, data.table, data.spreadsheet, data.stats,
+                                                   data.lists, data.updateView, data.updatePlotsAndMonitors))
+  }
 }
 
 class BehaviorSpaceExtension extends DefaultClassManager {
@@ -82,6 +120,8 @@ class BehaviorSpaceExtension extends DefaultClassManager {
     manager.addPrimitive("run-experiment", RunExperiment)
     manager.addPrimitive("rename-experiment", RenameExperiment)
     manager.addPrimitive("duplicate-experiment", DuplicateExperiment)
+    manager.addPrimitive("import-experiment", ImportExperiment)
+    manager.addPrimitive("export-experiment", ExportExperiment)
 
     manager.addPrimitive("set-pre-experiment-commands", SetPreExperimentCommands)
     manager.addPrimitive("set-setup-commands", SetSetupCommands)
