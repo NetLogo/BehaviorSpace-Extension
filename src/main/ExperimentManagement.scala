@@ -41,6 +41,9 @@ object DeleteExperiment extends Command {
     if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
 
     BehaviorSpaceExtension.experiments -= args(0).getString
+    
+    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
+      BehaviorSpaceExtension.savedExperiments -= args(0).getString
   }
 }
 
