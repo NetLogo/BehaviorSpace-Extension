@@ -122,6 +122,7 @@ class BehaviorSpaceExtension extends DefaultClassManager {
     manager.addPrimitive("duplicate-experiment", DuplicateExperiment)
     manager.addPrimitive("import-experiment", ImportExperiment)
     manager.addPrimitive("export-experiment", ExportExperiment)
+    manager.addPrimitive("clear-experiments", ClearExperiments)
 
     manager.addPrimitive("set-pre-experiment-commands", SetPreExperimentCommands)
     manager.addPrimitive("set-setup-commands", SetSetupCommands)
@@ -150,10 +151,5 @@ class BehaviorSpaceExtension extends DefaultClassManager {
     manager.addPrimitive("get-default-parallel-runs", GetDefaultParallelRuns)
     manager.addPrimitive("get-recommended-max-parallel-runs", GetRecommendedMaxParallelRuns)
     manager.addPrimitive("get-return-value", GetReturnValue)
-  }
-
-  override def clearAll() {
-    BehaviorSpaceExtension.experiments.clear()
-    BehaviorSpaceExtension.savedExperiments.clear()
   }
 }

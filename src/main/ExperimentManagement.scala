@@ -12,16 +12,22 @@ import org.nlogo.workspace.AbstractWorkspace
 
 object CreateExperiment extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType))
+    commandSyntax(right = List(StringType, BooleanType))
   }
 
   def perform(args: Array[Argument], context: Context) {
-    if (BehaviorSpaceExtension.experimentType(args(0).getString, context) != ExperimentType.None)
-      return BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.alreadyExists", args(0).getString), context)
+    if (!args(1).getBooleanValue &&
+        BehaviorSpaceExtension.experimentType(args(0).getString, context) != ExperimentType.None)
+      return BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.alreadyExists",
+                                                            args(0).getString), context)
     if (args(0).getString.isEmpty)
       return BehaviorSpaceExtension.nameError(I18N.gui.get("edit.behaviorSpace.name.empty"), context)
 
-    BehaviorSpaceExtension.experiments += ((args(0).getString, new ExperimentData()))
+    if (BehaviorSpaceExtension.experiments.contains(args(0).getString))
+      BehaviorSpaceExtension.experiments(args(0).getString) = new ExperimentData()
+    else
+      BehaviorSpaceExtension.experiments += ((args(0).getString, new ExperimentData()))
+
     BehaviorSpaceExtension.experiments(args(0).getString).name = args(0).getString
   }
 }
@@ -173,5 +179,16 @@ object ExportExperiment extends Command {
     out.write(LabSaver.save(List(protocol)))
 
     out.close()
+  }
+}
+
+object ClearExperiments extends Command {
+  override def getSyntax = {
+    commandSyntax()
+  }
+
+  def perform(args: Array[Argument], context: Context) {
+    BehaviorSpaceExtension.experiments.clear()
+    BehaviorSpaceExtension.savedExperiments.clear()
   }
 }
