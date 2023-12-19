@@ -151,7 +151,7 @@ bspace:rename-experiment "my-experiment" "another-experiment"
 
 #### bspace:duplicate-experiment *string* *string*
 
-Duplicate the experiment specified in the first input and rename it to the name specified in the second
+Make a copy of the experiment specified in the first input and rename the copy to the name specified in the second
 input. An error will be thrown if the experiment specified in the first input does not exist.
 
 Example:
