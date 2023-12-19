@@ -29,6 +29,9 @@ object CreateExperiment extends Command {
       BehaviorSpaceExtension.experiments += ((args(0).getString, new ExperimentData()))
 
     BehaviorSpaceExtension.experiments(args(0).getString).name = args(0).getString
+
+    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
+      BehaviorSpaceExtension.savedExperiments -= args(0).getString
   }
 }
 
@@ -97,6 +100,13 @@ object RenameExperiment extends Command {
 
     BehaviorSpaceExtension.experiments -= args(0).getString
     BehaviorSpaceExtension.experiments += ((args(1).getString, data))
+
+    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString)) {
+      val protocol = BehaviorSpaceExtension.savedExperiments(args(0).getString)
+
+      BehaviorSpaceExtension.savedExperiments -= args(0).getString
+      BehaviorSpaceExtension.savedExperiments += ((args(1).getString, protocol.copy(name = args(1).getString)))
+    }
   }
 }
 
