@@ -99,3 +99,28 @@ object RenameExperiment extends Command {
     BehaviorSpaceExtension.experiments += ((args(1).getString, data))
   }
 }
+
+object DuplicateExperiment extends Command {
+  override def getSyntax = {
+    commandSyntax(right = List(StringType, StringType))
+  }
+
+  def perform(args: Array[Argument], context: Context) {
+    if (BehaviorSpaceExtension.experimentType(args(1).getString, context) != ExperimentType.None)
+      return BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.alreadyExists", args(1).getString), context)
+    if (args(1).getString.isEmpty)
+      return BehaviorSpaceExtension.nameError(I18N.gui.get("edit.behaviorSpace.name.empty"), context)
+
+    val data = BehaviorSpaceExtension.experimentType(args(0).getString, context) match {
+      case ExperimentType.GUI =>
+        BehaviorSpaceExtension.dataFromProtocol(context.workspace.getBehaviorSpaceExperiments.
+                                                find(x => x.name == args(0).getString).get)
+      case ExperimentType.Code =>
+        BehaviorSpaceExtension.experiments(args(0).getString)
+    }
+
+    data.name = args(1).getString
+
+    BehaviorSpaceExtension.experiments += ((args(1).getString, data))
+  }
+}
