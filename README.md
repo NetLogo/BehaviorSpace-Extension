@@ -16,8 +16,8 @@ extensions [bspace]
 If you are already using another extension, you can just add `bspace` to the list inside the square brackets.
 
 Once the extension is loaded, you can use it to run experiments from anywhere in the code. Note that experiments
-created in the code will persist for the lifetime of the application if not cleared with the `bspace:clear-experiments`
-command (see [`bspace:clear-experiments`](#bspaceclear-experiments)).
+created in the code will persist for the lifetime of the current model if not cleared with the
+`bspace:clear-experiments` command (see [`bspace:clear-experiments`](#bspaceclear-experiments)).
 
 ## Primitives
 
