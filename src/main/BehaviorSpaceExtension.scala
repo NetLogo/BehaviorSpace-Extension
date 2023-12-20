@@ -171,5 +171,8 @@ class BehaviorSpaceExtension extends DefaultClassManager {
     manager.addPrimitive("get-default-parallel-runs", GetDefaultParallelRuns)
     manager.addPrimitive("get-recommended-max-parallel-runs", GetRecommendedMaxParallelRuns)
     manager.addPrimitive("get-return-value", GetReturnValue)
+
+    BehaviorSpaceExtension.experiments.clear()
+    BehaviorSpaceExtension.savedExperiments.clear()
   }
 }
