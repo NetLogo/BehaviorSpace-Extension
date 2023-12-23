@@ -9,327 +9,327 @@ import org.nlogo.window.GUIWorkspace
 
 object SetPreExperimentCommands extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType, StringType))
+    commandSyntax(right = List(StringType))
   }
 
   def perform(args: Array[Argument], context: Context) {
-    if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
+    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
 
-    BehaviorSpaceExtension.experiments(args(0).getString).preExperimentCommands = args(1).getString
+    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).preExperimentCommands = args(0).getString
 
-    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
-      BehaviorSpaceExtension.savedExperiments -= args(0).getString
+    if (BehaviorSpaceExtension.savedExperiments.contains(BehaviorSpaceExtension.currentExperiment))
+      BehaviorSpaceExtension.savedExperiments -= BehaviorSpaceExtension.currentExperiment
   }
 }
 
 object SetSetupCommands extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType, StringType))
+    commandSyntax(right = List(StringType))
   }
 
   def perform(args: Array[Argument], context: Context) {
-    if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
+    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
 
-    BehaviorSpaceExtension.experiments(args(0).getString).setupCommands = args(1).getString
+    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).setupCommands = args(0).getString
 
-    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
-      BehaviorSpaceExtension.savedExperiments -= args(0).getString
+    if (BehaviorSpaceExtension.savedExperiments.contains(BehaviorSpaceExtension.currentExperiment))
+      BehaviorSpaceExtension.savedExperiments -= BehaviorSpaceExtension.currentExperiment
   }
 }
 
 object SetGoCommands extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType, StringType))
+    commandSyntax(right = List(StringType))
   }
 
   def perform(args: Array[Argument], context: Context) {
-    if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
+    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
 
-    BehaviorSpaceExtension.experiments(args(0).getString).goCommands = args(1).getString
+    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).goCommands = args(0).getString
 
-    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
-      BehaviorSpaceExtension.savedExperiments -= args(0).getString
+    if (BehaviorSpaceExtension.savedExperiments.contains(BehaviorSpaceExtension.currentExperiment))
+      BehaviorSpaceExtension.savedExperiments -= BehaviorSpaceExtension.currentExperiment
   }
 }
 
 object SetPostRunCommands extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType, StringType))
+    commandSyntax(right = List(StringType))
   }
 
   def perform(args: Array[Argument], context: Context) {
-    if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
+    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
 
-    BehaviorSpaceExtension.experiments(args(0).getString).postRunCommands = args(1).getString
+    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).postRunCommands = args(0).getString
 
-    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
-      BehaviorSpaceExtension.savedExperiments -= args(0).getString
+    if (BehaviorSpaceExtension.savedExperiments.contains(BehaviorSpaceExtension.currentExperiment))
+      BehaviorSpaceExtension.savedExperiments -= BehaviorSpaceExtension.currentExperiment
   }
 }
 
 object SetPostExperimentCommands extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType, StringType))
+    commandSyntax(right = List(StringType))
   }
 
   def perform(args: Array[Argument], context: Context) {
-    if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
+    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
 
-    BehaviorSpaceExtension.experiments(args(0).getString).postExperimentCommands = args(1).getString
+    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).postExperimentCommands = args(0).getString
 
-    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
-      BehaviorSpaceExtension.savedExperiments -= args(0).getString
+    if (BehaviorSpaceExtension.savedExperiments.contains(BehaviorSpaceExtension.currentExperiment))
+      BehaviorSpaceExtension.savedExperiments -= BehaviorSpaceExtension.currentExperiment
   }
 }
 
 object SetRepetitions extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType, NumberType))
+    commandSyntax(right = List(NumberType))
   }
 
   def perform(args: Array[Argument], context: Context) {
-    if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
+    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
 
-    BehaviorSpaceExtension.experiments(args(0).getString).repetitions = args(1).getIntValue
+    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).repetitions = args(0).getIntValue
 
-    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
-      BehaviorSpaceExtension.savedExperiments -= args(0).getString
+    if (BehaviorSpaceExtension.savedExperiments.contains(BehaviorSpaceExtension.currentExperiment))
+      BehaviorSpaceExtension.savedExperiments -= BehaviorSpaceExtension.currentExperiment
   }
 }
 
 object SetSequentialRunOrder extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType, BooleanType))
+    commandSyntax(right = List(BooleanType))
   }
 
   def perform(args: Array[Argument], context: Context) {
-    if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
+    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
 
-    BehaviorSpaceExtension.experiments(args(0).getString).sequentialRunOrder = args(1).getBooleanValue
+    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).sequentialRunOrder = args(0).getBooleanValue
 
-    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
-      BehaviorSpaceExtension.savedExperiments -= args(0).getString
+    if (BehaviorSpaceExtension.savedExperiments.contains(BehaviorSpaceExtension.currentExperiment))
+      BehaviorSpaceExtension.savedExperiments -= BehaviorSpaceExtension.currentExperiment
   }
 }
 
 object SetRunMetricsEveryStep extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType, BooleanType))
+    commandSyntax(right = List(BooleanType))
   }
 
   def perform(args: Array[Argument], context: Context) {
-    if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
+    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
 
-    BehaviorSpaceExtension.experiments(args(0).getString).runMetricsEveryStep = args(1).getBooleanValue
+    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).runMetricsEveryStep = args(0).getBooleanValue
 
-    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
-      BehaviorSpaceExtension.savedExperiments -= args(0).getString
+    if (BehaviorSpaceExtension.savedExperiments.contains(BehaviorSpaceExtension.currentExperiment))
+      BehaviorSpaceExtension.savedExperiments -= BehaviorSpaceExtension.currentExperiment
   }
 }
 
 object SetRunMetricsCondition extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType, StringType))
+    commandSyntax(right = List(StringType))
   }
 
   def perform(args: Array[Argument], context: Context) {
-    if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
+    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
 
-    BehaviorSpaceExtension.experiments(args(0).getString).runMetricsCondition = args(1).getString
+    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).runMetricsCondition = args(0).getString
 
-    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
-      BehaviorSpaceExtension.savedExperiments -= args(0).getString
+    if (BehaviorSpaceExtension.savedExperiments.contains(BehaviorSpaceExtension.currentExperiment))
+      BehaviorSpaceExtension.savedExperiments -= BehaviorSpaceExtension.currentExperiment
   }
 }
 
 object SetTimeLimit extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType, NumberType))
+    commandSyntax(right = List(NumberType))
   }
 
   def perform(args: Array[Argument], context: Context) {
-    if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
+    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
 
-    BehaviorSpaceExtension.experiments(args(0).getString).timeLimit = args(1).getIntValue
+    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).timeLimit = args(0).getIntValue
 
-    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
-      BehaviorSpaceExtension.savedExperiments -= args(0).getString
+    if (BehaviorSpaceExtension.savedExperiments.contains(BehaviorSpaceExtension.currentExperiment))
+      BehaviorSpaceExtension.savedExperiments -= BehaviorSpaceExtension.currentExperiment
   }
 }
 
 object SetStopCondition extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType, StringType))
+    commandSyntax(right = List(StringType))
   }
 
   def perform(args: Array[Argument], context: Context) {
-    if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
+    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
 
-    BehaviorSpaceExtension.experiments(args(0).getString).exitCondition = args(1).getString
+    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).exitCondition = args(0).getString
 
-    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
-      BehaviorSpaceExtension.savedExperiments -= args(0).getString
+    if (BehaviorSpaceExtension.savedExperiments.contains(BehaviorSpaceExtension.currentExperiment))
+      BehaviorSpaceExtension.savedExperiments -= BehaviorSpaceExtension.currentExperiment
   }
 }
 
 object SetMetrics extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType, ListType | StringType))
+    commandSyntax(right = List(ListType | StringType))
   }
 
   def perform(args: Array[Argument], context: Context) {
-    if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
+    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
 
-    BehaviorSpaceExtension.experiments(args(0).getString).metrics = args(1).getList.toList.map(_.toString)
+    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).metrics = args(0).getList.toList.map(_.toString)
 
-    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
-      BehaviorSpaceExtension.savedExperiments -= args(0).getString
+    if (BehaviorSpaceExtension.savedExperiments.contains(BehaviorSpaceExtension.currentExperiment))
+      BehaviorSpaceExtension.savedExperiments -= BehaviorSpaceExtension.currentExperiment
   }
 }
 
 object SetVariables extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType, StringType))
+    commandSyntax(right = List(StringType))
   }
 
   def perform(args: Array[Argument], context: Context) {
-    if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
+    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
 
-    LabVariableParser.parseVariables(args(1).getString,
-                                     BehaviorSpaceExtension.experiments(args(0).getString).repetitions,
+    LabVariableParser.parseVariables(args(0).getString,
+                                     BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).repetitions,
                                      context.workspace.world,
                                      context.workspace.asInstanceOf[GUIWorkspace]) match {
       case (Some((constants: List[RefValueSet], subExperiments: List[List[RefValueSet]])), _) =>
-        BehaviorSpaceExtension.experiments(args(0).getString).constants = constants
-        BehaviorSpaceExtension.experiments(args(0).getString).subExperiments = subExperiments
+        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).constants = constants
+        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).subExperiments = subExperiments
       case (None, message: String) =>
         BehaviorSpaceExtension.nameError(message, context)
     }
 
-    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
-      BehaviorSpaceExtension.savedExperiments -= args(0).getString
+    if (BehaviorSpaceExtension.savedExperiments.contains(BehaviorSpaceExtension.currentExperiment))
+      BehaviorSpaceExtension.savedExperiments -= BehaviorSpaceExtension.currentExperiment
   }
 }
 
 object SetReturnReporter extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType, StringType, StringType))
+    commandSyntax(right = List(StringType, StringType))
   }
 
   def perform(args: Array[Argument], context: Context) {
-    if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
+    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
 
-    if (BehaviorSpaceExtension.experiments(args(0).getString).returnReporters.contains(args(1).getString))
-      BehaviorSpaceExtension.experiments(args(0).getString).returnReporters(args(1).getString) = args(2).getString
+    if (BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).returnReporters.contains(args(0).getString))
+      BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).returnReporters(args(0).getString) = args(1).getString
     else
-      BehaviorSpaceExtension.experiments(args(0).getString).returnReporters += ((args(1).getString, args(2).getString))
+      BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).returnReporters += ((args(0).getString, args(1).getString))
 
-    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
-      BehaviorSpaceExtension.savedExperiments -= args(0).getString
+    if (BehaviorSpaceExtension.savedExperiments.contains(BehaviorSpaceExtension.currentExperiment))
+      BehaviorSpaceExtension.savedExperiments -= BehaviorSpaceExtension.currentExperiment
   }
 }
 
 object SetParallelRuns extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType, NumberType))
+    commandSyntax(right = List(NumberType))
   }
 
   def perform(args: Array[Argument], context: Context) {
-    if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
+    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
 
-    BehaviorSpaceExtension.experiments(args(0).getString).threadCount = args(1).getIntValue
+    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).threadCount = args(0).getIntValue
 
-    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
-      BehaviorSpaceExtension.savedExperiments -= args(0).getString
+    if (BehaviorSpaceExtension.savedExperiments.contains(BehaviorSpaceExtension.currentExperiment))
+      BehaviorSpaceExtension.savedExperiments -= BehaviorSpaceExtension.currentExperiment
   }
 }
 
 object SetTable extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType, StringType))
+    commandSyntax(right = List(StringType))
   }
 
   def perform(args: Array[Argument], context: Context) {
-    if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
+    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
 
-    BehaviorSpaceExtension.experiments(args(0).getString).table = args(1).getString
+    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).table = args(0).getString
 
-    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
-      BehaviorSpaceExtension.savedExperiments -= args(0).getString
+    if (BehaviorSpaceExtension.savedExperiments.contains(BehaviorSpaceExtension.currentExperiment))
+      BehaviorSpaceExtension.savedExperiments -= BehaviorSpaceExtension.currentExperiment
   }
 }
 
 object SetSpreadsheet extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType, StringType))
+    commandSyntax(right = List(StringType))
   }
 
   def perform(args: Array[Argument], context: Context) {
-    if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
+    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
 
-    BehaviorSpaceExtension.experiments(args(0).getString).spreadsheet = args(1).getString
+    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).spreadsheet = args(0).getString
 
-    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
-      BehaviorSpaceExtension.savedExperiments -= args(0).getString
+    if (BehaviorSpaceExtension.savedExperiments.contains(BehaviorSpaceExtension.currentExperiment))
+      BehaviorSpaceExtension.savedExperiments -= BehaviorSpaceExtension.currentExperiment
   }
 }
 
 object SetStats extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType, StringType))
+    commandSyntax(right = List(StringType))
   }
 
   def perform(args: Array[Argument], context: Context) {
-    if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
+    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
 
-    BehaviorSpaceExtension.experiments(args(0).getString).stats = args(1).getString
+    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).stats = args(0).getString
 
-    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
-      BehaviorSpaceExtension.savedExperiments -= args(0).getString
+    if (BehaviorSpaceExtension.savedExperiments.contains(BehaviorSpaceExtension.currentExperiment))
+      BehaviorSpaceExtension.savedExperiments -= BehaviorSpaceExtension.currentExperiment
   }
 }
 
 object SetLists extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType, StringType))
+    commandSyntax(right = List(StringType))
   }
 
   def perform(args: Array[Argument], context: Context) {
-    if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
+    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
 
-    BehaviorSpaceExtension.experiments(args(0).getString).lists = args(1).getString
+    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).lists = args(0).getString
 
-    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
-      BehaviorSpaceExtension.savedExperiments -= args(0).getString
+    if (BehaviorSpaceExtension.savedExperiments.contains(BehaviorSpaceExtension.currentExperiment))
+      BehaviorSpaceExtension.savedExperiments -= BehaviorSpaceExtension.currentExperiment
   }
 }
 
 object SetUpdateView extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType, BooleanType))
+    commandSyntax(right = List(BooleanType))
   }
 
   def perform(args: Array[Argument], context: Context) {
-    if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
+    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
 
-    BehaviorSpaceExtension.experiments(args(0).getString).updateView = args(1).getBooleanValue
+    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).updateView = args(0).getBooleanValue
 
-    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
-      BehaviorSpaceExtension.savedExperiments -= args(0).getString
+    if (BehaviorSpaceExtension.savedExperiments.contains(BehaviorSpaceExtension.currentExperiment))
+      BehaviorSpaceExtension.savedExperiments -= BehaviorSpaceExtension.currentExperiment
   }
 }
 
 object SetUpdatePlots extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType, BooleanType))
+    commandSyntax(right = List(BooleanType))
   }
 
   def perform(args: Array[Argument], context: Context) {
-    if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
+    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
 
-    BehaviorSpaceExtension.experiments(args(0).getString).updatePlotsAndMonitors = args(1).getBooleanValue
+    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).updatePlotsAndMonitors = args(0).getBooleanValue
 
-    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
-      BehaviorSpaceExtension.savedExperiments -= args(0).getString
+    if (BehaviorSpaceExtension.savedExperiments.contains(BehaviorSpaceExtension.currentExperiment))
+      BehaviorSpaceExtension.savedExperiments -= BehaviorSpaceExtension.currentExperiment
   }
 }

@@ -46,6 +46,8 @@ object BehaviorSpaceExtension {
   val experiments = Map[String, ExperimentData]()
   val savedExperiments = Map[String, LabProtocol]()
 
+  var currentExperiment = ""
+
   def experimentType(name: String, context: Context): ExperimentType.ExperimentType = {
     if (experiments.contains(name))
       ExperimentType.Code
@@ -56,7 +58,7 @@ object BehaviorSpaceExtension {
   }
 
   def validateForEditing(name: String, context: Context): Boolean = {
-    return experimentType(name, context) match {
+    experimentType(name, context) match {
       case ExperimentType.None =>
         nameError(I18N.gui.getN("tools.behaviorSpace.extension.noExperiment", name), context)
         false
@@ -123,6 +125,7 @@ class BehaviorSpaceExtension extends DefaultClassManager {
     manager.addPrimitive("import-experiments", ImportExperiments)
     manager.addPrimitive("export-experiment", ExportExperiment)
     manager.addPrimitive("clear-experiments", ClearExperiments)
+    manager.addPrimitive("set-current-experiment", SetCurrentExperiment)
 
     manager.addPrimitive("set-pre-experiment-commands", SetPreExperimentCommands)
     manager.addPrimitive("set-setup-commands", SetSetupCommands)
@@ -148,6 +151,7 @@ class BehaviorSpaceExtension extends DefaultClassManager {
 
     manager.addPrimitive("goto-behaviorspace-documentation", GotoBehaviorspaceDocumentation)
     manager.addPrimitive("goto-bspace-extension-documentation", GotoBspaceExtensionDocumentation)
+    manager.addPrimitive("get-current-experiment", GetCurrentExperiment)
     manager.addPrimitive("get-pre-experiment-commands", GetPreExperimentCommands)
     manager.addPrimitive("get-setup-commands", GetSetupCommands)
     manager.addPrimitive("get-go-commands", GetGoCommands)
@@ -174,5 +178,7 @@ class BehaviorSpaceExtension extends DefaultClassManager {
 
     BehaviorSpaceExtension.experiments.clear()
     BehaviorSpaceExtension.savedExperiments.clear()
+
+    BehaviorSpaceExtension.currentExperiment = ""
   }
 }

@@ -34,6 +34,7 @@ should be a string.
 [`bspace:import-experiments`](#bspaceimport-experiments)
 [`bspace:export-experiment`](#bspaceexport-experiment)
 [`bspace:clear-experiments`](#bspaceclear-experiments)
+[`bspace:set-current-experiment`](#bspaceset-current-experiment)
 
 ### Setting Experiment Parameters
 
@@ -92,6 +93,7 @@ should be a string.
 
 [`bspace:goto-behaviorspace-documentation`](#bspacegoto-behaviorspace-documentation)
 [`bspace:goto-bspace-extension-documentation`](#bspacegoto-bspace-extension-documentation)
+[`bspace:get-current-experiment`](#bspaceget-current-experiment)
 [`bspace:get-default-parallel-runs`](#bspaceget-default-parallel-runs)
 [`bspace:get-recommended-max-parallel-runs`](#bspaceget-recommended-max-parallel-runs)
 [`bspace:get-return-value`](#bspaceget-return-value)
@@ -124,40 +126,40 @@ bspace:delete-experiment "my-experiment"
 
 ### bspace:run-experiment
 
-#### bspace:run-experiment *string*
+#### bspace:run-experiment
 
-Run the experiment specified in the first input. An error will be thrown if the specified experiment does not exist.
+Run the current working experiment. An error will be thrown if no current working experiment has been set.
 
 Example:
 
 ```
-bspace:run-experiment "my-experiment"
+bspace:run-experiment
 ```
 
 ### bspace:rename-experiment
 
-#### bspace:rename-experiment *string* *string*
+#### bspace:rename-experiment *string*
 
-Rename the experiment specified in the first input to the name specified in the second input. An error
-will be thrown if the experiment specified in the first input does not exist.
+Rename the current working experiment to the name specified in the first input. An error will be thrown if no current
+working experiment has been set.
 
 Example:
 
 ```
-bspace:rename-experiment "my-experiment" "another-experiment"
+bspace:rename-experiment "another-experiment"
 ```
 
 ### bspace:duplicate-experiment
 
-#### bspace:duplicate-experiment *string* *string*
+#### bspace:duplicate-experiment *string*
 
-Make a copy of the experiment specified in the first input and rename the copy to the name specified in the second
-input. An error will be thrown if the experiment specified in the first input does not exist.
+Make a copy of the current working experiment and rename the copy to the name specified in the first input. An error
+will be thrown if no current working experiment has been set.
 
 Example:
 
 ```
-bspace:duplicate-experiment "my-experiment" "my-experiment-copy"
+bspace:duplicate-experiment "my-experiment-copy"
 ```
 
 ### bspace:import-experiments
@@ -175,16 +177,16 @@ bspace:import-experiments "/Users/johndoe/Documents/experiments.xml"
 
 ### bspace:export-experiment
 
-#### bspace:export-experiment *string* *string* *boolean*
+#### bspace:export-experiment *string* *boolean*
 
-Export the experiment specified in the first input to the file specified in the second input. If that file already
-exists and the third input is true, it will be overwritten with the specified experiment. If that file already exists
-and the third input is false, an error will be thrown.
+Export the current working experiment to the file specified in the second input. If that file already exists and the
+second input is true, it will be overwritten with the specified experiment. If that file already exists and the second
+input is false, an error will be thrown.
 
 Example:
 
 ```
-bspace:export-experiment "my-experiment" "/Users/johndoe/Documents/my-experiment.xml"
+bspace:export-experiment "/Users/johndoe/Documents/my-experiment.xml"
 ```
 
 ### bspace:clear-experiments
@@ -200,533 +202,549 @@ Example:
 bspace:clear-experiments
 ```
 
-### bspace:set-variables
+### bspace:set-current-experiment
 
-#### bspace:set-variables *string* *string*
+#### bspace:set-current-experient *string*
 
-Set the variables to vary for the experiment specified in the first input. An error will be thrown if the specified
-experiment does not exist.
+Set the current working experiment to the name specified in the first input.
 
 Example:
 
 ```
-bspace:set-variables "my-experiment" "[ 'var1' 0 5 20 ]"
+bspace:set-current-experiment "my-experiment"
+```
+
+### bspace:set-variables
+
+#### bspace:set-variables *string*
+
+Set the variables to vary for the current working experiment. An error will be thrown if no current working experiment
+has been set.
+
+Example:
+
+```
+bspace:set-variables "[ 'var1' 0 5 20 ]"
 ```
 
 ### bspace:set-repetitions
 
-#### bspace:set-repetitions *string* *number*
+#### bspace:set-repetitions *number*
 
-Set the repetitions for the experiment specified in the first input. An error will be thrown if the specified
-experiment does not exist.
+Set the repetitions for the current working experiment. An error will be thrown if no current working experiment has
+been set.
 
 Example:
 
 ```
-bspace:set-repetitions "my-experiment" 3
+bspace:set-repetitions 3
 ```
 
 ### bspace:set-sequential-run-order
 
-#### bspace:set-sequential-run-order *string* *boolean*
+#### bspace:set-sequential-run-order *boolean*
 
-Set whether the experiment specified in the first input uses sequential run order. An error will be thrown if the
-specified experiment does not exist.
+Set whether the current working experiment uses sequential run order. An error will be thrown if no current working
+experiment has been set.
 
 Example:
 
 ```
-bspace:set-sequential-run-order "my-experiment" true
+bspace:set-sequential-run-order true
 ```
 
 ### bspace:set-metrics
 
-#### bspace:set-metrics *string* *list*
+#### bspace:set-metrics *list*
 
-Set the metrics commands for the experiment specified in the first input. An error will be thrown if the specified
-experiment does not exist. The second input must be a list of string commands.
+Set the metrics commands for the current working experiment. An error will be thrown if no current working experiment
+has been set. The first input must be a list of string commands.
 
 Example:
 
 ```
-bspace:set-metrics "my-experiment" [ "count turtles", "count patches" ]
+bspace:set-metrics [ "count turtles", "count patches" ]
 ```
 
 ### bspace:set-run-metrics-every-step
 
 #### bspace:set-run-metrics-every-step *string* *boolean*
 
-Set whether the experiment specified in the first input runs metrics every step. An error will be thrown if the
-specified experiment does not exist.
+Set whether the current working experiment runs metrics every step. An error will be thrown if no current working
+experiment has been set.
 
 Example:
 
 ```
-bspace:set-run-metrics-every-step "my-experiment" false
+bspace:set-run-metrics-every-step false
 ```
 
 ### bspace:set-run-metrics-condition
 
-#### bspace:set-run-metrics-condition *string* *string*
+#### bspace:set-run-metrics-condition *string*
 
-Set the run metrics condition for the experiment specified in the first input. An error will be thrown if the specified
-experiment does not exist.
+Set the run metrics condition for the current working experiment. An error will be thrown if no current working
+experiment has been set.
 
 Example:
 
 ```
-bspace:set-run-metrics-condition "my-experiment" "count turtles < 5"
+bspace:set-run-metrics-condition "count turtles < 5"
 ```
 
 ### bspace:set-pre-experiment-commands
 
-#### bspace:set-pre-experiment-commands *string* *string*
+#### bspace:set-pre-experiment-commands *string*
 
-Set the pre-experiment commands for the experiment specified in the first input. An error will be thrown if the
-specified experiment does not exist.
+Set the pre-experiment commands for the current working experiment. An error will be thrown if no current working
+experiment has been set.
 
 Example:
 
 ```
-bspace:set-pre-experiment-commands "my-experiment" "clear-all"
+bspace:set-pre-experiment-commands "clear-all"
 ```
 
 ### bspace:set-setup-commands
 
-#### bspace:set-setup-commands *string* *string*
+#### bspace:set-setup-commands *string*
 
-Set the setup commands for the experiment specified in the first input. An error will be thrown if the specified
-experiment does not exist.
+Set the setup commands for the current working experiment. An error will be thrown if no current working experiment has
+been set.
 
 Example:
 
 ```
-bspace:set-setup-commands "my-experiment" "clear-all create-turtles 50"
+bspace:set-setup-commands "clear-all create-turtles 50"
 ```
 
 ### bspace:set-go-commands
 
-#### bspace:set-go-commands *string* *string*
+#### bspace:set-go-commands *string*
 
-Set the go commands for the experiment specified in the first input. An error will be thrown if the specified
-experiment does not exist.
+Set the go commands for the current working experiment. An error will be thrown if no current working experiment has
+been set.
 
 Example:
 
 ```
-bspace:set-go-commands "my-experiment" "myFunction"
+bspace:set-go-commands "myFunction"
 ```
 
 ### bspace:set-stop-condition
 
-#### bspace:set-stop-condition *string* *string*
+#### bspace:set-stop-condition *string*
 
-Set the stop condition for the experiment specified in the first input. An error will be thrown if the specified
-experiment does not exist.
+Set the stop condition for the current working experiment. An error will be thrown if no current working experiment has
+been set.
 
 Example:
 
 ```
-bspace:set-stop-condition "my-experiment" "ticks > 1000"
+bspace:set-stop-condition "ticks > 1000"
 ```
 
 ### bspace:set-post-run-commands
 
-#### bspace:set-post-run-commands *string* *string*
+#### bspace:set-post-run-commands *string*
 
-Set the post-run commands for the experiment specified in the first input. An error will be thrown if the specified
-experiment does not exist.
+Set the post-run commands for the current working experiment. An error will be thrown if no current working experiment
+has been set.
 
 Example:
 
 ```
-bspace:set-post-run-commands "my-experiment" "print count turtles"
+bspace:set-post-run-commands "print count turtles"
 ```
 
 ### bspace:set-post-experiment-commands
 
-#### bspace:set-post-experiment-commands *string* *string*
+#### bspace:set-post-experiment-commands *string*
 
-Set the post-experiment commands for the experiment specified in the first input. An error will be thrown if the
-specified experiment does not exist.
+Set the post-experiment commands for the current working experiment. An error will be thrown if no current working
+experiment has been set.
 
 Example:
 
 ```
-bspace:set-post-experiment-commands "my-experiment" "ask turtles [ setxy 0 0 ]"
+bspace:set-post-experiment-commands "ask turtles [ setxy 0 0 ]"
 ```
 
 ### bspace:set-time-limit
 
-#### bspace:set-time-limit *string* *number*
+#### bspace:set-time-limit *number*
 
-Set the time limit in ticks for the experiment specified in the first input. An error will be thrown if the specified
-experiment does not exist.
+Set the time limit in ticks for the current working experiment. An error will be thrown if no current working experiment
+has been set.
 
 Example:
 
 ```
-bspace:set-time-limit "my-experiment" 1500
+bspace:set-time-limit 1500
 ```
 
 ### bspace:set-return-reporter
 
-#### bspace:set-return-reporter *string* *string* *string*
+#### bspace:set-return-reporter *string* *string*
 
-Set a return value for the experiment specified in the first input, with the name specified in the second input. An
-error will be thrown if the specified experiment does not exist.
+Set a return value for the current working experiment, with the name specified in the first input. An error will be
+thrown if no current working experiment has been set.
 
 Example:
 
 ```
-bspace:set-return-reporter "my-experiment" "numTurtles" "count turtles"
+bspace:set-return-reporter "numTurtles" "count turtles"
 ```
 
 ### bspace:get-variables
 
-#### bspace:get-variables *string*
+#### bspace:get-variables
 
-Report the variables for the specified experiment. An error will be thrown if the specified experiment does not exist.
+Report the variables for the current working experiment. An error will be thrown if no current working experiment has
+been set.
 
 Example:
 
 ```
-bspace:get-variables "my-experiment"
+bspace:get-variables
 ```
 
 ### bspace:get-repetitions
 
-#### bspace:get-repetitions *string*
+#### bspace:get-repetitions
 
-Report the repetitions for the specified experiment. An error will be thrown if the specified experiment does not exist.
+Report the repetitions for the current working experiment. An error will be thrown if no current working experiment has
+been set.
 
 Example:
 
 ```
-bspace:get-repetitions "my-experiment"
+bspace:get-repetitions
 ```
 
 ### bspace:get-sequential-run-order
 
-#### bspace:get-sequential-run-order *string*
+#### bspace:get-sequential-run-order
 
-Report whether the specified experiment uses sequential run order. An error will be thrown if the specified experiment
-does not exist.
+Report whether the current working experiment uses sequential run order. An error will be thrown if no current working
+experiment has been set.
 
 Example:
 
 ```
-bspace:get-sequential-run-order "my-experiment"
+bspace:get-sequential-run-order
 ```
 
 ### bspace:get-metrics
 
-#### bspace:get-metrics *string*
+#### bspace:get-metrics
 
-Report the metrics for the specified experiment. An error will be thrown if the specified experiment does not exist.
+Report the metrics for the current working experiment. An error will be thrown if no current working experiment has
+been set.
 
 Example:
 
 ```
-bspace:get-metrics "my-experiment"
+bspace:get-metrics
 ```
 
 ### bspace:get-run-metrics-every-step
 
-#### bspace:get-run-metrics-every-step *string*
+#### bspace:get-run-metrics-every-step
 
-Report whether the specified experiment runs metrics every step. An error will be thrown if the specified experiment
-does not exist.
+Report whether the current working experiment runs metrics every step. An error will be thrown if no current working
+experiment has been set.
 
 Example:
 
 ```
-bspace:get-run-metrics-every-step "my-experiment"
+bspace:get-run-metrics-every-step
 ```
 
 ### bspace:get-run-metrics-condition
 
-#### bspace:get-run-metrics-condition *string*
+#### bspace:get-run-metrics-condition
 
-Report the run metrics condition for the specified experiment. An error will be thrown if the specified experiment does
-not exist.
+Report the run metrics condition for the current working experiment. An error will be thrown if no current working
+experiment has been set.
 
 Example:
 
 ```
-bspace:get-run-metrics-condition "my-experiment"
+bspace:get-run-metrics-condition
 ```
 
 ### bspace:get-pre-experiment-commands
 
-#### bspace:get-pre-experiment-commands *string*
+#### bspace:get-pre-experiment-commands
 
-Report the pre-experiment commands for the specified experiment. An error will be thrown if the specified experiment
-does not exist.
+Report the pre-experiment commands for the current working experiment. An error will be thrown if no current working
+experiment has been set.
 
 Example:
 
 ```
-bspace:get-pre-experiment-commands "my-experiment"
+bspace:get-pre-experiment-commands
 ```
 
 ### bspace:get-setup-commands
 
-#### bspace:get-setup-commands *string*
+#### bspace:get-setup-commands
 
-Report the setup commands for the specified experiment. An error will be thrown if the specified experiment does not
-exist.
+Report the setup commands for the current working experiment. An error will be thrown if no current working experiment
+has been set.
 
 Example:
 
 ```
-bspace:get-setup-commands "my-experiment"
+bspace:get-setup-commands
 ```
 
 ### bspace:get-go-commands
 
-#### bspace:get-go-commands *string*
+#### bspace:get-go-commands
 
-Report the go commands for the specified experiment. An error will be thrown if the specified experiment does not
-exist.
+Report the go commands for the current working experiment. An error will be thrown if no current working experiment has
+been set.
 
 Example:
 
 ```
-bspace:get-go-commands "my-experiment"
+bspace:get-go-commands
 ```
 
 ### bspace:get-stop-condition
 
-#### bspace:get-stop-condition *string*
+#### bspace:get-stop-condition
 
-Report the stop condition for the specified experiment. An error will be thrown if the specified experiment does not
-exist.
+Report the stop condition for the current working experiment. An error will be thrown if no current working
+experiment has been set.
 
 Example:
 
 ```
-bspace:get-stop-condition "my-experiment"
+bspace:get-stop-condition
 ```
 
 ### bspace:get-post-run-commands
 
-#### bspace:get-post-run-commands *string*
+#### bspace:get-post-run-commands
 
-Report the post-run commands for the specified experiment. An error will be thrown if the specified experiment does not
-exist.
+Report the post-run commands for the current working experiment. An error will be thrown if no current working
+experiment has been set.
 
 Example:
 
 ```
-bspace:get-post-run-commands "my-experiment"
+bspace:get-post-run-commands
 ```
 
 ### bspace:get-post-experiment-commands
 
-#### bspace:get-post-experiment-commands *string*
+#### bspace:get-post-experiment-commands
 
-Report the post-experiment commands for the specified experiment. An error will be thrown if the specified experiment
-does not exist.
+Report the post-experiment commands for the current working experiment. An error will be thrown if no current working
+experiment has been set.
 
 Example:
 
 ```
-bspace:get-post-experiment-commands "my-experiment"
+bspace:get-post-experiment-commands
 ```
 
 ### bspace:get-time-limit
 
-#### bspace:get-time-limit *string*
+#### bspace:get-time-limit
 
-Report the time limit for the specified experiment. An error will be thrown if the specified experiment does not exist.
+Report the time limit for the current working experiment. An error will be thrown if no current working experiment has
+been set.
 
 Example:
 
 ```
-bspace:get-time-limit "my-experiment"
+bspace:get-time-limit
 ```
 
 ### bspace:set-spreadsheet
 
-#### bspace:set-spreadsheet *string* *string*
+#### bspace:set-spreadsheet *string*
 
-Set the path for the spreadsheet file for the experiment specified in the first input. An error will be thrown if the
-specified experiment does not exist.
+Set the path for the spreadsheet file for the current working experiment. An error will be thrown if no current working
+experiment has been set.
 
 Example:
 
 ```
-bspace:set-spreadsheet "my-experiment" "/Users/johndoe/Documents/exp-sheet.csv"
+bspace:set-spreadsheet "/Users/johndoe/Documents/exp-sheet.csv"
 ```
 
 ### bspace:set-table
 
-#### bspace:set-table *string* *string*
+#### bspace:set-table *string*
 
-Set the path for the table file for the experiment specified in the first input. An error will be thrown if the
-specified experiment does not exist.
+Set the path for the table file for the current working experiment. An error will be thrown if no current working
+experiment has been set.
 
 Example:
 
 ```
-bspace:set-table "my-experiment" "/Users/johndoe/Documents/exp-table.csv"
+bspace:set-table "/Users/johndoe/Documents/exp-table.csv"
 ```
 
 ### bspace:set-stats
 
-#### bspace:set-stats *string* *string*
+#### bspace:set-stats *string*
 
-Set the path for the stats file for the experiment specified in the first input. An error will be thrown if the
-specified experiment does not exist.
+Set the path for the stats file for the current working experiment. An error will be thrown if no current working
+experiment has been set.
 
 Example:
 
 ```
-bspace:set-stats "my-experiment" "/Users/johndoe/Documents/exp-stats.csv"
+bspace:set-stats "/Users/johndoe/Documents/exp-stats.csv"
 ```
 
 ### bspace:set-lists
 
-#### bspace:set-lists *string* *string*
+#### bspace:set-lists *string*
 
-Set the path for the lists file for the experiment specified in the first input. An error will be thrown if the
-specified experiment does not exist.
+Set the path for the lists file for the current working experiment. An error will be thrown if no current working
+experiment has been set.
 
 Example:
 
 ```
-bspace:set-lists "my-experiment" "/Users/johndoe/Documents/exp-lists.csv"
+bspace:set-lists "/Users/johndoe/Documents/exp-lists.csv"
 ```
 
 ### bspace:set-update-view
 
-#### bspace:set-update-view *string* *boolean*
+#### bspace:set-update-view *boolean*
 
-Set whether the specified experiment should update the view. An error will be thrown if the specified experiment does
-not exist.
+Set whether the current working experiment should update the view. An error will be thrown if no current working
+experiment has been set.
 
 Example:
 
 ```
-bspace:set-update-view "my-experiment" true
+bspace:set-update-view true
 ```
 
 ### bspace:set-update-plots
 
-#### bspace:set-update-view *string* *boolean*
+#### bspace:set-update-view *boolean*
 
-Set whether the specified experiment should update the plots. An error will be thrown if the specified experiment does
-not exist.
+Set whether the current working experiment should update the plots. An error will be thrown if no current working
+experiment has been set.
 
 Example:
 
 ```
-bspace:set-update-view "my-experiment" false
+bspace:set-update-view false
 ```
 
 ### bspace:set-parallel-runs
 
-#### bspace:set-parallel-runs *string* *number*
+#### bspace:set-parallel-runs *number*
 
-Set the number of parallel runs for the experiment specified in the first input. An error will be thrown if the
-specified experiment does not exist.
+Set the number of parallel runs for the current working experiment. An error will be thrown if no current working
+experiment has been set.
 
 Example:
 
 ```
-bspace:set-parallel-runs "my-experiment" 3
+bspace:set-parallel-runs 3
 ```
 
 ### bspace:get-spreadsheet
 
-#### bspace:get-spreadsheet *string*
+#### bspace:get-spreadsheet
 
-Report the spreadsheet location for the specified experiment. An error will be thrown if the specified experiment does
-not exist.
+Report the spreadsheet location for the current working experiment. An error will be thrown if no current working
+experiment has been set.
 
 Example:
 
 ```
-bspace:get-spreadsheet "my-experiment"
+bspace:get-spreadsheet
 ```
 
 ### bspace:get-table
 
-#### bspace:get-table *string*
+#### bspace:get-table
 
-Report the table location for the specified experiment. An error will be thrown if the specified experiment does not
-exist.
+Report the table location for the current working experiment. An error will be thrown if no current working experiment
+has been set.
 
 Example:
 
 ```
-bspace:get-table "my-experiment"
+bspace:get-table
 ```
 
 ### bspace:get-stats
 
-#### bspace:get-stats *string*
+#### bspace:get-stats
 
-Report the stats location for the specified experiment. An error will be thrown if the specified experiment does not
-exist.
+Report the stats location for the current working experiment. An error will be thrown if no current working experiment
+has been set.
 
 Example:
 
 ```
-bspace:get-stats "my-experiment"
+bspace:get-stats
 ```
 
 ### bspace:get-lists
 
-#### bspace:get-lists *string*
+#### bspace:get-lists
 
-Report the lists location for the specified experiment. An error will be thrown if the specified experiment does not
-exist.
+Report the lists location for the current working experiment. An error will be thrown if no current working experiment
+has been set.
 
 Example:
 
 ```
-bspace:get-lists "my-experiment"
+bspace:get-lists
 ```
 
 ### bspace:get-update-view
 
-#### bspace:get-update-view *string*
+#### bspace:get-update-view
 
-Report whether the specified experiment will update the view. An error will be thrown if the specified experiment does
-not exist.
+Report whether the current working experiment will update the view. An error will be thrown if no current working
+experiment has been set.
 
 Example:
 
 ```
-bspace:get-update-view "my-experiment"
+bspace:get-update-view
 ```
 
 ### bspace:get-update-plots
 
-#### bspace:get-update-plots *string*
+#### bspace:get-update-plots
 
-Report whether the specified experiment will update the plots. An error will be thrown if the specified experiment does
-not exist.
+Report whether the current working experiment will update the plots. An error will be thrown if no current working
+experiment has been set.
 
 Example:
 
 ```
-bspace:get-update-plots "my-experiment"
+bspace:get-update-plots
 ```
 
 ### bspace:get-parallel-runs
 
-#### bspace:get-parallel-runs *string*
+#### bspace:get-parallel-runs
 
-Report the number of parallel runs for the specified experiment. An error will be thrown if the specified experiment
-does not exist.
+Report the number of parallel runs for the current working experiment. An error will be thrown if no current working
+experiment has been set.
 
 Example:
 
 ```
-bspace:get-parallel-runs "my-experiment"
+bspace:get-parallel-runs
 ```
 
 ### bspace:goto-behaviorspace-documentation
@@ -751,6 +769,18 @@ Example:
 
 ```
 bspace:goto-bspace-extension-documentation
+```
+
+### bspace:get-current-experiment
+
+#### bspace:get-current-experiment
+
+Report the current working experiment.
+
+Example:
+
+```
+bspace:get-current-experiment
 ```
 
 ### bspace:get-default-parallel-runs
