@@ -68,9 +68,8 @@ href="#bspaceset-stop-condition"><code>bspace:set-stop-condition</code></a>
 href="#bspaceset-post-run-commands"><code>bspace:set-post-run-commands</code></a>
 <a
 href="#bspaceset-post-experiment-commands"><code>bspace:set-post-experiment-commands</code></a>
-<a href="#bspaceset-time-limit"><code>bspace:set-time-limit</code></a>
 <a
-href="#bspaceset-return-reporter"><code>bspace:set-return-reporter</code></a></p>
+href="#bspaceset-time-limit"><code>bspace:set-time-limit</code></a></p>
 <h3 id="getting-experiment-parameters">Getting Experiment
 Parameters</h3>
 <p><a href="#bspaceget-variables"><code>bspace:get-variables</code></a>
@@ -116,6 +115,10 @@ href="#bspaceget-update-view"><code>bspace:get-update-view</code></a> <a
 href="#bspaceget-update-plots"><code>bspace:get-update-plots</code></a>
 <a
 href="#bspaceget-parallel-runs"><code>bspace:get-parallel-runs</code></a></p>
+<h3 id="processing-behaviorspace-output">Processing BehaviorSpace
+Output</h3>
+<p><a
+href="#bspaceget-output-metric"><code>bspace:get-output-metric</code></a></p>
 <h3 id="experiment-information">Experiment Information</h3>
 <p><a
 href="#bspacegoto-behaviorspace-documentation"><code>bspace:goto-behaviorspace-documentation</code></a>
@@ -126,9 +129,7 @@ href="#bspaceget-current-experiment"><code>bspace:get-current-experiment</code><
 <a
 href="#bspaceget-default-parallel-runs"><code>bspace:get-default-parallel-runs</code></a>
 <a
-href="#bspaceget-recommended-max-parallel-runs"><code>bspace:get-recommended-max-parallel-runs</code></a>
-<a
-href="#bspaceget-return-value"><code>bspace:get-return-value</code></a></p>
+href="#bspaceget-recommended-max-parallel-runs"><code>bspace:get-recommended-max-parallel-runs</code></a></p>
 <h3 id="bspacecreate-experiment">bspace:create-experiment</h3>
 <h4 id="bspacecreate-experiment-string-boolean">bspace:create-experiment
 <em>string</em> <em>boolean</em></h4>
@@ -306,15 +307,6 @@ set.</p>
 error will be thrown if no current working experiment has been set.</p>
 <p>Example:</p>
 <pre><code>bspace:set-time-limit 1500</code></pre>
-<h3 id="bspaceset-return-reporter">bspace:set-return-reporter</h3>
-<h4
-id="bspaceset-return-reporter-string-string">bspace:set-return-reporter
-<em>string</em> <em>string</em></h4>
-<p>Set a return value for the current working experiment, with the name
-specified in the first input. An error will be thrown if no current
-working experiment has been set.</p>
-<p>Example:</p>
-<pre><code>bspace:set-return-reporter &quot;numTurtles&quot; &quot;count turtles&quot;</code></pre>
 <h3 id="bspaceget-variables">bspace:get-variables</h3>
 <h4 id="bspaceget-variables-1">bspace:get-variables</h4>
 <p>Report the variables for the current working experiment. An error
@@ -463,26 +455,37 @@ set.</p>
 <h3 id="bspaceget-spreadsheet">bspace:get-spreadsheet</h3>
 <h4 id="bspaceget-spreadsheet-1">bspace:get-spreadsheet</h4>
 <p>Report the spreadsheet location for the current working experiment.
-An error will be thrown if no current working experiment has been
-set.</p>
+An error will be thrown if no current working experiment has been set.
+Will report an empty string if no spreadsheet file was specified in the
+current working experiment, or the string “-” if the output is directed
+to standard output.</p>
 <p>Example:</p>
 <pre><code>bspace:get-spreadsheet</code></pre>
 <h3 id="bspaceget-table">bspace:get-table</h3>
 <h4 id="bspaceget-table-1">bspace:get-table</h4>
 <p>Report the table location for the current working experiment. An
-error will be thrown if no current working experiment has been set.</p>
+error will be thrown if no current working experiment has been set. Will
+report an empty string if no table file was specified in the current
+working experiment, or the string “-” if the output is directed to
+standard output.</p>
 <p>Example:</p>
 <pre><code>bspace:get-table</code></pre>
 <h3 id="bspaceget-stats">bspace:get-stats</h3>
 <h4 id="bspaceget-stats-1">bspace:get-stats</h4>
 <p>Report the stats location for the current working experiment. An
-error will be thrown if no current working experiment has been set.</p>
+error will be thrown if no current working experiment has been set. Will
+report an empty string if no spreastatsdsheet file was specified in the
+current working experiment, or the string “-” if the output is directed
+to standard output.</p>
 <p>Example:</p>
 <pre><code>bspace:get-stats</code></pre>
 <h3 id="bspaceget-lists">bspace:get-lists</h3>
 <h4 id="bspaceget-lists-1">bspace:get-lists</h4>
 <p>Report the lists location for the current working experiment. An
-error will be thrown if no current working experiment has been set.</p>
+error will be thrown if no current working experiment has been set. Will
+report an empty string if no lists file was specified in the current
+working experiment, or the string “-” if the output is directed to
+standard output.</p>
 <p>Example:</p>
 <pre><code>bspace:get-lists</code></pre>
 <h3 id="bspaceget-update-view">bspace:get-update-view</h3>
@@ -506,6 +509,17 @@ experiment. An error will be thrown if no current working experiment has
 been set.</p>
 <p>Example:</p>
 <pre><code>bspace:get-parallel-runs</code></pre>
+<h3 id="bspaceget-output-metric">bspace:get-output-metric</h3>
+<h4
+id="bspaceget-output-metric-string-string-number">bspace:get-output-metric
+<em>string</em> <em>string</em> <em>number</em></h4>
+<p>Report the list of values for the metric specified in the second
+input for the run number specified in the third input, from the file
+specified in the first input. The specified file must be a spreadsheet
+output to ensure proper ordering of values. An error will be thrown if
+any of the inputs are invalid.</p>
+<p>Example:</p>
+<pre><code>bspace:get-output-metric &quot;/Users/johndoe/Documents/spreadsheet.csv&quot; &quot;count turtles&quot; 3</code></pre>
 <h3
 id="bspacegoto-behaviorspace-documentation">bspace:goto-behaviorspace-documentation</h3>
 <h4
@@ -542,10 +556,3 @@ id="bspaceget-recommended-max-parallel-runs-1">bspace:get-recommended-max-parall
 current device.</p>
 <p>Example:</p>
 <pre><code>print bspace:get-recommended-max-parallel-runs</code></pre>
-<h3 id="bspaceget-return-value">bspace:get-return-value</h3>
-<h4 id="bspaceget-return-value-string">bspace:get-return-value
-<em>string</em></h4>
-<p>Gets the return value with the specified name. Will throw an error if
-the specified return value does not exist.</p>
-<p>Example:</p>
-<pre><code>print bspace:get-return-value &quot;numTurtles&quot;</code></pre>

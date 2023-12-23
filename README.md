@@ -51,7 +51,6 @@ should be a string.
 [`bspace:set-post-run-commands`](#bspaceset-post-run-commands)
 [`bspace:set-post-experiment-commands`](#bspaceset-post-experiment-commands)
 [`bspace:set-time-limit`](#bspaceset-time-limit)
-[`bspace:set-return-reporter`](#bspaceset-return-reporter)
 
 ### Getting Experiment Parameters
 
@@ -89,6 +88,10 @@ should be a string.
 [`bspace:get-update-plots`](#bspaceget-update-plots)
 [`bspace:get-parallel-runs`](#bspaceget-parallel-runs)
 
+### Processing BehaviorSpace Output
+
+[`bspace:get-output-metric`](#bspaceget-output-metric)
+
 ### Experiment Information
 
 [`bspace:goto-behaviorspace-documentation`](#bspacegoto-behaviorspace-documentation)
@@ -96,7 +99,6 @@ should be a string.
 [`bspace:get-current-experiment`](#bspaceget-current-experiment)
 [`bspace:get-default-parallel-runs`](#bspaceget-default-parallel-runs)
 [`bspace:get-recommended-max-parallel-runs`](#bspaceget-recommended-max-parallel-runs)
-[`bspace:get-return-value`](#bspaceget-return-value)
 
 ### bspace:create-experiment
 
@@ -383,19 +385,6 @@ Example:
 bspace:set-time-limit 1500
 ```
 
-### bspace:set-return-reporter
-
-#### bspace:set-return-reporter *string* *string*
-
-Set a return value for the current working experiment, with the name specified in the first input. An error will be
-thrown if no current working experiment has been set.
-
-Example:
-
-```
-bspace:set-return-reporter "numTurtles" "count turtles"
-```
-
 ### bspace:get-variables
 
 #### bspace:get-variables
@@ -661,7 +650,8 @@ bspace:set-parallel-runs 3
 #### bspace:get-spreadsheet
 
 Report the spreadsheet location for the current working experiment. An error will be thrown if no current working
-experiment has been set.
+experiment has been set. Will report an empty string if no spreadsheet file was specified in the current working
+experiment, or the string "-" if the output is directed to standard output.
 
 Example:
 
@@ -674,7 +664,8 @@ bspace:get-spreadsheet
 #### bspace:get-table
 
 Report the table location for the current working experiment. An error will be thrown if no current working experiment
-has been set.
+has been set. Will report an empty string if no table file was specified in the current working experiment, or the
+string "-" if the output is directed to standard output.
 
 Example:
 
@@ -687,7 +678,8 @@ bspace:get-table
 #### bspace:get-stats
 
 Report the stats location for the current working experiment. An error will be thrown if no current working experiment
-has been set.
+has been set. Will report an empty string if no spreastatsdsheet file was specified in the current working experiment,
+or the string "-" if the output is directed to standard output.
 
 Example:
 
@@ -700,7 +692,8 @@ bspace:get-stats
 #### bspace:get-lists
 
 Report the lists location for the current working experiment. An error will be thrown if no current working experiment
-has been set.
+has been set. Will report an empty string if no lists file was specified in the current working experiment, or the
+string "-" if the output is directed to standard output.
 
 Example:
 
@@ -745,6 +738,20 @@ Example:
 
 ```
 bspace:get-parallel-runs
+```
+
+### bspace:get-output-metric
+
+#### bspace:get-output-metric *string* *string* *number*
+
+Report the list of values for the metric specified in the second input for the run number specified in the third input,
+from the file specified in the first input. The specified file must be a spreadsheet output to ensure proper ordering
+of values. An error will be thrown if any of the inputs are invalid.
+
+Example:
+
+```
+bspace:get-output-metric "/Users/johndoe/Documents/spreadsheet.csv" "count turtles" 3
 ```
 
 ### bspace:goto-behaviorspace-documentation
@@ -806,16 +813,3 @@ Example:
 ```
 print bspace:get-recommended-max-parallel-runs
 ```
-
-### bspace:get-return-value
-
-#### bspace:get-return-value *string*
-
-Gets the return value with the specified name. Will throw an error if the specified return value does not exist.
-
-Example:
-
-```
-print bspace:get-return-value "numTurtles"
-```
-
