@@ -441,21 +441,3 @@ object GetRecommendedMaxParallelRuns extends Reporter {
     LabDefaultValues.getRecommendedMaxThreads
   }
 }
-
-object GetReturnValue extends Reporter {
-  override def getSyntax = {
-    reporterSyntax(ret = WildcardType)
-  }
-
-  override def report(args: Array[Argument], context: Context): AnyRef = {
-    val values = context.workspace.asInstanceOf[GUIWorkspace].getBehaviorSpaceReturnValues
-    
-    if (!values.contains(BehaviorSpaceExtension.currentExperiment)) {
-      BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.noReturn", BehaviorSpaceExtension.currentExperiment), context)
-
-      return null
-    }
-    
-    return values(BehaviorSpaceExtension.currentExperiment)
-  }
-}

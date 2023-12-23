@@ -211,24 +211,6 @@ object SetVariables extends Command {
   }
 }
 
-object SetReturnReporter extends Command {
-  override def getSyntax = {
-    commandSyntax(right = List(StringType, StringType))
-  }
-
-  def perform(args: Array[Argument], context: Context) {
-    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
-
-    if (BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).returnReporters.contains(args(0).getString))
-      BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).returnReporters(args(0).getString) = args(1).getString
-    else
-      BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).returnReporters += ((args(0).getString, args(1).getString))
-
-    if (BehaviorSpaceExtension.savedExperiments.contains(BehaviorSpaceExtension.currentExperiment))
-      BehaviorSpaceExtension.savedExperiments -= BehaviorSpaceExtension.currentExperiment
-  }
-}
-
 object SetParallelRuns extends Command {
   override def getSyntax = {
     commandSyntax(right = List(NumberType))
