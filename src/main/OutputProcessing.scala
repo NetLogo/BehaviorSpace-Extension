@@ -3,7 +3,7 @@
 package org.nlogo.extensions.bspace
 
 import org.nlogo.api.{ Argument, Context, Reporter }
-import org.nlogo.core.{ I18N, LogoList }
+import org.nlogo.core.LogoList
 import org.nlogo.core.Syntax._
 
 object GetOutputMetric extends Reporter {
@@ -23,13 +23,13 @@ object GetOutputMetric extends Reporter {
     var result = Iterator[String]()
 
     if (index < 0) {
-      BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.noMetric",
-                                                     args(1).getString), context)
+      BehaviorSpaceExtension.nameError(s"""Metric "${args(1).getString}" does not exist in the specified output file.""",
+                                       context)
     }
 
     else if (args(2).getIntValue <= 0 || args(2).getIntValue > runs) {
-      BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.noRun",
-                                                     args(2).getIntValue.toString), context)
+      BehaviorSpaceExtension.nameError(
+        s"""Run "${args(2).getIntValue.toString}" does not exist in the specified output file.""", context)
     }
 
     else {

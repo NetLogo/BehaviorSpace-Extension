@@ -3,7 +3,6 @@
 package org.nlogo.extensions.bspace
 
 import org.nlogo.api.{ Argument, Command, Context, LabProtocol, LabVariableParser, RefValueSet }
-import org.nlogo.core.I18N
 import org.nlogo.core.Syntax._
 import org.nlogo.window.GUIWorkspace
 

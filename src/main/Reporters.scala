@@ -3,7 +3,6 @@
 package org.nlogo.extensions.bspace
 
 import org.nlogo.api.{ Argument, Command, Context, LabDefaultValues, LabVariableParser, Reporter }
-import org.nlogo.core.I18N
 import org.nlogo.core.Syntax._
 import org.nlogo.swing.BrowserLauncher
 import org.nlogo.window.GUIWorkspace
@@ -50,8 +49,8 @@ object GetPreExperimentCommands extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).preExperimentCommands
       case _ =>
-        BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.noExperiment",
-                                                       BehaviorSpaceExtension.currentExperiment), context)
+        BehaviorSpaceExtension.nameError(
+          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
         ""
     }
   }
@@ -69,8 +68,8 @@ object GetSetupCommands extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).setupCommands
       case _ =>
-        BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.noExperiment",
-                                                       BehaviorSpaceExtension.currentExperiment), context)
+        BehaviorSpaceExtension.nameError(
+          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
         ""
     }
   }
@@ -88,8 +87,8 @@ object GetGoCommands extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).goCommands
       case _ =>
-        BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.noExperiment",
-                                                       BehaviorSpaceExtension.currentExperiment), context)
+        BehaviorSpaceExtension.nameError(
+          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
         ""
     }
   }
@@ -107,8 +106,8 @@ object GetPostRunCommands extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).postRunCommands
       case _ =>
-        BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.noExperiment",
-                                                       BehaviorSpaceExtension.currentExperiment), context)
+        BehaviorSpaceExtension.nameError(
+          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
         ""
     }
   }
@@ -126,8 +125,8 @@ object GetPostExperimentCommands extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).postExperimentCommands
       case _ =>
-        BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.noExperiment",
-                                                       BehaviorSpaceExtension.currentExperiment), context)
+        BehaviorSpaceExtension.nameError(
+          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
         ""
     }
   }
@@ -145,8 +144,8 @@ object GetRepetitions extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).repetitions
       case _ =>
-        BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.noExperiment",
-                                                       BehaviorSpaceExtension.currentExperiment), context)
+        BehaviorSpaceExtension.nameError(
+          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
         LabDefaultValues.getDefaultRepetitions
     }
   }
@@ -164,8 +163,8 @@ object GetSequentialRunOrder extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).sequentialRunOrder
       case _ =>
-        BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.noExperiment",
-                                                       BehaviorSpaceExtension.currentExperiment), context)
+        BehaviorSpaceExtension.nameError(
+          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
         LabDefaultValues.getDefaultSequentialRunOrder
     }
   }
@@ -183,8 +182,8 @@ object GetRunMetricsEveryStep extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).runMetricsEveryStep
       case _ =>
-        BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.noExperiment",
-                                                       BehaviorSpaceExtension.currentExperiment), context)
+        BehaviorSpaceExtension.nameError(
+          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
         LabDefaultValues.getDefaultRunMetricsEveryStep
     }
   }
@@ -202,8 +201,8 @@ object GetRunMetricsCondition extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).runMetricsCondition
       case _ =>
-        BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.noExperiment",
-                                                       BehaviorSpaceExtension.currentExperiment), context)
+        BehaviorSpaceExtension.nameError(
+          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
         ""
     }
   }
@@ -221,8 +220,8 @@ object GetTimeLimit extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).timeLimit
       case _ =>
-        BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.noExperiment",
-                                                       BehaviorSpaceExtension.currentExperiment), context)
+        BehaviorSpaceExtension.nameError(
+          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
         LabDefaultValues.getDefaultTimeLimit
     }
   }
@@ -240,8 +239,8 @@ object GetStopCondition extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).exitCondition
       case _ =>
-        BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.noExperiment",
-                                                       BehaviorSpaceExtension.currentExperiment), context)
+        BehaviorSpaceExtension.nameError(
+          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
         ""
     }
   }
@@ -259,8 +258,8 @@ object GetMetrics extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).metrics
       case _ =>
-        BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.noExperiment",
-                                                       BehaviorSpaceExtension.currentExperiment), context)
+        BehaviorSpaceExtension.nameError(
+          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
         Nil
     }
   }
@@ -282,8 +281,8 @@ object GetVariables extends Reporter {
           BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).constants,
           BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).subExperiments)
       case _ =>
-        BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.noExperiment",
-                                                       BehaviorSpaceExtension.currentExperiment), context)
+        BehaviorSpaceExtension.nameError(
+          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
         ""
     }
   }
@@ -301,8 +300,8 @@ object GetParallelRuns extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).threadCount
       case _ =>
-        BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.noExperiment",
-                                                       BehaviorSpaceExtension.currentExperiment), context)
+        BehaviorSpaceExtension.nameError(
+          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
         LabDefaultValues.getDefaultThreads
     }
   }
@@ -320,8 +319,8 @@ object GetTable extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).table
       case _ =>
-        BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.noExperiment",
-                                                       BehaviorSpaceExtension.currentExperiment), context)
+        BehaviorSpaceExtension.nameError(
+          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
         ""
     }
   }
@@ -339,8 +338,8 @@ object GetSpreadsheet extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).spreadsheet
       case _ =>
-        BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.noExperiment",
-                                                       BehaviorSpaceExtension.currentExperiment), context)
+        BehaviorSpaceExtension.nameError(
+          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
         ""
     }
   }
@@ -358,8 +357,8 @@ object GetStats extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).stats
       case _ =>
-        BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.noExperiment",
-                                                       BehaviorSpaceExtension.currentExperiment), context)
+        BehaviorSpaceExtension.nameError(
+          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
         ""
     }
   }
@@ -377,8 +376,8 @@ object GetLists extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).lists
       case _ =>
-        BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.noExperiment",
-                                                       BehaviorSpaceExtension.currentExperiment), context)
+        BehaviorSpaceExtension.nameError(
+          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
         ""
     }
   }
@@ -396,8 +395,8 @@ object GetUpdateView extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).updateView
       case _ =>
-        BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.noExperiment",
-                                                       BehaviorSpaceExtension.currentExperiment), context)
+        BehaviorSpaceExtension.nameError(
+          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
         LabDefaultValues.getDefaultUpdateView
     }
   }
@@ -415,8 +414,8 @@ object GetUpdatePlots extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).updatePlotsAndMonitors
       case _ =>
-        BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.noExperiment",
-                                                       BehaviorSpaceExtension.currentExperiment), context)
+        BehaviorSpaceExtension.nameError(
+          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
         LabDefaultValues.getDefaultUpdatePlotsAndMonitors
     }
   }

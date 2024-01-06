@@ -2,11 +2,14 @@
 
 package org.nlogo.extensions.bspace
 
+import java.io.{ File, FileWriter, PrintWriter }
+
 import org.nlogo.api.{ Argument, Command, Context }
-import org.nlogo.core.I18N
 import org.nlogo.core.Syntax._
 import org.nlogo.fileformat.{ LabLoader, LabSaver }
+import org.nlogo.headless.Main
 import org.nlogo.lab.gui.Supervisor
+import org.nlogo.nvm.LabInterface.Settings
 import org.nlogo.window.GUIWorkspace
 import org.nlogo.workspace.AbstractWorkspace
 
@@ -18,10 +21,10 @@ object CreateExperiment extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (!args(1).getBooleanValue &&
         BehaviorSpaceExtension.experimentType(args(0).getString, context) != ExperimentType.None)
-      return BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.alreadyExists",
-                                                            args(0).getString), context)
+      return BehaviorSpaceExtension.nameError(s"""An experiment already exists with the name "${args(0).getString}".""",
+                                              context)
     if (args(0).getString.isEmpty)
-      return BehaviorSpaceExtension.nameError(I18N.gui.get("edit.behaviorSpace.name.empty"), context)
+      return BehaviorSpaceExtension.nameError("Experiment name cannot be empty.", context)
 
     if (BehaviorSpaceExtension.experiments.contains(args(0).getString))
       BehaviorSpaceExtension.experiments(args(0).getString) = new ExperimentData()
@@ -64,20 +67,52 @@ object RunExperiment extends Command {
           BehaviorSpaceExtension.savedExperiments(BehaviorSpaceExtension.currentExperiment)
         else
           BehaviorSpaceExtension.protocolFromData(BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment))
-      case _ => return BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.noExperiment", BehaviorSpaceExtension.currentExperiment), context)
+      case _ => return BehaviorSpaceExtension.nameError(
+        s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
     }
 
     javax.swing.SwingUtilities.invokeLater(() => {
-      Supervisor.runFromExtension(protocol, context.workspace.asInstanceOf[AbstractWorkspace], (protocol) => {
-        if (BehaviorSpaceExtension.savedExperiments.contains(protocol.name)) {
-          if (protocol.runsCompleted == 0)
-            BehaviorSpaceExtension.savedExperiments -= protocol.name
-          else
-            BehaviorSpaceExtension.savedExperiments(protocol.name) = protocol
-        }
-        else if (protocol.runsCompleted != 0)
-          BehaviorSpaceExtension.savedExperiments += ((protocol.name, protocol))
-      }, if (context.workspace.isHeadless) Supervisor.Headless else Supervisor.Extension)
+      if (context.workspace.isHeadless) {
+        val out = new java.io.PrintWriter("bsext_temp.xml")
+
+        out.write(LabSaver.save(List(protocol)))
+
+        out.close()
+
+        val file = Some(new File("bsext_temp.xml"))
+
+        val table =
+          if (protocol.runOptions.table.trim.isEmpty) None
+          else Some(new PrintWriter(new FileWriter(protocol.runOptions.table.trim)))
+        val spreadsheet =
+          if (protocol.runOptions.spreadsheet.trim.isEmpty) None
+          else Some(new PrintWriter(new FileWriter(protocol.runOptions.spreadsheet.trim)))
+        val stats =
+          if (protocol.runOptions.stats.trim.isEmpty) None
+          else Some((new PrintWriter(new FileWriter(protocol.runOptions.stats.trim)), protocol.runOptions.stats.trim))
+        val lists =
+          if (protocol.runOptions.lists.trim.isEmpty) None
+          else Some((new PrintWriter(new FileWriter(protocol.runOptions.lists.trim)), protocol.runOptions.lists.trim))
+
+        Main.runExperiment(new Settings(context.workspace.getModelPath, None, file, table, spreadsheet, stats, lists,
+                                        None, protocol.runOptions.threadCount, false,
+                                        protocol.runOptions.updatePlotsAndMonitors))
+
+        file.get.delete()
+      }
+
+      else {
+        Supervisor.runFromExtension(protocol, context.workspace.asInstanceOf[AbstractWorkspace], (protocol) => {
+          if (BehaviorSpaceExtension.savedExperiments.contains(protocol.name)) {
+            if (protocol.runsCompleted == 0)
+              BehaviorSpaceExtension.savedExperiments -= protocol.name
+            else
+              BehaviorSpaceExtension.savedExperiments(protocol.name) = protocol
+          }
+          else if (protocol.runsCompleted != 0)
+            BehaviorSpaceExtension.savedExperiments += ((protocol.name, protocol))
+        })
+      }
     })
   }
 }
@@ -90,9 +125,9 @@ object RenameExperiment extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
     if (BehaviorSpaceExtension.experimentType(args(0).getString, context) != ExperimentType.None)
-      return BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.alreadyExists", args(0).getString), context)
+      return BehaviorSpaceExtension.nameError(s"""No experiment exists with the name "${args(0).getString}".""", context)
     if (args(0).getString.isEmpty)
-      return BehaviorSpaceExtension.nameError(I18N.gui.get("edit.behaviorSpace.name.empty"), context)
+      return BehaviorSpaceExtension.nameError("Experiment name cannot be empty.", context)
 
     val data = BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment)
 
@@ -117,9 +152,9 @@ object DuplicateExperiment extends Command {
 
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.experimentType(args(0).getString, context) != ExperimentType.None)
-      return BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.alreadyExists", args(0).getString), context)
+      return BehaviorSpaceExtension.nameError(s"""No experiment exists with the name "${args(0).getString}".""", context)
     if (args(0).getString.isEmpty)
-      return BehaviorSpaceExtension.nameError(I18N.gui.get("edit.behaviorSpace.name.empty"), context)
+      return BehaviorSpaceExtension.nameError("Experiment name cannot be empty.", context)
 
     val data = BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
@@ -147,8 +182,7 @@ object ImportExperiments extends Command {
                                      scala.collection.mutable.Set[String]()))
       {
         if (BehaviorSpaceExtension.experimentType(protocol.name, context) != ExperimentType.None)
-          BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.alreadyExists",
-                                                         protocol.name), context)
+          BehaviorSpaceExtension.nameError(s"""No experiment exists with the name "${protocol.name}".""", context)
         else
           BehaviorSpaceExtension.experiments += ((protocol.name, BehaviorSpaceExtension.dataFromProtocol(protocol)))
       }
@@ -156,9 +190,8 @@ object ImportExperiments extends Command {
       case e: org.xml.sax.SAXParseException => {
         if (!context.workspace.isHeadless) {
           javax.swing.JOptionPane.showMessageDialog(context.workspace.asInstanceOf[GUIWorkspace].getFrame,
-                                                    I18N.gui.getN("tools.behaviorSpace.error.import",
-                                                                  args(0).getString),
-                                                    I18N.gui.get("tools.behaviorSpace.invalid"),
+                                                    s"""Invalid format in "${args(0).getString}".""",
+                                                    "Invalid",
                                                     javax.swing.JOptionPane.ERROR_MESSAGE)
         }
       }
@@ -178,13 +211,12 @@ object ExportExperiment extends Command {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.protocolFromData(BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment))
       case _ =>
-        return BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.noExperiment",
-                                                              BehaviorSpaceExtension.currentExperiment), context)
+        return BehaviorSpaceExtension.nameError(
+          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}"""", context)
     }
 
     if (!args(1).getBooleanValue && new java.io.File(args(0).getString).exists)
-      return BehaviorSpaceExtension.nameError(I18N.gui.getN("tools.behaviorSpace.extension.fileExists",
-                                                            args(0).getString), context)
+      return BehaviorSpaceExtension.nameError(s"""File "${args(0).getString}" already exists.""", context)
 
     val out = new java.io.PrintWriter(args(0).getString)
 

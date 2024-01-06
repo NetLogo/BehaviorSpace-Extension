@@ -4,7 +4,6 @@ package org.nlogo.extensions.bspace
 
 import org.nlogo.api.{ Argument, Command, Context, DefaultClassManager, LabDefaultValues, LabProtocol,
                        LabRunOptions, PrimitiveManager, RefValueSet }
-import org.nlogo.core.I18N
 import org.nlogo.window.GUIWorkspace
 
 import javax.swing.JOptionPane
@@ -59,20 +58,26 @@ object BehaviorSpaceExtension {
   def validateForEditing(name: String, context: Context): Boolean = {
     experimentType(name, context) match {
       case ExperimentType.None =>
-        nameError(I18N.gui.getN("tools.behaviorSpace.extension.noExperiment", name), context)
+        nameError(s"No experiment exists with the name $name.", context)
         false
       case ExperimentType.GUI =>
-        nameError(I18N.gui.getN("tools.behaviorSpace.extension.guiExperiment", name), context)
+        nameError(s"Experiment $name is a GUI experiment, it cannot be edited.", context)
         false
       case ExperimentType.Code => true
     }
   }
 
   def nameError(message: String, context: Context) {
-    JOptionPane.showMessageDialog(context.workspace.asInstanceOf[GUIWorkspace].getFrame,
-                                  message,
-                                  I18N.gui.get("tools.behaviorSpace.invalid"),
-                                  JOptionPane.ERROR_MESSAGE)
+    if (context.workspace.isHeadless) {
+      println(message)
+    }
+
+    else {
+      JOptionPane.showMessageDialog(context.workspace.asInstanceOf[GUIWorkspace].getFrame,
+                                    message,
+                                    "Invalid",
+                                    JOptionPane.ERROR_MESSAGE)
+    }
   }
 
   def dataFromProtocol(protocol: LabProtocol): ExperimentData = {
