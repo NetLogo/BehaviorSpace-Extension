@@ -72,6 +72,12 @@ object RunExperiment extends Command {
     }
 
     javax.swing.SwingUtilities.invokeLater(() => {
+      if (BehaviorSpaceExtension.experimentStack.contains(protocol.name)) {
+        return BehaviorSpaceExtension.nameError("Cannot run an experiment recursively.", context)
+      }
+
+      BehaviorSpaceExtension.experimentStack += protocol.name
+
       if (context.workspace.isHeadless) {
         val out = new java.io.PrintWriter("bsext_temp.xml")
 
@@ -109,8 +115,11 @@ object RunExperiment extends Command {
             else
               BehaviorSpaceExtension.savedExperiments(protocol.name) = protocol
           }
+
           else if (protocol.runsCompleted != 0)
             BehaviorSpaceExtension.savedExperiments += ((protocol.name, protocol))
+
+          BehaviorSpaceExtension.experimentStack -= protocol.name
         })
       }
     })

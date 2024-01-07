@@ -8,7 +8,7 @@ import org.nlogo.window.GUIWorkspace
 
 import javax.swing.JOptionPane
 
-import scala.collection.mutable.Map
+import scala.collection.mutable.{ Map, Set }
 
 class ExperimentData {
   var name = ""
@@ -43,6 +43,7 @@ object ExperimentType extends Enumeration {
 object BehaviorSpaceExtension {
   val experiments = Map[String, ExperimentData]()
   val savedExperiments = Map[String, LabProtocol]()
+  val experimentStack = Set[String]()
 
   var currentExperiment = ""
 
