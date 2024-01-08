@@ -4,12 +4,11 @@ package org.nlogo.extensions.bspace
 
 import org.nlogo.api.{ Argument, Command, Context, DefaultClassManager, LabDefaultValues, LabProtocol,
                        LabRunOptions, PrimitiveManager, RefValueSet }
-import org.nlogo.core.I18N
 import org.nlogo.window.GUIWorkspace
 
 import javax.swing.JOptionPane
 
-import scala.collection.mutable.Map
+import scala.collection.mutable.{ Map, Set }
 
 class ExperimentData {
   var name = ""
@@ -27,7 +26,6 @@ class ExperimentData {
   var metrics: List[String] = Nil
   var constants: List[RefValueSet] = Nil
   var subExperiments: List[List[RefValueSet]] = Nil
-  var returnReporters = Map[String, String]()
   var threadCount = LabDefaultValues.getDefaultThreads
   var table = ""
   var spreadsheet = ""
@@ -45,6 +43,9 @@ object ExperimentType extends Enumeration {
 object BehaviorSpaceExtension {
   val experiments = Map[String, ExperimentData]()
   val savedExperiments = Map[String, LabProtocol]()
+  val experimentStack = Set[String]()
+
+  var currentExperiment = ""
 
   def experimentType(name: String, context: Context): ExperimentType.ExperimentType = {
     if (experiments.contains(name))
@@ -56,22 +57,28 @@ object BehaviorSpaceExtension {
   }
 
   def validateForEditing(name: String, context: Context): Boolean = {
-    return experimentType(name, context) match {
+    experimentType(name, context) match {
       case ExperimentType.None =>
-        nameError(I18N.gui.getN("tools.behaviorSpace.extension.noExperiment", name), context)
+        nameError(s"No experiment exists with the name $name.", context)
         false
       case ExperimentType.GUI =>
-        nameError(I18N.gui.getN("tools.behaviorSpace.extension.guiExperiment", name), context)
+        nameError(s"Experiment $name is a GUI experiment, it cannot be edited.", context)
         false
       case ExperimentType.Code => true
     }
   }
 
   def nameError(message: String, context: Context) {
-    JOptionPane.showMessageDialog(context.workspace.asInstanceOf[GUIWorkspace].getFrame,
-                                  message,
-                                  I18N.gui.get("tools.behaviorSpace.invalid"),
-                                  JOptionPane.ERROR_MESSAGE)
+    if (context.workspace.isHeadless) {
+      println(message)
+    }
+
+    else {
+      JOptionPane.showMessageDialog(context.workspace.asInstanceOf[GUIWorkspace].getFrame,
+                                    message,
+                                    "Invalid",
+                                    JOptionPane.ERROR_MESSAGE)
+    }
   }
 
   def dataFromProtocol(protocol: LabProtocol): ExperimentData = {
@@ -107,9 +114,13 @@ object BehaviorSpaceExtension {
     new LabProtocol(data.name, data.preExperimentCommands, data.setupCommands, data.goCommands, data.postRunCommands,
                     data.postExperimentCommands, data.repetitions, data.sequentialRunOrder, data.runMetricsEveryStep,
                     data.runMetricsCondition, data.timeLimit, data.exitCondition, data.metrics, data.constants,
-                    data.subExperiments, data.returnReporters.toMap,
-                    runOptions = new LabRunOptions(data.threadCount, data.table, data.spreadsheet, data.stats,
-                                                   data.lists, data.updateView, data.updatePlotsAndMonitors))
+                    data.subExperiments, runOptions = new LabRunOptions(data.threadCount, data.table, data.spreadsheet,
+                                                                        data.stats, data.lists, data.updateView,
+                                                                        data.updatePlotsAndMonitors))
+  }
+
+  def removeQuotes(string: String): String = {
+    if (string(0) == '"') string.substring(1, string.length - 1) else string
   }
 }
 
@@ -123,6 +134,7 @@ class BehaviorSpaceExtension extends DefaultClassManager {
     manager.addPrimitive("import-experiments", ImportExperiments)
     manager.addPrimitive("export-experiment", ExportExperiment)
     manager.addPrimitive("clear-experiments", ClearExperiments)
+    manager.addPrimitive("set-current-experiment", SetCurrentExperiment)
 
     manager.addPrimitive("set-pre-experiment-commands", SetPreExperimentCommands)
     manager.addPrimitive("set-setup-commands", SetSetupCommands)
@@ -137,7 +149,6 @@ class BehaviorSpaceExtension extends DefaultClassManager {
     manager.addPrimitive("set-stop-condition", SetStopCondition)
     manager.addPrimitive("set-metrics", SetMetrics)
     manager.addPrimitive("set-variables", SetVariables)
-    manager.addPrimitive("set-return-reporter", SetReturnReporter)
     manager.addPrimitive("set-parallel-runs", SetParallelRuns)
     manager.addPrimitive("set-table", SetTable)
     manager.addPrimitive("set-spreadsheet", SetSpreadsheet)
@@ -148,6 +159,7 @@ class BehaviorSpaceExtension extends DefaultClassManager {
 
     manager.addPrimitive("goto-behaviorspace-documentation", GotoBehaviorspaceDocumentation)
     manager.addPrimitive("goto-bspace-extension-documentation", GotoBspaceExtensionDocumentation)
+    manager.addPrimitive("get-current-experiment", GetCurrentExperiment)
     manager.addPrimitive("get-pre-experiment-commands", GetPreExperimentCommands)
     manager.addPrimitive("get-setup-commands", GetSetupCommands)
     manager.addPrimitive("get-go-commands", GetGoCommands)
@@ -170,9 +182,12 @@ class BehaviorSpaceExtension extends DefaultClassManager {
     manager.addPrimitive("get-update-plots", GetUpdatePlots)
     manager.addPrimitive("get-default-parallel-runs", GetDefaultParallelRuns)
     manager.addPrimitive("get-recommended-max-parallel-runs", GetRecommendedMaxParallelRuns)
-    manager.addPrimitive("get-return-value", GetReturnValue)
+
+    manager.addPrimitive("get-output-metric", GetOutputMetric)
 
     BehaviorSpaceExtension.experiments.clear()
     BehaviorSpaceExtension.savedExperiments.clear()
+
+    BehaviorSpaceExtension.currentExperiment = ""
   }
 }
