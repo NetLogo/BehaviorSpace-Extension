@@ -78,50 +78,48 @@ object RunExperiment extends Command {
 
       BehaviorSpaceExtension.experimentStack += protocol.name
 
-      if (context.workspace.isHeadless) {
-        val out = new java.io.PrintWriter("bsext_temp.xml")
+      val out = new java.io.PrintWriter("bsext_temp.xml")
 
-        out.write(LabSaver.save(List(protocol)))
+      out.write(LabSaver.save(List(protocol)))
 
-        out.close()
+      out.close()
 
-        val file = Some(new File("bsext_temp.xml"))
+      val file = Some(new File("bsext_temp.xml"))
 
-        val table =
-          if (protocol.runOptions.table.trim.isEmpty) None
-          else Some(new PrintWriter(new FileWriter(protocol.runOptions.table.trim)))
-        val spreadsheet =
-          if (protocol.runOptions.spreadsheet.trim.isEmpty) None
-          else Some(new PrintWriter(new FileWriter(protocol.runOptions.spreadsheet.trim)))
-        val stats =
-          if (protocol.runOptions.stats.trim.isEmpty) None
-          else Some((new PrintWriter(new FileWriter(protocol.runOptions.stats.trim)), protocol.runOptions.stats.trim))
-        val lists =
-          if (protocol.runOptions.lists.trim.isEmpty) None
-          else Some((new PrintWriter(new FileWriter(protocol.runOptions.lists.trim)), protocol.runOptions.lists.trim))
+      val table =
+        if (protocol.runOptions.table.trim.isEmpty) None
+        else Some(new PrintWriter(new FileWriter(protocol.runOptions.table.trim)))
+      val spreadsheet =
+        if (protocol.runOptions.spreadsheet.trim.isEmpty) None
+        else Some(new PrintWriter(new FileWriter(protocol.runOptions.spreadsheet.trim)))
+      val stats =
+        if (protocol.runOptions.stats.trim.isEmpty) None
+        else Some((new PrintWriter(new FileWriter(protocol.runOptions.stats.trim)), protocol.runOptions.stats.trim))
+      val lists =
+        if (protocol.runOptions.lists.trim.isEmpty) None
+        else Some((new PrintWriter(new FileWriter(protocol.runOptions.lists.trim)), protocol.runOptions.lists.trim))
 
-        Main.runExperiment(new Settings(context.workspace.getModelPath, None, file, table, spreadsheet, stats, lists,
-                                        None, protocol.runOptions.threadCount, false,
-                                        protocol.runOptions.updatePlotsAndMonitors))
+      Main.runExperiment(new Settings(context.workspace.getModelPath, None, file, table, spreadsheet, stats, lists,
+                                      None, protocol.runOptions.threadCount, false,
+                                      protocol.runOptions.updatePlotsAndMonitors))
 
-        file.get.delete()
-      }
+      file.get.delete()
 
-      else {
-        Supervisor.runFromExtension(protocol, context.workspace.asInstanceOf[AbstractWorkspace], (protocol) => {
-          if (BehaviorSpaceExtension.savedExperiments.contains(protocol.name)) {
-            if (protocol.runsCompleted == 0)
-              BehaviorSpaceExtension.savedExperiments -= protocol.name
-            else
-              BehaviorSpaceExtension.savedExperiments(protocol.name) = protocol
-          }
+      // gui version, doesn't work but might in the future so it's still here
 
-          else if (protocol.runsCompleted != 0)
-            BehaviorSpaceExtension.savedExperiments += ((protocol.name, protocol))
+      // Supervisor.runFromExtension(protocol, context.workspace.asInstanceOf[AbstractWorkspace], (protocol) => {
+      //   if (BehaviorSpaceExtension.savedExperiments.contains(protocol.name)) {
+      //     if (protocol.runsCompleted == 0)
+      //       BehaviorSpaceExtension.savedExperiments -= protocol.name
+      //     else
+      //       BehaviorSpaceExtension.savedExperiments(protocol.name) = protocol
+      //   }
 
-          BehaviorSpaceExtension.experimentStack -= protocol.name
-        })
-      }
+      //   else if (protocol.runsCompleted != 0)
+      //     BehaviorSpaceExtension.savedExperiments += ((protocol.name, protocol))
+
+      //   BehaviorSpaceExtension.experimentStack -= protocol.name
+      // })
     })
   }
 }
