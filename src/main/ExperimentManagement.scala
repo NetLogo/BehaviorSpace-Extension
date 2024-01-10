@@ -101,25 +101,22 @@ object RunExperiment extends Command {
 
       Main.runExperiment(new Settings(context.workspace.getModelPath, None, file, table, spreadsheet, stats, lists,
                                       None, protocol.runOptions.threadCount, false,
-                                      protocol.runOptions.updatePlotsAndMonitors))
+                                      protocol.runOptions.updatePlotsAndMonitors),
+                        () => {
+                          if (BehaviorSpaceExtension.savedExperiments.contains(protocol.name)) {
+                            if (protocol.runsCompleted == 0)
+                              BehaviorSpaceExtension.savedExperiments -= protocol.name
+                            else
+                              BehaviorSpaceExtension.savedExperiments(protocol.name) = protocol
+                          }
+
+                          else if (protocol.runsCompleted != 0)
+                            BehaviorSpaceExtension.savedExperiments += ((protocol.name, protocol))
+
+                          BehaviorSpaceExtension.experimentStack -= protocol.name
+                        })
 
       file.get.delete()
-
-      // gui version, doesn't work but might in the future so it's still here
-
-      // Supervisor.runFromExtension(protocol, context.workspace.asInstanceOf[AbstractWorkspace], (protocol) => {
-      //   if (BehaviorSpaceExtension.savedExperiments.contains(protocol.name)) {
-      //     if (protocol.runsCompleted == 0)
-      //       BehaviorSpaceExtension.savedExperiments -= protocol.name
-      //     else
-      //       BehaviorSpaceExtension.savedExperiments(protocol.name) = protocol
-      //   }
-
-      //   else if (protocol.runsCompleted != 0)
-      //     BehaviorSpaceExtension.savedExperiments += ((protocol.name, protocol))
-
-      //   BehaviorSpaceExtension.experimentStack -= protocol.name
-      // })
     })
   }
 }
