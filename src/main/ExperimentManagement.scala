@@ -59,6 +59,11 @@ object RunExperiment extends Command {
   }
 
   def perform(args: Array[Argument], context: Context) {
+    if (BehaviorSpaceExtension.currentExperiment.isEmpty)
+      return BehaviorSpaceExtension.nameError(
+        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        context)
+        
     val protocol = BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
         context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get
@@ -127,6 +132,11 @@ object RenameExperiment extends Command {
   }
 
   def perform(args: Array[Argument], context: Context) {
+    if (BehaviorSpaceExtension.currentExperiment.isEmpty)
+      return BehaviorSpaceExtension.nameError(
+        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        context)
+        
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
     if (BehaviorSpaceExtension.experimentType(args(0).getString, context) != ExperimentType.None)
       return BehaviorSpaceExtension.nameError(s"""No experiment exists with the name "${args(0).getString}".""", context)
@@ -155,7 +165,12 @@ object DuplicateExperiment extends Command {
   }
 
   def perform(args: Array[Argument], context: Context) {
-    if (BehaviorSpaceExtension.experimentType(args(0).getString, context) != ExperimentType.None)
+    if (BehaviorSpaceExtension.currentExperiment.isEmpty)
+      return BehaviorSpaceExtension.nameError(
+        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        context)
+        
+    if (BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) != ExperimentType.None)
       return BehaviorSpaceExtension.nameError(s"""No experiment exists with the name "${args(0).getString}".""", context)
     if (args(0).getString.isEmpty)
       return BehaviorSpaceExtension.nameError("Experiment name cannot be empty.", context)
@@ -209,6 +224,11 @@ object ExportExperiment extends Command {
   }
 
   def perform(args: Array[Argument], context: Context) {
+    if (BehaviorSpaceExtension.currentExperiment.isEmpty)
+      return BehaviorSpaceExtension.nameError(
+        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        context)
+        
     val protocol = BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
         context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get
@@ -248,6 +268,6 @@ object SetCurrentExperiment extends Command {
   }
 
   def perform(args: Array[Argument], context: Context) {
-    BehaviorSpaceExtension.currentExperiment = args(0).getString
+    BehaviorSpaceExtension.currentExperiment = args(0).getString.trim
   }
 }
