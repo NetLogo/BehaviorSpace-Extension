@@ -61,7 +61,7 @@ object RunExperiment extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.currentExperiment.isEmpty)
       return BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
         
     val protocol = BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
@@ -134,7 +134,7 @@ object RenameExperiment extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.currentExperiment.isEmpty)
       return BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
         
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
@@ -167,7 +167,7 @@ object DuplicateExperiment extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.currentExperiment.isEmpty)
       return BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
         
     if (BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) != ExperimentType.None)
@@ -226,7 +226,7 @@ object ExportExperiment extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.currentExperiment.isEmpty)
       return BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
         
     val protocol = BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {

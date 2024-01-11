@@ -45,7 +45,7 @@ object GetPreExperimentCommands extends Reporter {
   override def report(args: Array[Argument], context: Context): String = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
       BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
       return ""
     }
@@ -71,7 +71,7 @@ object GetSetupCommands extends Reporter {
   override def report(args: Array[Argument], context: Context): String = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
       BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
       return ""
     }
@@ -97,7 +97,7 @@ object GetGoCommands extends Reporter {
   override def report(args: Array[Argument], context: Context): String = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
       BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
       return ""
     }
@@ -123,7 +123,7 @@ object GetPostRunCommands extends Reporter {
   override def report(args: Array[Argument], context: Context): String = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
       BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
       return ""
     }
@@ -149,7 +149,7 @@ object GetPostExperimentCommands extends Reporter {
   override def report(args: Array[Argument], context: Context): String = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
       BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
       return ""
     }
@@ -175,7 +175,7 @@ object GetRepetitions extends Reporter {
   override def report(args: Array[Argument], context: Context): java.lang.Double = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
       BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
       return LabDefaultValues.getDefaultRepetitions
     }
@@ -201,7 +201,7 @@ object GetSequentialRunOrder extends Reporter {
   override def report(args: Array[Argument], context: Context): java.lang.Boolean = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
       BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
       return LabDefaultValues.getDefaultSequentialRunOrder
     }
@@ -227,7 +227,7 @@ object GetRunMetricsEveryStep extends Reporter {
   override def report(args: Array[Argument], context: Context): java.lang.Boolean = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
       BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
       return LabDefaultValues.getDefaultRunMetricsEveryStep
     }
@@ -253,7 +253,7 @@ object GetRunMetricsCondition extends Reporter {
   override def report(args: Array[Argument], context: Context): String = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
       BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
       return ""
     }
@@ -279,7 +279,7 @@ object GetTimeLimit extends Reporter {
   override def report(args: Array[Argument], context: Context): java.lang.Double = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
       BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
       return LabDefaultValues.getDefaultTimeLimit
     }
@@ -305,7 +305,7 @@ object GetStopCondition extends Reporter {
   override def report(args: Array[Argument], context: Context): String = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
       BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
       return ""
     }
@@ -331,7 +331,7 @@ object GetMetrics extends Reporter {
   override def report(args: Array[Argument], context: Context): List[String] = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
       BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
       return Nil
     }
@@ -357,7 +357,7 @@ object GetVariables extends Reporter {
   override def report(args: Array[Argument], context: Context): String = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
       BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
       return ""
     }
@@ -387,7 +387,7 @@ object GetParallelRuns extends Reporter {
   override def report(args: Array[Argument], context: Context): java.lang.Double = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
       BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
       return LabDefaultValues.getDefaultThreads
     }
@@ -413,7 +413,7 @@ object GetTable extends Reporter {
   override def report(args: Array[Argument], context: Context): String = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
       BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
       return ""
     }
@@ -439,7 +439,7 @@ object GetSpreadsheet extends Reporter {
   override def report(args: Array[Argument], context: Context): String = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
       BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
       return ""
     }
@@ -465,7 +465,7 @@ object GetStats extends Reporter {
   override def report(args: Array[Argument], context: Context): String = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
       BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
       return ""
     }
@@ -491,7 +491,7 @@ object GetLists extends Reporter {
   override def report(args: Array[Argument], context: Context): String = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
       BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
       return ""
     }
@@ -517,7 +517,7 @@ object GetUpdateView extends Reporter {
   override def report(args: Array[Argument], context: Context): java.lang.Boolean = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
       BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
       return LabDefaultValues.getDefaultUpdateView
     }
@@ -543,7 +543,7 @@ object GetUpdatePlots extends Reporter {
   override def report(args: Array[Argument], context: Context): java.lang.Boolean = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
       BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
       return LabDefaultValues.getDefaultUpdatePlotsAndMonitors
     }

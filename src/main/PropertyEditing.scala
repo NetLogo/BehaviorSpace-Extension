@@ -14,7 +14,7 @@ object SetPreExperimentCommands extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty)
       return BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
         
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
@@ -34,7 +34,7 @@ object SetSetupCommands extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty)
       return BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
         
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
@@ -54,7 +54,7 @@ object SetGoCommands extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty)
       return BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
         
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
@@ -74,7 +74,7 @@ object SetPostRunCommands extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty)
       return BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
         
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
@@ -94,7 +94,7 @@ object SetPostExperimentCommands extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty)
       return BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
         
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
@@ -114,7 +114,7 @@ object SetRepetitions extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty)
       return BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
         
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
@@ -134,7 +134,7 @@ object SetSequentialRunOrder extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty)
       return BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
         
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
@@ -154,7 +154,7 @@ object SetRunMetricsEveryStep extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty)
       return BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
         
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
@@ -174,7 +174,7 @@ object SetRunMetricsCondition extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty)
       return BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
         
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
@@ -194,7 +194,7 @@ object SetTimeLimit extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty)
       return BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
         
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
@@ -214,7 +214,7 @@ object SetStopCondition extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty)
       return BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
         
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
@@ -234,7 +234,7 @@ object SetMetrics extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty)
       return BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
         
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
@@ -254,7 +254,7 @@ object SetVariables extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty)
       return BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
         
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
@@ -283,7 +283,7 @@ object SetParallelRuns extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty)
       return BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
         
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
@@ -303,7 +303,7 @@ object SetTable extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty)
       return BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
         
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
@@ -323,7 +323,7 @@ object SetSpreadsheet extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty)
       return BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
         
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
@@ -343,7 +343,7 @@ object SetStats extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty)
       return BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
         
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
@@ -363,7 +363,7 @@ object SetLists extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty)
       return BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
         
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
@@ -383,7 +383,7 @@ object SetUpdateView extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty)
       return BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
         
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
@@ -403,7 +403,7 @@ object SetUpdatePlots extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty)
       return BehaviorSpaceExtension.nameError(
-        s"You must set a current working experiment before running bspace commands with no specified experiment name.",
+        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
         
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
