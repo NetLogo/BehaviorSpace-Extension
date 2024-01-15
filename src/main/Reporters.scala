@@ -335,7 +335,7 @@ object GetMetrics extends Reporter {
         context)
       return Nil
     }
-        
+
     return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
         context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.metrics
@@ -361,7 +361,7 @@ object GetVariables extends Reporter {
         context)
       return ""
     }
-        
+
     return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
         LabVariableParser.combineVariables(

@@ -4,7 +4,6 @@ package org.nlogo.extensions.bspace
 
 import org.nlogo.api.{ Argument, Command, Context, LabProtocol, LabVariableParser, RefValueSet }
 import org.nlogo.core.Syntax._
-import org.nlogo.window.GUIWorkspace
 
 object SetPreExperimentCommands extends Command {
   override def getSyntax = {
@@ -262,7 +261,7 @@ object SetVariables extends Command {
     LabVariableParser.parseVariables(args(0).getString,
                                      BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).repetitions,
                                      context.workspace.world,
-                                     context.workspace.asInstanceOf[GUIWorkspace]) match {
+                                     context.workspace.asInstanceOf[org.nlogo.workspace.AbstractWorkspace]) match {
       case (Some((constants: List[RefValueSet], subExperiments: List[List[RefValueSet]])), _) =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).constants = constants
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).subExperiments = subExperiments
