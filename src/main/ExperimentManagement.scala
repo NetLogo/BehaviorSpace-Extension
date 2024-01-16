@@ -83,14 +83,6 @@ object RunExperiment extends Command {
 
       BehaviorSpaceExtension.experimentStack += protocol.name
 
-      val out = new java.io.PrintWriter("bsext_temp.xml")
-
-      out.write(LabSaver.save(List(protocol)))
-
-      out.close()
-
-      val file = Some(new File("bsext_temp.xml"))
-
       val table =
         if (protocol.runOptions.table.trim.isEmpty) None
         else Some(new PrintWriter(new FileWriter(protocol.runOptions.table.trim)))
@@ -104,24 +96,22 @@ object RunExperiment extends Command {
         if (protocol.runOptions.lists.trim.isEmpty) None
         else Some((new PrintWriter(new FileWriter(protocol.runOptions.lists.trim)), protocol.runOptions.lists.trim))
 
-      Main.runExperiment(new Settings(context.workspace.getModelPath, None, file, table, spreadsheet, stats, lists,
-                                      None, protocol.runOptions.threadCount, false,
-                                      protocol.runOptions.updatePlotsAndMonitors),
-                        () => {
-                          if (BehaviorSpaceExtension.savedExperiments.contains(protocol.name)) {
-                            if (protocol.runsCompleted == 0)
-                              BehaviorSpaceExtension.savedExperiments -= protocol.name
-                            else
-                              BehaviorSpaceExtension.savedExperiments(protocol.name) = protocol
-                          }
+      Main.runExperimentWithProtocol(new Settings(context.workspace.getModelPath, None, None, table, spreadsheet,
+                                                  stats, lists, None, protocol.runOptions.threadCount, false,
+                                                  protocol.runOptions.updatePlotsAndMonitors), protocol,
+                                    () => {
+                                      if (BehaviorSpaceExtension.savedExperiments.contains(protocol.name)) {
+                                        if (protocol.runsCompleted == 0)
+                                          BehaviorSpaceExtension.savedExperiments -= protocol.name
+                                        else
+                                          BehaviorSpaceExtension.savedExperiments(protocol.name) = protocol
+                                      }
 
-                          else if (protocol.runsCompleted != 0)
-                            BehaviorSpaceExtension.savedExperiments += ((protocol.name, protocol))
+                                      else if (protocol.runsCompleted != 0)
+                                        BehaviorSpaceExtension.savedExperiments += ((protocol.name, protocol))
 
-                          BehaviorSpaceExtension.experimentStack -= protocol.name
-                        })
-
-      file.get.delete()
+                                      BehaviorSpaceExtension.experimentStack -= protocol.name
+                                    })
     })
   }
 }
