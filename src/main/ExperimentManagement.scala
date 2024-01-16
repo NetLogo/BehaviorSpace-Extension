@@ -78,43 +78,41 @@ object RunExperiment extends Command {
         return BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
     }
 
-    javax.swing.SwingUtilities.invokeLater(() => {
-      if (BehaviorSpaceExtension.experimentStack.contains(protocol.name)) {
-        return BehaviorSpaceExtension.nameError(context, "recursive")
-      }
+    if (BehaviorSpaceExtension.experimentStack.contains(protocol.name)) {
+      return BehaviorSpaceExtension.nameError(context, "recursive")
+    }
 
-      BehaviorSpaceExtension.experimentStack += protocol.name
+    BehaviorSpaceExtension.experimentStack += protocol.name
 
-      val table =
-        if (protocol.runOptions.table.trim.isEmpty) None
-        else Some(new PrintWriter(new FileWriter(protocol.runOptions.table.trim)))
-      val spreadsheet =
-        if (protocol.runOptions.spreadsheet.trim.isEmpty) None
-        else Some(new PrintWriter(new FileWriter(protocol.runOptions.spreadsheet.trim)))
-      val stats =
-        if (protocol.runOptions.stats.trim.isEmpty) None
-        else Some((new PrintWriter(new FileWriter(protocol.runOptions.stats.trim)), protocol.runOptions.stats.trim))
-      val lists =
-        if (protocol.runOptions.lists.trim.isEmpty) None
-        else Some((new PrintWriter(new FileWriter(protocol.runOptions.lists.trim)), protocol.runOptions.lists.trim))
+    val table =
+      if (protocol.runOptions.table.trim.isEmpty) None
+      else Some(new PrintWriter(new FileWriter(protocol.runOptions.table.trim)))
+    val spreadsheet =
+      if (protocol.runOptions.spreadsheet.trim.isEmpty) None
+      else Some(new PrintWriter(new FileWriter(protocol.runOptions.spreadsheet.trim)))
+    val stats =
+      if (protocol.runOptions.stats.trim.isEmpty) None
+      else Some((new PrintWriter(new FileWriter(protocol.runOptions.stats.trim)), protocol.runOptions.stats.trim))
+    val lists =
+      if (protocol.runOptions.lists.trim.isEmpty) None
+      else Some((new PrintWriter(new FileWriter(protocol.runOptions.lists.trim)), protocol.runOptions.lists.trim))
 
-      Main.runExperimentWithProtocol(new Settings(context.workspace.getModelPath, None, None, table, spreadsheet,
-                                                  stats, lists, None, protocol.runOptions.threadCount, false,
-                                                  protocol.runOptions.updatePlotsAndMonitors), protocol,
-                                    () => {
-                                      if (BehaviorSpaceExtension.savedExperiments.contains(protocol.name)) {
-                                        if (protocol.runsCompleted == 0)
-                                          BehaviorSpaceExtension.savedExperiments -= protocol.name
-                                        else
-                                          BehaviorSpaceExtension.savedExperiments(protocol.name) = protocol
-                                      }
+    Main.runExperimentWithProtocol(new Settings(context.workspace.getModelPath, None, None, table, spreadsheet,
+                                                stats, lists, None, protocol.runOptions.threadCount, false,
+                                                protocol.runOptions.updatePlotsAndMonitors), protocol,
+                                  () => {
+                                    if (BehaviorSpaceExtension.savedExperiments.contains(protocol.name)) {
+                                      if (protocol.runsCompleted == 0)
+                                        BehaviorSpaceExtension.savedExperiments -= protocol.name
+                                      else
+                                        BehaviorSpaceExtension.savedExperiments(protocol.name) = protocol
+                                    }
 
-                                      else if (protocol.runsCompleted != 0)
-                                        BehaviorSpaceExtension.savedExperiments += ((protocol.name, protocol))
+                                    else if (protocol.runsCompleted != 0)
+                                      BehaviorSpaceExtension.savedExperiments += ((protocol.name, protocol))
 
-                                      BehaviorSpaceExtension.experimentStack -= protocol.name
-                                    })
-    })
+                                    BehaviorSpaceExtension.experimentStack -= protocol.name
+                                  })
   }
 }
 
