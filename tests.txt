@@ -49,3 +49,18 @@ PropertiesRoundTrip
   bspace:get-lists => "/Users/johndoe/lists.csv"
   bspace:get-update-view => false
   bspace:get-update-plots => false
+
+Errors
+  extensions [bspace]
+  O> bspace:create-experiment "" true => ERROR Experiment name cannot be empty.
+  O> bspace:create-experiment "test" true
+  O> bspace:create-experiment "test" true
+  O> bspace:create-experiment "test" false => ERROR An experiment already exists
+  O> bspace:set-current-experiment ""
+  O> bspace:set-time-limit 10 => ERROR You must set a current working experiment
+  O> bspace:set-current-experiment "test2"
+  O> bspace:set-time-limit 10 => ERROR No experiment exists
+  O> bspace:create-experiment "test" true
+  O> bspace:set-current-experiment "test"
+  O> bspace:set-pre-experiment-commands "bspace:run-experiment \"test\""
+  O> bspace:run-experiment => ERROR Cannot run an experiment recursively.

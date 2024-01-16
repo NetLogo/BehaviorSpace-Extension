@@ -44,7 +44,7 @@ object GetPreExperimentCommands extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): String = {
-    if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
+    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
@@ -67,7 +67,7 @@ object GetSetupCommands extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): String = {
-    if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
+    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
@@ -90,7 +90,7 @@ object GetGoCommands extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): String = {
-    if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
+    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
@@ -113,7 +113,7 @@ object GetPostRunCommands extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): String = {
-    if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
+    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
@@ -136,7 +136,7 @@ object GetPostExperimentCommands extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): String = {
-    if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
+    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
@@ -159,7 +159,7 @@ object GetRepetitions extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): java.lang.Double = {
-    if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
+    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return LabDefaultValues.getDefaultRepetitions
     }
@@ -182,7 +182,7 @@ object GetSequentialRunOrder extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): java.lang.Boolean = {
-    if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
+    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return LabDefaultValues.getDefaultSequentialRunOrder
     }
@@ -205,7 +205,7 @@ object GetRunMetricsEveryStep extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): java.lang.Boolean = {
-    if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
+    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return LabDefaultValues.getDefaultRunMetricsEveryStep
     }
@@ -228,7 +228,7 @@ object GetRunMetricsCondition extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): String = {
-    if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
+    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
@@ -251,7 +251,7 @@ object GetTimeLimit extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): java.lang.Double = {
-    if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
+    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return LabDefaultValues.getDefaultTimeLimit
     }
@@ -274,7 +274,7 @@ object GetStopCondition extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): String = {
-    if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
+    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
@@ -297,7 +297,7 @@ object GetMetrics extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): LogoList = {
-    if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
+    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return LogoList()
     }
@@ -322,7 +322,7 @@ object GetVariables extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): String = {
-    if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
+    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
@@ -349,7 +349,7 @@ object GetParallelRuns extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): java.lang.Double = {
-    if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
+    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return LabDefaultValues.getDefaultThreads
     }
@@ -372,7 +372,7 @@ object GetTable extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): String = {
-    if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
+    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
@@ -395,7 +395,7 @@ object GetSpreadsheet extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): String = {
-    if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
+    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
@@ -418,7 +418,7 @@ object GetStats extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): String = {
-    if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
+    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
@@ -441,7 +441,7 @@ object GetLists extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): String = {
-    if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
+    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
@@ -464,7 +464,7 @@ object GetUpdateView extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): java.lang.Boolean = {
-    if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
+    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return LabDefaultValues.getDefaultUpdateView
     }
@@ -487,7 +487,7 @@ object GetUpdatePlots extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): java.lang.Boolean = {
-    if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
+    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return LabDefaultValues.getDefaultUpdatePlotsAndMonitors
     }

@@ -12,7 +12,7 @@ object GetOutputMetric extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): LogoList = {
-    val file = scala.io.Source.fromFile(args(0).getString)
+    val file = scala.io.Source.fromFile(args(0).getString.trim)
 
     val lines = file.getLines.dropWhile(x => !x.split(",")(0).contains("final value") &&
                                              !x.split(",")(0).contains("all run data"))

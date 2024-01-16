@@ -19,21 +19,23 @@ object CreateExperiment extends Command {
   }
 
   def perform(args: Array[Argument], context: Context) {
+    val name = args(0).getString.trim
+
     if (!args(1).getBooleanValue &&
-        BehaviorSpaceExtension.experimentType(args(0).getString, context) != ExperimentType.None)
+        BehaviorSpaceExtension.experimentType(name, context) != ExperimentType.None)
       return BehaviorSpaceExtension.nameError(context, "alreadyExists", args(0).getString)
-    if (args(0).getString.isEmpty)
+    if (name.isEmpty)
       return BehaviorSpaceExtension.nameError(context, "emptyName")
 
-    if (BehaviorSpaceExtension.experiments.contains(args(0).getString))
-      BehaviorSpaceExtension.experiments(args(0).getString) = new ExperimentData()
+    if (BehaviorSpaceExtension.experiments.contains(name))
+      BehaviorSpaceExtension.experiments(name) = new ExperimentData()
     else
-      BehaviorSpaceExtension.experiments += ((args(0).getString, new ExperimentData()))
+      BehaviorSpaceExtension.experiments += ((name, new ExperimentData()))
 
-    BehaviorSpaceExtension.experiments(args(0).getString).name = args(0).getString
+    BehaviorSpaceExtension.experiments(name).name = name
 
-    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
-      BehaviorSpaceExtension.savedExperiments -= args(0).getString
+    if (BehaviorSpaceExtension.savedExperiments.contains(name))
+      BehaviorSpaceExtension.savedExperiments -= name
   }
 }
 
@@ -43,12 +45,14 @@ object DeleteExperiment extends Command {
   }
 
   def perform(args: Array[Argument], context: Context) {
-    if (!BehaviorSpaceExtension.validateForEditing(args(0).getString, context)) return
+    val name = args(0).getString.trim
 
-    BehaviorSpaceExtension.experiments -= args(0).getString
+    if (!BehaviorSpaceExtension.validateForEditing(name, context)) return
+
+    BehaviorSpaceExtension.experiments -= name
     
-    if (BehaviorSpaceExtension.savedExperiments.contains(args(0).getString))
-      BehaviorSpaceExtension.savedExperiments -= args(0).getString
+    if (BehaviorSpaceExtension.savedExperiments.contains(name))
+      BehaviorSpaceExtension.savedExperiments -= name
   }
 }
 
@@ -122,25 +126,27 @@ object RenameExperiment extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.currentExperiment.isEmpty)
       return BehaviorSpaceExtension.nameError(context, "noCurrent")
+
+    val name = args(0).getString.trim
         
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
-    if (BehaviorSpaceExtension.experimentType(args(0).getString, context) != ExperimentType.None)
-      return BehaviorSpaceExtension.nameError(context, "noExperiment", args(0).getString)
-    if (args(0).getString.isEmpty)
+    if (BehaviorSpaceExtension.experimentType(name, context) != ExperimentType.None)
+      return BehaviorSpaceExtension.nameError(context, "noExperiment", name)
+    if (name.isEmpty)
       return BehaviorSpaceExtension.nameError(context, "emptyName")
 
     val data = BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment)
 
-    data.name = args(0).getString
+    data.name = name
 
     BehaviorSpaceExtension.experiments -= BehaviorSpaceExtension.currentExperiment
-    BehaviorSpaceExtension.experiments += ((args(0).getString, data))
+    BehaviorSpaceExtension.experiments += ((name, data))
 
     if (BehaviorSpaceExtension.savedExperiments.contains(BehaviorSpaceExtension.currentExperiment)) {
       val protocol = BehaviorSpaceExtension.savedExperiments(BehaviorSpaceExtension.currentExperiment)
 
       BehaviorSpaceExtension.savedExperiments -= BehaviorSpaceExtension.currentExperiment
-      BehaviorSpaceExtension.savedExperiments += ((args(0).getString, protocol.copy(name = args(0).getString)))
+      BehaviorSpaceExtension.savedExperiments += ((name, protocol.copy(name = name)))
     }
   }
 }
@@ -153,9 +159,12 @@ object DuplicateExperiment extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.currentExperiment.isEmpty)
       return BehaviorSpaceExtension.nameError(context, "noCurrent")
+
+    val name = args(0).getString.trim
+
     if (BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) !=ExperimentType.None)
-      return BehaviorSpaceExtension.nameError(context, "noExperiment", args(0).getString)
-    if (args(0).getString.isEmpty)
+      return BehaviorSpaceExtension.nameError(context, "noExperiment", name)
+    if (name.isEmpty)
       return BehaviorSpaceExtension.nameError(context, "emptyName")
 
     val data = BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
@@ -166,9 +175,9 @@ object DuplicateExperiment extends Command {
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment)
     }
 
-    data.name = args(0).getString
+    data.name = name
 
-    BehaviorSpaceExtension.experiments += ((args(0).getString, data))
+    BehaviorSpaceExtension.experiments += ((name, data))
   }
 }
 
@@ -178,9 +187,11 @@ object ImportExperiments extends Command {
   }
 
   def perform(args: Array[Argument], context: Context) {
+    val path = args(0).getString.trim
+
     try {
       for (protocol <- new LabLoader(context.workspace.asInstanceOf[AbstractWorkspace].compiler.utilities)
-                                    (scala.io.Source.fromFile(args(0).getString).mkString, true,
+                                    (scala.io.Source.fromFile(path).mkString, true,
                                      scala.collection.mutable.Set[String]()))
       {
         if (BehaviorSpaceExtension.experimentType(protocol.name, context) != ExperimentType.None)
@@ -190,7 +201,7 @@ object ImportExperiments extends Command {
       }
     } catch {
       case e: org.xml.sax.SAXParseException =>
-        BehaviorSpaceExtension.nameError(context, "invalidFormat", args(0).getString)
+        BehaviorSpaceExtension.nameError(context, "invalidFormat", path)
     }
   }
 }
@@ -203,6 +214,8 @@ object ExportExperiment extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.currentExperiment.isEmpty)
       return BehaviorSpaceExtension.nameError(context, "noCurrent")
+
+    val path = args(0).getString.trim
         
     val protocol = BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
@@ -213,10 +226,10 @@ object ExportExperiment extends Command {
         return BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
     }
 
-    if (!args(1).getBooleanValue && new java.io.File(args(0).getString).exists)
-      return BehaviorSpaceExtension.nameError(context, "fileExists", args(0).getString)
+    if (!args(1).getBooleanValue && new java.io.File(path).exists)
+      return BehaviorSpaceExtension.nameError(context, "fileExists", path)
 
-    val out = new java.io.PrintWriter(args(0).getString)
+    val out = new java.io.PrintWriter(path)
 
     out.write(s"${LabLoader.XMLVER}\n${LabLoader.DOCTYPE}\n")
     out.write(LabSaver.save(List(protocol)))

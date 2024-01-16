@@ -84,7 +84,7 @@ object BehaviorSpaceExtension {
 
   def nameError(context: Context, message: String, keys: String*) {
     if (context.workspace.isHeadless) {
-      println(replaceErrorString(message, keys))
+      throw new RuntimeException(replaceErrorString(message, keys))
     }
 
     else {
@@ -100,7 +100,7 @@ object BehaviorSpaceExtension {
       if (errors.contains(message)) errors(message)
       else message
 
-    for (i <- 0 to keys.length) {
+    for (i <- 0 until keys.length) {
       error = error.replace("$" + i, keys(i))
     }
 
