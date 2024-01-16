@@ -3,6 +3,7 @@
 package org.nlogo.extensions.bspace
 
 import org.nlogo.api.{ Argument, Command, Context, LabDefaultValues, LabVariableParser, Reporter }
+import org.nlogo.core.LogoList
 import org.nlogo.core.Syntax._
 import org.nlogo.swing.BrowserLauncher
 import org.nlogo.window.GUIWorkspace
@@ -328,15 +329,15 @@ object GetMetrics extends Reporter {
     reporterSyntax(ret = ListType | StringType)
   }
 
-  override def report(args: Array[Argument], context: Context): List[String] = {
+  override def report(args: Array[Argument], context: Context): LogoList = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
       BehaviorSpaceExtension.nameError(
         "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
         context)
-      return Nil
+      return LogoList()
     }
 
-    return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
+    val list = BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
         context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.metrics
       case ExperimentType.Code =>
@@ -346,6 +347,8 @@ object GetMetrics extends Reporter {
           s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
         Nil
     }
+
+    return LogoList.fromList(list)
   }
 }
 
