@@ -21,10 +21,9 @@ object CreateExperiment extends Command {
   def perform(args: Array[Argument], context: Context) {
     if (!args(1).getBooleanValue &&
         BehaviorSpaceExtension.experimentType(args(0).getString, context) != ExperimentType.None)
-      return BehaviorSpaceExtension.nameError(s"""An experiment already exists with the name "${args(0).getString}".""",
-                                              context)
+      return BehaviorSpaceExtension.nameError(context, "alreadyExists", args(0).getString)
     if (args(0).getString.isEmpty)
-      return BehaviorSpaceExtension.nameError("Experiment name cannot be empty.", context)
+      return BehaviorSpaceExtension.nameError(context, "emptyName")
 
     if (BehaviorSpaceExtension.experiments.contains(args(0).getString))
       BehaviorSpaceExtension.experiments(args(0).getString) = new ExperimentData()
@@ -60,9 +59,7 @@ object RunExperiment extends Command {
 
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.currentExperiment.isEmpty)
-      return BehaviorSpaceExtension.nameError(
-        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
-        context)
+      return BehaviorSpaceExtension.nameError(context, "noCurrent")
         
     val protocol = BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
@@ -71,14 +68,15 @@ object RunExperiment extends Command {
         if (BehaviorSpaceExtension.savedExperiments.contains(BehaviorSpaceExtension.currentExperiment))
           BehaviorSpaceExtension.savedExperiments(BehaviorSpaceExtension.currentExperiment)
         else
-          BehaviorSpaceExtension.protocolFromData(BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment))
-      case _ => return BehaviorSpaceExtension.nameError(
-        s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
+          BehaviorSpaceExtension.protocolFromData(
+            BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment))
+      case _ =>
+        return BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
     }
 
     javax.swing.SwingUtilities.invokeLater(() => {
       if (BehaviorSpaceExtension.experimentStack.contains(protocol.name)) {
-        return BehaviorSpaceExtension.nameError("Cannot run an experiment recursively.", context)
+        return BehaviorSpaceExtension.nameError(context, "recursive")
       }
 
       BehaviorSpaceExtension.experimentStack += protocol.name
@@ -123,15 +121,13 @@ object RenameExperiment extends Command {
 
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.currentExperiment.isEmpty)
-      return BehaviorSpaceExtension.nameError(
-        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
-        context)
+      return BehaviorSpaceExtension.nameError(context, "noCurrent")
         
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
     if (BehaviorSpaceExtension.experimentType(args(0).getString, context) != ExperimentType.None)
-      return BehaviorSpaceExtension.nameError(s"""No experiment exists with the name "${args(0).getString}".""", context)
+      return BehaviorSpaceExtension.nameError(context, "noExperiment", args(0).getString)
     if (args(0).getString.isEmpty)
-      return BehaviorSpaceExtension.nameError("Experiment name cannot be empty.", context)
+      return BehaviorSpaceExtension.nameError(context, "emptyName")
 
     val data = BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment)
 
@@ -156,14 +152,11 @@ object DuplicateExperiment extends Command {
 
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.currentExperiment.isEmpty)
-      return BehaviorSpaceExtension.nameError(
-        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
-        context)
-        
-    if (BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) != ExperimentType.None)
-      return BehaviorSpaceExtension.nameError(s"""No experiment exists with the name "${args(0).getString}".""", context)
+      return BehaviorSpaceExtension.nameError(context, "noCurrent")
+    if (BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) !=ExperimentType.None)
+      return BehaviorSpaceExtension.nameError(context, "noExperiment", args(0).getString)
     if (args(0).getString.isEmpty)
-      return BehaviorSpaceExtension.nameError("Experiment name cannot be empty.", context)
+      return BehaviorSpaceExtension.nameError(context, "emptyName")
 
     val data = BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
@@ -191,19 +184,13 @@ object ImportExperiments extends Command {
                                      scala.collection.mutable.Set[String]()))
       {
         if (BehaviorSpaceExtension.experimentType(protocol.name, context) != ExperimentType.None)
-          BehaviorSpaceExtension.nameError(s"""No experiment exists with the name "${protocol.name}".""", context)
+          BehaviorSpaceExtension.nameError(context, "noExperiment", protocol.name)
         else
           BehaviorSpaceExtension.experiments += ((protocol.name, BehaviorSpaceExtension.dataFromProtocol(protocol)))
       }
     } catch {
-      case e: org.xml.sax.SAXParseException => {
-        if (!context.workspace.isHeadless) {
-          javax.swing.JOptionPane.showMessageDialog(context.workspace.asInstanceOf[GUIWorkspace].getFrame,
-                                                    s"""Invalid format in "${args(0).getString}".""",
-                                                    "Invalid",
-                                                    javax.swing.JOptionPane.ERROR_MESSAGE)
-        }
-      }
+      case e: org.xml.sax.SAXParseException =>
+        BehaviorSpaceExtension.nameError(context, "invalidFormat", args(0).getString)
     }
   }
 }
@@ -215,9 +202,7 @@ object ExportExperiment extends Command {
 
   def perform(args: Array[Argument], context: Context) {
     if (BehaviorSpaceExtension.currentExperiment.isEmpty)
-      return BehaviorSpaceExtension.nameError(
-        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
-        context)
+      return BehaviorSpaceExtension.nameError(context, "noCurrent")
         
     val protocol = BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
@@ -225,12 +210,11 @@ object ExportExperiment extends Command {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.protocolFromData(BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment))
       case _ =>
-        return BehaviorSpaceExtension.nameError(
-          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}"""", context)
+        return BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
     }
 
     if (!args(1).getBooleanValue && new java.io.File(args(0).getString).exists)
-      return BehaviorSpaceExtension.nameError(s"""File "${args(0).getString}" already exists.""", context)
+      return BehaviorSpaceExtension.nameError(context, "fileExists", args(0).getString)
 
     val out = new java.io.PrintWriter(args(0).getString)
 

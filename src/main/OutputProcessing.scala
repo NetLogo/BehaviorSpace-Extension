@@ -20,27 +20,19 @@ object GetOutputMetric extends Reporter {
     val runs = headers.count(BehaviorSpaceExtension.removeQuotes(_) == "[step]")
     val index = headers.indexWhere(BehaviorSpaceExtension.removeQuotes(_) == args(1).getString)
 
-    var result = Iterator[String]()
+    var result = List[String]()
 
-    if (index < 0) {
-      BehaviorSpaceExtension.nameError(s"""Metric "${args(1).getString}" does not exist in the specified output file.""",
-                                       context)
-    }
-
-    else if (args(2).getIntValue <= 0 || args(2).getIntValue > runs) {
-      BehaviorSpaceExtension.nameError(
-        s"""Run "${args(2).getIntValue.toString}" does not exist in the specified output file.""", context)
-    }
-
+    if (index < 0)
+      BehaviorSpaceExtension.nameError(context, "noMetric", args(1).getString)
+    else if (args(2).getIntValue <= 0 || args(2).getIntValue > runs)
+      BehaviorSpaceExtension.nameError(context, "noRun", args(2).getIntValue.toString)
     else {
       result = lines.map(x => BehaviorSpaceExtension.removeQuotes(x.split(",")((headers.length - 1) / runs *
-                              (args(2).getIntValue - 1) + index)))
+                              (args(2).getIntValue - 1) + index))).toList
     }
-
-    val logo = LogoList.fromIterator(result)
 
     file.close
 
-    return logo
+    return LogoList.fromList(result)
   }
 }

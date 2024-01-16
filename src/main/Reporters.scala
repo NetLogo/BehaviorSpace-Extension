@@ -45,9 +45,7 @@ object GetPreExperimentCommands extends Reporter {
 
   override def report(args: Array[Argument], context: Context): String = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
-      BehaviorSpaceExtension.nameError(
-        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
-        context)
+      BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
         
@@ -57,8 +55,7 @@ object GetPreExperimentCommands extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).preExperimentCommands
       case _ =>
-        BehaviorSpaceExtension.nameError(
-          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
+        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
         ""
     }
   }
@@ -71,9 +68,7 @@ object GetSetupCommands extends Reporter {
 
   override def report(args: Array[Argument], context: Context): String = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
-      BehaviorSpaceExtension.nameError(
-        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
-        context)
+      BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
         
@@ -83,8 +78,7 @@ object GetSetupCommands extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).setupCommands
       case _ =>
-        BehaviorSpaceExtension.nameError(
-          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
+        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
         ""
     }
   }
@@ -97,9 +91,7 @@ object GetGoCommands extends Reporter {
 
   override def report(args: Array[Argument], context: Context): String = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
-      BehaviorSpaceExtension.nameError(
-        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
-        context)
+      BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
         
@@ -109,8 +101,7 @@ object GetGoCommands extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).goCommands
       case _ =>
-        BehaviorSpaceExtension.nameError(
-          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
+        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
         ""
     }
   }
@@ -123,9 +114,7 @@ object GetPostRunCommands extends Reporter {
 
   override def report(args: Array[Argument], context: Context): String = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
-      BehaviorSpaceExtension.nameError(
-        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
-        context)
+      BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
         
@@ -135,8 +124,7 @@ object GetPostRunCommands extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).postRunCommands
       case _ =>
-        BehaviorSpaceExtension.nameError(
-          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
+        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
         ""
     }
   }
@@ -149,9 +137,7 @@ object GetPostExperimentCommands extends Reporter {
 
   override def report(args: Array[Argument], context: Context): String = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
-      BehaviorSpaceExtension.nameError(
-        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
-        context)
+      BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
         
@@ -161,8 +147,7 @@ object GetPostExperimentCommands extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).postExperimentCommands
       case _ =>
-        BehaviorSpaceExtension.nameError(
-          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
+        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
         ""
     }
   }
@@ -175,9 +160,7 @@ object GetRepetitions extends Reporter {
 
   override def report(args: Array[Argument], context: Context): java.lang.Double = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
-      BehaviorSpaceExtension.nameError(
-        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
-        context)
+      BehaviorSpaceExtension.nameError(context, "noCurrent")
       return LabDefaultValues.getDefaultRepetitions
     }
         
@@ -187,8 +170,7 @@ object GetRepetitions extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).repetitions
       case _ =>
-        BehaviorSpaceExtension.nameError(
-          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
+        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
         LabDefaultValues.getDefaultRepetitions
     }
   }
@@ -201,9 +183,7 @@ object GetSequentialRunOrder extends Reporter {
 
   override def report(args: Array[Argument], context: Context): java.lang.Boolean = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
-      BehaviorSpaceExtension.nameError(
-        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
-        context)
+      BehaviorSpaceExtension.nameError(context, "noCurrent")
       return LabDefaultValues.getDefaultSequentialRunOrder
     }
         
@@ -213,8 +193,7 @@ object GetSequentialRunOrder extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).sequentialRunOrder
       case _ =>
-        BehaviorSpaceExtension.nameError(
-          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
+        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
         LabDefaultValues.getDefaultSequentialRunOrder
     }
   }
@@ -227,9 +206,7 @@ object GetRunMetricsEveryStep extends Reporter {
 
   override def report(args: Array[Argument], context: Context): java.lang.Boolean = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
-      BehaviorSpaceExtension.nameError(
-        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
-        context)
+      BehaviorSpaceExtension.nameError(context, "noCurrent")
       return LabDefaultValues.getDefaultRunMetricsEveryStep
     }
         
@@ -239,8 +216,7 @@ object GetRunMetricsEveryStep extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).runMetricsEveryStep
       case _ =>
-        BehaviorSpaceExtension.nameError(
-          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
+        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
         LabDefaultValues.getDefaultRunMetricsEveryStep
     }
   }
@@ -253,9 +229,7 @@ object GetRunMetricsCondition extends Reporter {
 
   override def report(args: Array[Argument], context: Context): String = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
-      BehaviorSpaceExtension.nameError(
-        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
-        context)
+      BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
         
@@ -265,8 +239,7 @@ object GetRunMetricsCondition extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).runMetricsCondition
       case _ =>
-        BehaviorSpaceExtension.nameError(
-          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
+        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
         ""
     }
   }
@@ -279,9 +252,7 @@ object GetTimeLimit extends Reporter {
 
   override def report(args: Array[Argument], context: Context): java.lang.Double = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
-      BehaviorSpaceExtension.nameError(
-        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
-        context)
+      BehaviorSpaceExtension.nameError(context, "noCurrent")
       return LabDefaultValues.getDefaultTimeLimit
     }
         
@@ -291,8 +262,7 @@ object GetTimeLimit extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).timeLimit
       case _ =>
-        BehaviorSpaceExtension.nameError(
-          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
+        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
         LabDefaultValues.getDefaultTimeLimit
     }
   }
@@ -305,9 +275,7 @@ object GetStopCondition extends Reporter {
 
   override def report(args: Array[Argument], context: Context): String = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
-      BehaviorSpaceExtension.nameError(
-        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
-        context)
+      BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
         
@@ -317,8 +285,7 @@ object GetStopCondition extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).exitCondition
       case _ =>
-        BehaviorSpaceExtension.nameError(
-          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
+        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
         ""
     }
   }
@@ -331,9 +298,7 @@ object GetMetrics extends Reporter {
 
   override def report(args: Array[Argument], context: Context): LogoList = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
-      BehaviorSpaceExtension.nameError(
-        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
-        context)
+      BehaviorSpaceExtension.nameError(context, "noCurrent")
       return LogoList()
     }
 
@@ -343,8 +308,7 @@ object GetMetrics extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).metrics
       case _ =>
-        BehaviorSpaceExtension.nameError(
-          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
+        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
         Nil
     }
 
@@ -359,9 +323,7 @@ object GetVariables extends Reporter {
 
   override def report(args: Array[Argument], context: Context): String = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
-      BehaviorSpaceExtension.nameError(
-        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
-        context)
+      BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
 
@@ -375,8 +337,7 @@ object GetVariables extends Reporter {
           BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).constants,
           BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).subExperiments)
       case _ =>
-        BehaviorSpaceExtension.nameError(
-          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
+        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
         ""
     }
   }
@@ -389,9 +350,7 @@ object GetParallelRuns extends Reporter {
 
   override def report(args: Array[Argument], context: Context): java.lang.Double = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
-      BehaviorSpaceExtension.nameError(
-        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
-        context)
+      BehaviorSpaceExtension.nameError(context, "noCurrent")
       return LabDefaultValues.getDefaultThreads
     }
         
@@ -401,8 +360,7 @@ object GetParallelRuns extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).threadCount
       case _ =>
-        BehaviorSpaceExtension.nameError(
-          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
+        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
         LabDefaultValues.getDefaultThreads
     }
   }
@@ -415,9 +373,7 @@ object GetTable extends Reporter {
 
   override def report(args: Array[Argument], context: Context): String = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
-      BehaviorSpaceExtension.nameError(
-        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
-        context)
+      BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
         
@@ -427,8 +383,7 @@ object GetTable extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).table
       case _ =>
-        BehaviorSpaceExtension.nameError(
-          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
+        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
         ""
     }
   }
@@ -441,9 +396,7 @@ object GetSpreadsheet extends Reporter {
 
   override def report(args: Array[Argument], context: Context): String = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
-      BehaviorSpaceExtension.nameError(
-        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
-        context)
+      BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
         
@@ -453,8 +406,7 @@ object GetSpreadsheet extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).spreadsheet
       case _ =>
-        BehaviorSpaceExtension.nameError(
-          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
+        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
         ""
     }
   }
@@ -467,9 +419,7 @@ object GetStats extends Reporter {
 
   override def report(args: Array[Argument], context: Context): String = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
-      BehaviorSpaceExtension.nameError(
-        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
-        context)
+      BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
         
@@ -479,8 +429,7 @@ object GetStats extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).stats
       case _ =>
-        BehaviorSpaceExtension.nameError(
-          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
+        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
         ""
     }
   }
@@ -493,9 +442,7 @@ object GetLists extends Reporter {
 
   override def report(args: Array[Argument], context: Context): String = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
-      BehaviorSpaceExtension.nameError(
-        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
-        context)
+      BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
         
@@ -505,8 +452,7 @@ object GetLists extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).lists
       case _ =>
-        BehaviorSpaceExtension.nameError(
-          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
+        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
         ""
     }
   }
@@ -519,9 +465,7 @@ object GetUpdateView extends Reporter {
 
   override def report(args: Array[Argument], context: Context): java.lang.Boolean = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
-      BehaviorSpaceExtension.nameError(
-        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
-        context)
+      BehaviorSpaceExtension.nameError(context, "noCurrent")
       return LabDefaultValues.getDefaultUpdateView
     }
         
@@ -531,8 +475,7 @@ object GetUpdateView extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).updateView
       case _ =>
-        BehaviorSpaceExtension.nameError(
-          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
+        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
         LabDefaultValues.getDefaultUpdateView
     }
   }
@@ -545,9 +488,7 @@ object GetUpdatePlots extends Reporter {
 
   override def report(args: Array[Argument], context: Context): java.lang.Boolean = {
     if (BehaviorSpaceExtension.currentExperiment.trim.isEmpty) {
-      BehaviorSpaceExtension.nameError(
-        "You must set a current working experiment before running\nbspace commands with no specified experiment name.",
-        context)
+      BehaviorSpaceExtension.nameError(context, "noCurrent")
       return LabDefaultValues.getDefaultUpdatePlotsAndMonitors
     }
         
@@ -557,8 +498,7 @@ object GetUpdatePlots extends Reporter {
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).updatePlotsAndMonitors
       case _ =>
-        BehaviorSpaceExtension.nameError(
-          s"""No experiment exists with the name "${BehaviorSpaceExtension.currentExperiment}".""", context)
+        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
         LabDefaultValues.getDefaultUpdatePlotsAndMonitors
     }
   }

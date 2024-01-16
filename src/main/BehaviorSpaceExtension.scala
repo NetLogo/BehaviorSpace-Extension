@@ -47,6 +47,20 @@ object BehaviorSpaceExtension {
 
   var currentExperiment = ""
 
+  private val errors = Map[String, String](
+    "alreadyExists" -> "An experiment already exists with the name \"$0\".",
+    "emptyName" -> "Experiment name cannot be empty.",
+    "noCurrent" -> """You must set a current working experiment before running\n
+                      bspace commands with no specified experiment name.""",
+    "noExperiment" -> "No experiment exists with the name \"$0\".",
+    "recursive" -> "Cannot run an experiment recursively.",
+    "invalidFormat" -> "Invalid format in \"$0\".",
+    "fileExists" -> "File \"$0\" already exists.",
+    "gui" -> "Experiment \"$0\" is a GUI experiment, it cannot be edited.",
+    "noMetric" -> "Metric \"$0\" does not exist in the specified output file.",
+    "noRun" -> "Run \"$0\" does not exist in the specified output file."
+  )
+
   def experimentType(name: String, context: Context): ExperimentType.ExperimentType = {
     if (experiments.contains(name))
       ExperimentType.Code
@@ -59,26 +73,38 @@ object BehaviorSpaceExtension {
   def validateForEditing(name: String, context: Context): Boolean = {
     experimentType(name, context) match {
       case ExperimentType.None =>
-        nameError(s"No experiment exists with the name $name.", context)
+        nameError(context, "noExperiment", name)
         false
       case ExperimentType.GUI =>
-        nameError(s"Experiment $name is a GUI experiment, it cannot be edited.", context)
+        nameError(context, "gui", name)
         false
       case ExperimentType.Code => true
     }
   }
 
-  def nameError(message: String, context: Context) {
+  def nameError(context: Context, message: String, keys: String*) {
     if (context.workspace.isHeadless) {
-      println(message)
+      println(replaceErrorString(message, keys))
     }
 
     else {
       JOptionPane.showMessageDialog(context.workspace.asInstanceOf[GUIWorkspace].getFrame,
-                                    message,
+                                    replaceErrorString(message, keys),
                                     "Invalid",
                                     JOptionPane.ERROR_MESSAGE)
     }
+  }
+
+  def replaceErrorString(message: String, keys: Seq[String]): String = {
+    var error =
+      if (errors.contains(message)) errors(message)
+      else message
+
+    for (i <- 0 to keys.length) {
+      error = error.replace("$" + i, keys(i))
+    }
+
+    return error
   }
 
   def dataFromProtocol(protocol: LabProtocol): ExperimentData = {
