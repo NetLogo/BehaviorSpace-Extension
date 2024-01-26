@@ -4,10 +4,11 @@ package org.nlogo.extensions.bspace
 
 import org.nlogo.api.{ Argument, Command, Context, LabProtocol, LabVariableParser, RefValueSet }
 import org.nlogo.core.Syntax._
+import org.nlogo.nvm.Procedure
 
 object SetPreExperimentCommands extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType))
+    commandSyntax(right = List(DelayedCommandBlockType))
   }
 
   def perform(args: Array[Argument], context: Context) {
@@ -25,7 +26,7 @@ object SetPreExperimentCommands extends Command {
 
 object SetSetupCommands extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType))
+    commandSyntax(right = List(DelayedCommandBlockType))
   }
 
   def perform(args: Array[Argument], context: Context) {
@@ -43,7 +44,7 @@ object SetSetupCommands extends Command {
 
 object SetGoCommands extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType))
+    commandSyntax(right = List(DelayedCommandBlockType))
   }
 
   def perform(args: Array[Argument], context: Context) {
@@ -61,7 +62,7 @@ object SetGoCommands extends Command {
 
 object SetPostRunCommands extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType))
+    commandSyntax(right = List(DelayedCommandBlockType))
   }
 
   def perform(args: Array[Argument], context: Context) {
@@ -79,7 +80,7 @@ object SetPostRunCommands extends Command {
 
 object SetPostExperimentCommands extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType))
+    commandSyntax(right = List(DelayedCommandBlockType))
   }
 
   def perform(args: Array[Argument], context: Context) {
@@ -151,7 +152,7 @@ object SetRunMetricsEveryStep extends Command {
 
 object SetRunMetricsCondition extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType))
+    commandSyntax(right = List(StringType)) // make this code later
   }
 
   def perform(args: Array[Argument], context: Context) {
@@ -187,7 +188,7 @@ object SetTimeLimit extends Command {
 
 object SetStopCondition extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType))
+    commandSyntax(right = List(StringType)) // make this code later
   }
 
   def perform(args: Array[Argument], context: Context) {
@@ -205,7 +206,7 @@ object SetStopCondition extends Command {
 
 object SetMetrics extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(ListType | StringType))
+    commandSyntax(right = List(ListType | StringType)) // make this code later
   }
 
   def perform(args: Array[Argument], context: Context) {

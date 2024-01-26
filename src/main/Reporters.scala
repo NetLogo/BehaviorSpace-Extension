@@ -49,7 +49,7 @@ object GetPreExperimentCommands extends Reporter {
       return ""
     }
         
-    return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
+    return (BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
         context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.preExperimentCommands
       case ExperimentType.Code =>
@@ -57,7 +57,7 @@ object GetPreExperimentCommands extends Reporter {
       case _ =>
         BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
         ""
-    }
+    }).toString
   }
 }
 
