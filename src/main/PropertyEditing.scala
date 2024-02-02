@@ -152,7 +152,7 @@ object SetRunMetricsEveryStep extends Command {
 
 object SetRunMetricsCondition extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType)) // make this code later
+    commandSyntax(right = List(DelayedReporterBlockType))
   }
 
   def perform(args: Array[Argument], context: Context) {
@@ -188,7 +188,7 @@ object SetTimeLimit extends Command {
 
 object SetStopCondition extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType)) // make this code later
+    commandSyntax(right = List(DelayedReporterBlockType))
   }
 
   def perform(args: Array[Argument], context: Context) {
@@ -206,7 +206,7 @@ object SetStopCondition extends Command {
 
 object SetMetrics extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(ListType | StringType)) // make this code later
+    commandSyntax(right = List(ListType | StringType))
   }
 
   def perform(args: Array[Argument], context: Context) {
