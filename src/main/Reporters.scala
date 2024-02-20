@@ -28,16 +28,6 @@ object GotoBspaceExtensionDocumentation extends Command {
   }
 }
 
-object GetCurrentExperiment extends Reporter {
-  override def getSyntax = {
-    reporterSyntax(ret = StringType)
-  }
-
-  override def report(args: Array[Argument], context: Context): String = {
-    BehaviorSpaceExtension.currentExperiment
-  }
-}
-
 object GetPreExperimentCommands extends Reporter {
   override def getSyntax = {
     reporterSyntax(ret = StringType)

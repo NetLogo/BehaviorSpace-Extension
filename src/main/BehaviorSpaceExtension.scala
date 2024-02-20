@@ -161,6 +161,10 @@ class BehaviorSpaceExtension extends DefaultClassManager {
     manager.addPrimitive("export-experiment", ExportExperiment)
     manager.addPrimitive("clear-experiments", ClearExperiments)
     manager.addPrimitive("set-current-experiment", SetCurrentExperiment)
+    manager.addPrimitive("get-experiments", GetExperiments)
+    manager.addPrimitive("get-code-experiments", GetCodeExperiments)
+    manager.addPrimitive("get-gui-experiments", GetGuiExperiments)
+    manager.addPrimitive("get-current-experiment", GetCurrentExperiment)
 
     manager.addPrimitive("set-pre-experiment-commands", SetPreExperimentCommands)
     manager.addPrimitive("set-setup-commands", SetSetupCommands)
@@ -185,7 +189,6 @@ class BehaviorSpaceExtension extends DefaultClassManager {
 
     manager.addPrimitive("goto-behaviorspace-documentation", GotoBehaviorspaceDocumentation)
     manager.addPrimitive("goto-bspace-extension-documentation", GotoBspaceExtensionDocumentation)
-    manager.addPrimitive("get-current-experiment", GetCurrentExperiment)
     manager.addPrimitive("get-pre-experiment-commands", GetPreExperimentCommands)
     manager.addPrimitive("get-setup-commands", GetSetupCommands)
     manager.addPrimitive("get-go-commands", GetGoCommands)

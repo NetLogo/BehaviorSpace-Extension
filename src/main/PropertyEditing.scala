@@ -206,7 +206,7 @@ object SetStopCondition extends Command {
 
 object SetMetrics extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(ListType | StringType))
+    commandSyntax(right = List(ListType | StringType)) // weird parse error if code instead of strings, fix later
   }
 
   def perform(args: Array[Argument], context: Context) {

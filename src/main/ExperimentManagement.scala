@@ -4,13 +4,12 @@ package org.nlogo.extensions.bspace
 
 import java.io.{ File, FileWriter, PrintWriter }
 
-import org.nlogo.api.{ Argument, Command, Context }
+import org.nlogo.api.{ Argument, Command, Context, Reporter }
+import org.nlogo.core.LogoList
 import org.nlogo.core.Syntax._
 import org.nlogo.fileformat.{ LabLoader, LabSaver }
 import org.nlogo.headless.Main
-import org.nlogo.lab.gui.Supervisor
 import org.nlogo.nvm.LabInterface.Settings
-import org.nlogo.window.GUIWorkspace
 import org.nlogo.workspace.AbstractWorkspace
 
 object CreateExperiment extends Command {
@@ -254,5 +253,46 @@ object SetCurrentExperiment extends Command {
 
   def perform(args: Array[Argument], context: Context) {
     BehaviorSpaceExtension.currentExperiment = args(0).getString.trim
+  }
+}
+
+object GetExperiments extends Reporter {
+  override def getSyntax = {
+    reporterSyntax(ret = ListType)
+  }
+
+  override def report(args: Array[Argument], context: Context): LogoList = {
+    LogoList.fromList(BehaviorSpaceExtension.experiments.keys.toList ++
+                      context.workspace.getBehaviorSpaceExperiments.map(_.name))
+  }
+}
+
+object GetCodeExperiments extends Reporter {
+  override def getSyntax = {
+    reporterSyntax(ret = ListType)
+  }
+
+  override def report(args: Array[Argument], context: Context): LogoList = {
+    LogoList.fromIterator(BehaviorSpaceExtension.experiments.keysIterator)
+  }
+}
+
+object GetGuiExperiments extends Reporter {
+  override def getSyntax = {
+    reporterSyntax(ret = ListType)
+  }
+
+  override def report(args: Array[Argument], context: Context): LogoList = {
+    LogoList.fromList(context.workspace.getBehaviorSpaceExperiments.map(_.name))
+  }
+}
+
+object GetCurrentExperiment extends Reporter {
+  override def getSyntax = {
+    reporterSyntax(ret = StringType)
+  }
+
+  override def report(args: Array[Argument], context: Context): String = {
+    BehaviorSpaceExtension.currentExperiment
   }
 }
