@@ -159,7 +159,7 @@ object DuplicateExperiment extends Command {
 
     val name = args(0).getString.trim
 
-    if (BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) !=ExperimentType.None)
+    if (BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) != ExperimentType.None)
       return BehaviorSpaceExtension.nameError(context, "noExperiment", name)
     if (name.isEmpty)
       return BehaviorSpaceExtension.nameError(context, "emptyName")
@@ -294,5 +294,33 @@ object GetCurrentExperiment extends Reporter {
 
   override def report(args: Array[Argument], context: Context): String = {
     BehaviorSpaceExtension.currentExperiment
+  }
+}
+
+object ExperimentExists extends Reporter {
+  override def getSyntax = {
+    reporterSyntax(right = List(StringType), ret = BooleanType)
+  }
+
+  override def report(args: Array[Argument], context: Context): java.lang.Boolean = {
+    BehaviorSpaceExtension.experimentType(args(0).getString, context) match {
+      case ExperimentType.GUI | ExperimentType.Code => true
+      case _ => false
+    }
+  }
+}
+
+object ValidExperimentName extends Reporter {
+  override def getSyntax = {
+    reporterSyntax(right = List(StringType), ret = BooleanType)
+  }
+
+  override def report(args: Array[Argument], context: Context): java.lang.Boolean = {
+    if (args(0).getString.isEmpty) return false
+
+    BehaviorSpaceExtension.experimentType(args(0).getString, context) match {
+      case ExperimentType.GUI | ExperimentType.Code => false
+      case _ => true
+    }
   }
 }

@@ -165,6 +165,8 @@ class BehaviorSpaceExtension extends DefaultClassManager {
     manager.addPrimitive("get-code-experiments", GetCodeExperiments)
     manager.addPrimitive("get-gui-experiments", GetGuiExperiments)
     manager.addPrimitive("get-current-experiment", GetCurrentExperiment)
+    manager.addPrimitive("experiment-exists", ExperimentExists)
+    manager.addPrimitive("valid-experiment-name", ValidExperimentName)
 
     manager.addPrimitive("set-pre-experiment-commands", SetPreExperimentCommands)
     manager.addPrimitive("set-setup-commands", SetSetupCommands)
