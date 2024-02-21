@@ -262,32 +262,23 @@ object SetCurrentExperiment extends Command {
 
 object GetExperiments extends Reporter {
   override def getSyntax = {
-    reporterSyntax(ret = ListType)
+    reporterSyntax(ret = StringType)
   }
 
-  override def report(args: Array[Argument], context: Context): LogoList = {
-    LogoList.fromList(BehaviorSpaceExtension.experiments.keys.toList ++
-                      context.workspace.getBehaviorSpaceExperiments.map(_.name))
-  }
-}
+  override def report(args: Array[Argument], context: Context): String = {
+    var result = "Code Experiments:\n"
 
-object GetCodeExperiments extends Reporter {
-  override def getSyntax = {
-    reporterSyntax(ret = ListType)
-  }
+    for (exp <- BehaviorSpaceExtension.experiments.keys) {
+      result += "\t" + exp + "\n"
+    }
 
-  override def report(args: Array[Argument], context: Context): LogoList = {
-    LogoList.fromIterator(BehaviorSpaceExtension.experiments.keysIterator)
-  }
-}
+    result += "GUI Experiments:\n"
 
-object GetGuiExperiments extends Reporter {
-  override def getSyntax = {
-    reporterSyntax(ret = ListType)
-  }
+    for (exp <- context.workspace.getBehaviorSpaceExperiments) {
+      result += "\t" + exp.name + "\n"
+    }
 
-  override def report(args: Array[Argument], context: Context): LogoList = {
-    LogoList.fromList(context.workspace.getBehaviorSpaceExperiments.map(_.name))
+    result
   }
 }
 
