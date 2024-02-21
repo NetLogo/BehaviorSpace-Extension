@@ -163,6 +163,7 @@ class BehaviorSpaceExtension extends DefaultClassManager {
     manager.addPrimitive("set-current-experiment", SetCurrentExperiment)
     manager.addPrimitive("get-experiments", GetExperiments)
     manager.addPrimitive("get-current-experiment", GetCurrentExperiment)
+    manager.addPrimitive("get-parameters", GetParameters)
     manager.addPrimitive("experiment-exists", ExperimentExists)
     manager.addPrimitive("valid-experiment-name", ValidExperimentName)
 

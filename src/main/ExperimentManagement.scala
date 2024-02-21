@@ -4,7 +4,7 @@ package org.nlogo.extensions.bspace
 
 import java.io.{ File, FileWriter, PrintWriter }
 
-import org.nlogo.api.{ Argument, Command, Context, Reporter }
+import org.nlogo.api.{ Argument, Command, Context, LabProtocol, LabVariableParser, Reporter }
 import org.nlogo.core.LogoList
 import org.nlogo.core.Syntax._
 import org.nlogo.fileformat.{ LabLoader, LabSaver }
@@ -289,6 +289,60 @@ object GetCurrentExperiment extends Reporter {
 
   override def report(args: Array[Argument], context: Context): String = {
     BehaviorSpaceExtension.currentExperiment
+  }
+}
+
+object GetParameters extends Reporter {
+  override def getSyntax = {
+    reporterSyntax(right = List(StringType), ret = StringType)
+  }
+
+  override def report(args: Array[Argument], context: Context): String = {
+    val name = args(0).getString.trim
+
+    var protocol: LabProtocol = BehaviorSpaceExtension.experimentType(name, context) match {
+      case ExperimentType.GUI =>
+        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == name).get
+      case ExperimentType.Code =>
+        BehaviorSpaceExtension.protocolFromData(BehaviorSpaceExtension.experiments(name))
+      case _ =>
+        BehaviorSpaceExtension.nameError(context, "noExperiment", name)
+
+        return ""
+    }
+
+    var result = "EXPERIMENT PARAMETERS:\n\n"
+
+    result += "Variable values:\n"
+
+    for (variable <- LabVariableParser.combineVariables(protocol.constants, protocol.subExperiments).split("\n")) {
+      result += "\t" + variable + "\n"
+    }
+
+    result += "Repetitions:\n\t" + protocol.repetitions.toString + "\n"
+    result += "Sequential run order:\n\t" + protocol.sequentialRunOrder.toString + "\n"
+    result += "Metrics:\n\t" + protocol.metrics.toString + "\n"
+    result += "Run metrics every step:\n\t" + protocol.runMetricsEveryStep.toString + "\n"
+    result += "Run metrics condition:\n\t" + protocol.runMetricsCondition + "\n"
+    result += "Pre experiment commands:\n\t" + protocol.preExperimentCommands + "\n"
+    result += "Setup commands:\n\t" + protocol.setupCommands + "\n"
+    result += "Go commands:\n\t" + protocol.goCommands + "\n"
+    result += "Post run commands:\n\t" + protocol.postRunCommands + "\n"
+    result += "Post experiment commands:\n\t" + protocol.postExperimentCommands + "\n"
+    result += "Stop condtion:\n\t" + protocol.exitCondition + "\n"
+    result += "Time limit:\n\t" + protocol.timeLimit.toString + "\n\n"
+
+    result += "RUN OPTIONS:\n\n"
+
+    result += "Spreadsheet:\n\t" + protocol.runOptions.spreadsheet + "\n"
+    result += "Table:\n\t" + protocol.runOptions.table + "\n"
+    result += "Stats:\n\t" + protocol.runOptions.stats + "\n"
+    result += "Lists:\n\t" + protocol.runOptions.lists + "\n"
+    result += "Update view:\n\t" + protocol.runOptions.updateView.toString + "\n"
+    result += "Update plots:\n\t" + protocol.runOptions.updatePlotsAndMonitors.toString + "\n"
+    result += "Parallel runs:\n\t" + protocol.runOptions.threadCount.toString + "\n"
+
+    result
   }
 }
 
