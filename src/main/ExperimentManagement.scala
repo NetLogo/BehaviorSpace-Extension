@@ -145,6 +145,8 @@ object RenameExperiment extends Command {
       BehaviorSpaceExtension.savedExperiments -= BehaviorSpaceExtension.currentExperiment
       BehaviorSpaceExtension.savedExperiments += ((name, protocol.copy(name = name)))
     }
+
+    BehaviorSpaceExtension.currentExperiment = name
   }
 }
 
@@ -175,6 +177,8 @@ object DuplicateExperiment extends Command {
     data.name = name
 
     BehaviorSpaceExtension.experiments += ((name, data))
+
+    BehaviorSpaceExtension.currentExperiment = name
   }
 }
 
@@ -303,7 +307,7 @@ object ExperimentExists extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): java.lang.Boolean = {
-    BehaviorSpaceExtension.experimentType(args(0).getString, context) match {
+    BehaviorSpaceExtension.experimentType(args(0).getString.trim, context) match {
       case ExperimentType.GUI | ExperimentType.Code => true
       case _ => false
     }
@@ -316,7 +320,7 @@ object ValidExperimentName extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): java.lang.Boolean = {
-    if (args(0).getString.isEmpty) return false
+    if (args(0).getString.trim.isEmpty) return false
 
     BehaviorSpaceExtension.experimentType(args(0).getString, context) match {
       case ExperimentType.GUI | ExperimentType.Code => false
