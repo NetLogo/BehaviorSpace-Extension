@@ -247,6 +247,7 @@ object ClearExperiments extends Command {
   def perform(args: Array[Argument], context: Context) {
     BehaviorSpaceExtension.experiments.clear()
     BehaviorSpaceExtension.savedExperiments.clear()
+    BehaviorSpaceExtension.currentExperiment = ""
   }
 }
 
