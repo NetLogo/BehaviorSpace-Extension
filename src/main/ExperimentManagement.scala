@@ -161,8 +161,8 @@ object DuplicateExperiment extends Command {
 
     val name = args(0).getString.trim
 
-    if (BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) != ExperimentType.None)
-      return BehaviorSpaceExtension.nameError(context, "noExperiment", name)
+    if (BehaviorSpaceExtension.experimentType(name, context) != ExperimentType.None)
+      return BehaviorSpaceExtension.nameError(context, "alreadyExists", name)
     if (name.isEmpty)
       return BehaviorSpaceExtension.nameError(context, "emptyName")
 
