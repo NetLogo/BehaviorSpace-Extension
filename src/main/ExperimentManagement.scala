@@ -83,18 +83,26 @@ object RunExperiment extends Command {
 
     BehaviorSpaceExtension.experimentStack += protocol.name
 
-    val table =
-      if (protocol.runOptions.table.trim.isEmpty) None
-      else Some(new PrintWriter(new FileWriter(protocol.runOptions.table.trim)))
+    var outputPath = ""
+
     val spreadsheet =
       if (protocol.runOptions.spreadsheet.trim.isEmpty) None
-      else Some(new PrintWriter(new FileWriter(protocol.runOptions.spreadsheet.trim)))
+      else {
+        outputPath = protocol.runOptions.spreadsheet.trim
+        Some(new PrintWriter(new FileWriter(protocol.runOptions.spreadsheet.trim)))
+      }
+    val table =
+      if (protocol.runOptions.table.trim.isEmpty) None
+      else {
+        outputPath = protocol.runOptions.table.trim
+        Some(new PrintWriter(new FileWriter(protocol.runOptions.table.trim)))
+      }
     val stats =
       if (protocol.runOptions.stats.trim.isEmpty) None
-      else Some((new PrintWriter(new FileWriter(protocol.runOptions.stats.trim)), protocol.runOptions.stats.trim))
+      else Some((new PrintWriter(new FileWriter(protocol.runOptions.stats.trim)), outputPath))
     val lists =
       if (protocol.runOptions.lists.trim.isEmpty) None
-      else Some((new PrintWriter(new FileWriter(protocol.runOptions.lists.trim)), protocol.runOptions.lists.trim))
+      else Some((new PrintWriter(new FileWriter(protocol.runOptions.lists.trim)), outputPath))
 
     Main.runExperimentWithProtocol(new Settings(context.workspace.getModelPath, None, None, table, spreadsheet,
                                                 stats, lists, None, protocol.runOptions.threadCount, false,
