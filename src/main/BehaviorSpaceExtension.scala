@@ -42,7 +42,6 @@ object ExperimentType extends Enumeration {
 
 object BehaviorSpaceExtension {
   val experiments = Map[String, ExperimentData]()
-  val savedExperiments = Map[String, LabProtocol]()
   val experimentStack = Set[String]()
 
   var currentExperiment = ""
@@ -216,7 +215,6 @@ class BehaviorSpaceExtension extends DefaultClassManager {
     manager.addPrimitive("get-output-metric", GetOutputMetric)
 
     BehaviorSpaceExtension.experiments.clear()
-    BehaviorSpaceExtension.savedExperiments.clear()
 
     BehaviorSpaceExtension.currentExperiment = ""
   }

@@ -32,9 +32,6 @@ object CreateExperiment extends Command {
       BehaviorSpaceExtension.experiments += ((name, new ExperimentData()))
 
     BehaviorSpaceExtension.experiments(name).name = name
-
-    if (BehaviorSpaceExtension.savedExperiments.contains(name))
-      BehaviorSpaceExtension.savedExperiments -= name
   }
 }
 
@@ -49,9 +46,6 @@ object DeleteExperiment extends Command {
     if (!BehaviorSpaceExtension.validateForEditing(name, context)) return
 
     BehaviorSpaceExtension.experiments -= name
-    
-    if (BehaviorSpaceExtension.savedExperiments.contains(name))
-      BehaviorSpaceExtension.savedExperiments -= name
   }
 }
 
@@ -68,11 +62,8 @@ object RunExperiment extends Command {
       case ExperimentType.GUI =>
         context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get
       case ExperimentType.Code =>
-        if (BehaviorSpaceExtension.savedExperiments.contains(BehaviorSpaceExtension.currentExperiment))
-          BehaviorSpaceExtension.savedExperiments(BehaviorSpaceExtension.currentExperiment)
-        else
-          BehaviorSpaceExtension.protocolFromData(
-            BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment))
+        BehaviorSpaceExtension.protocolFromData(
+          BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment))
       case _ =>
         return BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
     }
@@ -108,16 +99,6 @@ object RunExperiment extends Command {
                                                 stats, lists, None, protocol.runOptions.threadCount, false,
                                                 protocol.runOptions.updatePlotsAndMonitors), protocol,
                                   () => {
-                                    if (BehaviorSpaceExtension.savedExperiments.contains(protocol.name)) {
-                                      if (protocol.runsCompleted == 0)
-                                        BehaviorSpaceExtension.savedExperiments -= protocol.name
-                                      else
-                                        BehaviorSpaceExtension.savedExperiments(protocol.name) = protocol
-                                    }
-
-                                    else if (protocol.runsCompleted != 0)
-                                      BehaviorSpaceExtension.savedExperiments += ((protocol.name, protocol))
-
                                     BehaviorSpaceExtension.experimentStack -= protocol.name
                                   })
   }
@@ -146,13 +127,6 @@ object RenameExperiment extends Command {
 
     BehaviorSpaceExtension.experiments -= BehaviorSpaceExtension.currentExperiment
     BehaviorSpaceExtension.experiments += ((name, data))
-
-    if (BehaviorSpaceExtension.savedExperiments.contains(BehaviorSpaceExtension.currentExperiment)) {
-      val protocol = BehaviorSpaceExtension.savedExperiments(BehaviorSpaceExtension.currentExperiment)
-
-      BehaviorSpaceExtension.savedExperiments -= BehaviorSpaceExtension.currentExperiment
-      BehaviorSpaceExtension.savedExperiments += ((name, protocol.copy(name = name)))
-    }
 
     BehaviorSpaceExtension.currentExperiment = name
   }
@@ -254,7 +228,7 @@ object ClearExperiments extends Command {
 
   def perform(args: Array[Argument], context: Context) {
     BehaviorSpaceExtension.experiments.clear()
-    BehaviorSpaceExtension.savedExperiments.clear()
+
     BehaviorSpaceExtension.currentExperiment = ""
   }
 }
