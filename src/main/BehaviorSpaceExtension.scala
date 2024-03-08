@@ -2,8 +2,8 @@
 
 package org.nlogo.extensions.bspace
 
-import org.nlogo.api.{ Argument, Command, Context, DefaultClassManager, LabDefaultValues, LabProtocol,
-                       LabRunOptions, PrimitiveManager, RefValueSet }
+import org.nlogo.api.{ AnonymousProcedure, Argument, Command, Context, DefaultClassManager, LabDefaultValues,
+                       LabProtocol, LabRunOptions, PrimitiveManager, RefValueSet }
 import org.nlogo.window.GUIWorkspace
 
 import javax.swing.JOptionPane
@@ -82,9 +82,8 @@ object BehaviorSpaceExtension {
   }
 
   def nameError(context: Context, message: String, keys: String*) {
-    if (context.workspace.isHeadless) {
+    if (context.workspace.isHeadless)
       throw new RuntimeException(replaceErrorString(message, keys))
-    }
 
     else {
       JOptionPane.showMessageDialog(context.workspace.asInstanceOf[GUIWorkspace].getFrame,
@@ -146,6 +145,10 @@ object BehaviorSpaceExtension {
 
   def removeQuotes(string: String): String = {
     if (string(0) == '"') string.substring(1, string.length - 1) else string
+  }
+
+  def extractSource(proc: AnonymousProcedure): String = {
+    """\[(.*)\]""".r.findFirstMatchIn(proc.toString).get.group(1).trim
   }
 }
 

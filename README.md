@@ -418,7 +418,7 @@ bspace:set-run-metrics-every-step false
 
 ### bspace:set-run-metrics-condition
 
-#### bspace:set-run-metrics-condition *reporter block*
+#### bspace:set-run-metrics-condition *anonymous reporter*
 
 Set the run metrics condition for the current working experiment. An error will be thrown if no current working
 experiment has been set.
@@ -431,7 +431,7 @@ bspace:set-run-metrics-condition [ count turtles < 5 ]
 
 ### bspace:set-pre-experiment-commands
 
-#### bspace:set-pre-experiment-commands *command block*
+#### bspace:set-pre-experiment-commands *anonymous command*
 
 Set the pre-experiment commands for the current working experiment. An error will be thrown if no current working
 experiment has been set.
@@ -444,7 +444,7 @@ bspace:set-pre-experiment-commands [ clear-all ]
 
 ### bspace:set-setup-commands
 
-#### bspace:set-setup-commands *command block*
+#### bspace:set-setup-commands *anonymous command*
 
 Set the setup commands for the current working experiment. An error will be thrown if no current working experiment has
 been set.
@@ -457,7 +457,7 @@ bspace:set-setup-commands [ clear-all create-turtles 50 ]
 
 ### bspace:set-go-commands
 
-#### bspace:set-go-commands *command block*
+#### bspace:set-go-commands *anonymous command*
 
 Set the go commands for the current working experiment. An error will be thrown if no current working experiment has
 been set.
@@ -470,7 +470,7 @@ bspace:set-go-commands [ myFunction ]
 
 ### bspace:set-stop-condition
 
-#### bspace:set-stop-condition *reporter block*
+#### bspace:set-stop-condition *anonymous reporter*
 
 Set the stop condition for the current working experiment. An error will be thrown if no current working experiment has
 been set.
@@ -483,7 +483,7 @@ bspace:set-stop-condition [ ticks > 1000 ]
 
 ### bspace:set-post-run-commands
 
-#### bspace:set-post-run-commands *command block*
+#### bspace:set-post-run-commands *anonymous command*
 
 Set the post-run commands for the current working experiment. An error will be thrown if no current working experiment
 has been set.
@@ -496,7 +496,7 @@ bspace:set-post-run-commands [ print count turtles ]
 
 ### bspace:set-post-experiment-commands
 
-#### bspace:set-post-experiment-commands *command block*
+#### bspace:set-post-experiment-commands *anonymous command*
 
 Set the post-experiment commands for the current working experiment. An error will be thrown if no current working
 experiment has been set.

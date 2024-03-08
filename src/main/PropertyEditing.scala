@@ -8,7 +8,7 @@ import org.nlogo.nvm.Procedure
 
 object SetPreExperimentCommands extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(DelayedCommandBlockType))
+    commandSyntax(right = List(CommandType))
   }
 
   def perform(args: Array[Argument], context: Context) {
@@ -17,13 +17,14 @@ object SetPreExperimentCommands extends Command {
 
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
 
-    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).preExperimentCommands = args(0).getString
+    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).preExperimentCommands =
+      BehaviorSpaceExtension.extractSource(args(0).getCommand)
   }
 }
 
 object SetSetupCommands extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(DelayedCommandBlockType))
+    commandSyntax(right = List(CommandType))
   }
 
   def perform(args: Array[Argument], context: Context) {
@@ -32,13 +33,14 @@ object SetSetupCommands extends Command {
         
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
 
-    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).setupCommands = args(0).getString
+    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).setupCommands =
+      BehaviorSpaceExtension.extractSource(args(0).getCommand)
   }
 }
 
 object SetGoCommands extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(DelayedCommandBlockType))
+    commandSyntax(right = List(CommandType))
   }
 
   def perform(args: Array[Argument], context: Context) {
@@ -47,13 +49,14 @@ object SetGoCommands extends Command {
         
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
 
-    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).goCommands = args(0).getString
+    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).goCommands =
+      BehaviorSpaceExtension.extractSource(args(0).getCommand)
   }
 }
 
 object SetPostRunCommands extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(DelayedCommandBlockType))
+    commandSyntax(right = List(CommandType))
   }
 
   def perform(args: Array[Argument], context: Context) {
@@ -62,13 +65,14 @@ object SetPostRunCommands extends Command {
         
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
 
-    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).postRunCommands = args(0).getString
+    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).postRunCommands =
+      BehaviorSpaceExtension.extractSource(args(0).getCommand)
   }
 }
 
 object SetPostExperimentCommands extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(DelayedCommandBlockType))
+    commandSyntax(right = List(CommandType))
   }
 
   def perform(args: Array[Argument], context: Context) {
@@ -77,7 +81,8 @@ object SetPostExperimentCommands extends Command {
         
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
 
-    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).postExperimentCommands = args(0).getString
+    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).postExperimentCommands =
+      BehaviorSpaceExtension.extractSource(args(0).getCommand)
   }
 }
 
@@ -128,7 +133,7 @@ object SetRunMetricsEveryStep extends Command {
 
 object SetRunMetricsCondition extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(DelayedReporterBlockType))
+    commandSyntax(right = List(ReporterType))
   }
 
   def perform(args: Array[Argument], context: Context) {
@@ -137,7 +142,8 @@ object SetRunMetricsCondition extends Command {
         
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
 
-    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).runMetricsCondition = args(0).getString
+    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).runMetricsCondition =
+      BehaviorSpaceExtension.extractSource(args(0).getReporter)
   }
 }
 
@@ -158,7 +164,7 @@ object SetTimeLimit extends Command {
 
 object SetStopCondition extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(DelayedReporterBlockType))
+    commandSyntax(right = List(ReporterType))
   }
 
   def perform(args: Array[Argument], context: Context) {
@@ -167,7 +173,8 @@ object SetStopCondition extends Command {
         
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
 
-    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).exitCondition = args(0).getString
+    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).exitCondition =
+      BehaviorSpaceExtension.extractSource(args(0).getReporter)
   }
 }
 
