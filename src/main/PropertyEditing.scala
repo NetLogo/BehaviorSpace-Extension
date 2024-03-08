@@ -224,7 +224,7 @@ object SetMetrics extends Command {
 
 object SetVariables extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(StringType))
+    commandSyntax(right = List(ListType | StringType))
   }
 
   def perform(args: Array[Argument], context: Context) {
@@ -233,7 +233,7 @@ object SetVariables extends Command {
         
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
 
-    LabVariableParser.parseVariables(args(0).getString,
+    LabVariableParser.parseVariables(args(0).getList.mkString("\n"),
                                      BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).repetitions,
                                      context.workspace.world,
                                      context.workspace.asInstanceOf[org.nlogo.workspace.AbstractWorkspace]) match {

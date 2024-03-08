@@ -353,15 +353,15 @@ bspace:valid-experiment-name "my-experiment" false
 
 ### bspace:set-variables
 
-#### bspace:set-variables *string*
+#### bspace:set-variables *list of strings*
 
-Set the variables to vary for the current working experiment. An error will be thrown if no current working experiment
-has been set.
+Set the variables to vary for the current working experiment. Each element of the input list should contain one
+constant or sub-experiment specification. An error will be thrown if no current working experiment has been set.
 
 Example:
 
 ```
-bspace:set-variables "[ 'var1' 0 5 20 ]"
+bspace:set-variables [ "[ 'var1' 0 5 20 ]" ]
 ```
 
 ### bspace:set-repetitions
