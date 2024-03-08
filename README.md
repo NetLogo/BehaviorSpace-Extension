@@ -19,6 +19,33 @@ Once the extension is loaded, you can use it to run experiments from anywhere in
 created in the code will persist for the duration of the current NetLogo session if not cleared with the
 `bspace:clear-experiments` command (see [`bspace:clear-experiments`](#bspaceclear-experiments)).
 
+Experiments created in the code will have the following default values:
+
+Pre Experiment Commands: empty
+Setup Commands: empty
+Go Commands: empty
+Post Run Commands: empty
+Post Experiment Commands: empty
+Repetitions: 1
+Sequential Run Order: true
+Run Metrics Every Step: true
+Run Metrics Condition: empty
+Time Limit: 0
+Stop Condition: empty
+Metrics: empty
+Variables: empty
+Threads: determined by number of processor cores
+Recommended Max Threads: determined by number of processor cores
+Table: empty
+Spreadsheet: empty
+Stats: empty
+Lists: empty
+Update View: true
+Update Plots And Monitors: true
+
+Any properties can also be set explicitly to other default values. For code blocks, you can specify "do nothing" with
+an empty pair of square brackets.
+
 ## Primitives
 
 ### Experiment Management
@@ -176,7 +203,7 @@ that has a name that already exists, but the remaining experiments will be succe
 Example:
 
 ```
-bspace:import-experiments "/Users/johndoe/Documents/experiments.xml"
+bspace:import-experiments "/Users/hacker53/Documents/experiments.xml"
 ```
 
 ### bspace:export-experiment
@@ -190,7 +217,7 @@ input is false, an error will be thrown.
 Example:
 
 ```
-bspace:export-experiment "/Users/johndoe/Documents/my-experiment.xml"
+bspace:export-experiment "/Users/hacker53/Documents/my-experiment.xml"
 ```
 
 ### bspace:clear-experiments
@@ -198,7 +225,7 @@ bspace:export-experiment "/Users/johndoe/Documents/my-experiment.xml"
 #### bspace:clear-experiments
 
 Clear the list of stored experiments that have been created in the code, and reset all experiments that have been
-paused after running from the code.
+paused after running from the code. The model and all experiments created in the GUI will remain unchanged.
 
 Example:
 
@@ -222,7 +249,8 @@ bspace:set-current-experiment "my-experiment"
 
 #### bspace:get-experiments
 
-Report a description of the current experiments, indicating whether each was created in the GUI or the code.
+Report a list of all BehaviorSpace experiments created programmatically, followed by all BehaviorSpace experiments
+created in the GUI.
 
 ### bspace:get-current-experiment
 
@@ -241,6 +269,58 @@ Example:
 
 ```
 bspace:get-parameters "my-experiment"
+```
+
+Sample output:
+
+```
+EXPERIMENT PARAMETERS:
+
+Variable values:
+	
+Repetitions:
+	1
+Sequential run order:
+	true
+Metrics:
+	List("count turtles")
+Run metrics every step:
+	true
+Run metrics condition:
+	
+Pre experiment commands:
+	
+Setup commands:
+    setup
+	
+Go commands:
+    go
+	
+Post run commands:
+	
+Post experiment commands:
+	
+Stop condtion:
+	
+Time limit:
+	0
+
+RUN OPTIONS:
+
+Spreadsheet:
+	
+Table:
+	
+Stats:
+	
+Lists:
+	
+Update view:
+	true
+Update plots:
+	true
+Parallel runs:
+	6
 ```
 
 ### bspace:experiment-exists
@@ -541,7 +621,7 @@ experiment has been set.
 Example:
 
 ```
-bspace:set-spreadsheet "/Users/johndoe/Documents/exp-sheet.csv"
+bspace:set-spreadsheet "/Users/hacker53/Documents/exp-sheet.csv"
 ```
 
 ### bspace:set-table
@@ -554,7 +634,7 @@ experiment has been set.
 Example:
 
 ```
-bspace:set-table "/Users/johndoe/Documents/exp-table.csv"
+bspace:set-table "/Users/hacker53/Documents/exp-table.csv"
 ```
 
 ### bspace:set-stats
@@ -567,7 +647,7 @@ experiment has been set.
 Example:
 
 ```
-bspace:set-stats "/Users/johndoe/Documents/exp-stats.csv"
+bspace:set-stats "/Users/hacker53/Documents/exp-stats.csv"
 ```
 
 ### bspace:set-lists
@@ -580,7 +660,7 @@ experiment has been set.
 Example:
 
 ```
-bspace:set-lists "/Users/johndoe/Documents/exp-lists.csv"
+bspace:set-lists "/Users/hacker53/Documents/exp-lists.csv"
 ```
 
 ### bspace:set-update-view
@@ -686,7 +766,7 @@ of values. An error will be thrown if any of the inputs are invalid.
 Example:
 
 ```
-bspace:get-output-metric "/Users/johndoe/Documents/spreadsheet.csv" "count turtles" 3
+bspace:get-output-metric "/Users/hacker53/Documents/spreadsheet.csv" "count turtles" 3
 ```
 
 ### bspace:goto-behaviorspace-documentation

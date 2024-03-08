@@ -277,13 +277,13 @@ object GetExperiments extends Reporter {
   override def report(args: Array[Argument], context: Context): String = {
     var result = "Code Experiments:\n"
 
-    for (exp <- BehaviorSpaceExtension.experiments.keys) {
+    for (exp <- BehaviorSpaceExtension.experiments.keys.toSeq.sorted) {
       result += "\t" + exp + "\n"
     }
 
     result += "GUI Experiments:\n"
 
-    for (exp <- context.workspace.getBehaviorSpaceExperiments) {
+    for (exp <- context.workspace.getBehaviorSpaceExperiments.toSeq.sortBy(_.name)) {
       result += "\t" + exp.name + "\n"
     }
 
