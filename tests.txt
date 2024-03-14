@@ -1,4 +1,0 @@
-DefaultExperiment
-  extensions [bspace]
-  O> bspace:create-experiment "test"
-  O> bspace:run-experiment "test"
