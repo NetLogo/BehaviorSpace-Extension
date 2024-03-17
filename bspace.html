@@ -26,6 +26,19 @@ anywhere in the code. Note that experiments created in the code will
 persist for the duration of the current NetLogo session if not cleared
 with the <code>bspace:clear-experiments</code> command (see <a
 href="#bspaceclear-experiments"><code>bspace:clear-experiments</code></a>).</p>
+<p>Experiments created in the code will have the following default
+values:</p>
+<p>Pre Experiment Commands: empty Setup Commands: empty Go Commands:
+empty Post Run Commands: empty Post Experiment Commands: empty
+Repetitions: 1 Sequential Run Order: true Run Metrics Every Step: true
+Run Metrics Condition: empty Time Limit: 0 Stop Condition: empty
+Metrics: empty Variables: empty Threads: determined by number of
+processor cores Recommended Max Threads: determined by number of
+processor cores Table: empty Spreadsheet: empty Stats: empty Lists:
+empty Update View: true Update Plots And Monitors: true</p>
+<p>Any properties can also be set explicitly to other default values.
+For code blocks, you can specify “do nothing” with an empty pair of
+square brackets.</p>
 <h2 id="primitives">Primitives</h2>
 <h3 id="experiment-management">Experiment Management</h3>
 <p><a
@@ -182,7 +195,7 @@ location. An error will be thrown for each experiment that has a name
 that already exists, but the remaining experiments will be succesfully
 imported.</p>
 <p>Example:</p>
-<pre><code>bspace:import-experiments &quot;/Users/johndoe/Documents/experiments.xml&quot;</code></pre>
+<pre><code>bspace:import-experiments &quot;/Users/hacker53/Documents/experiments.xml&quot;</code></pre>
 <h3 id="bspaceexport-experiment">bspace:export-experiment</h3>
 <h4 id="bspaceexport-experiment-string-boolean">bspace:export-experiment
 <em>string</em> <em>boolean</em></h4>
@@ -192,12 +205,13 @@ it will be overwritten with the specified experiment. If that file
 already exists and the second input is false, an error will be
 thrown.</p>
 <p>Example:</p>
-<pre><code>bspace:export-experiment &quot;/Users/johndoe/Documents/my-experiment.xml&quot;</code></pre>
+<pre><code>bspace:export-experiment &quot;/Users/hacker53/Documents/my-experiment.xml&quot;</code></pre>
 <h3 id="bspaceclear-experiments">bspace:clear-experiments</h3>
 <h4 id="bspaceclear-experiments-1">bspace:clear-experiments</h4>
 <p>Clear the list of stored experiments that have been created in the
 code, and reset all experiments that have been paused after running from
-the code.</p>
+the code. The model and all experiments created in the GUI will remain
+unchanged.</p>
 <p>Example:</p>
 <pre><code>bspace:clear-experiments</code></pre>
 <h3 id="bspaceset-current-experiment">bspace:set-current-experiment</h3>
@@ -209,8 +223,9 @@ input.</p>
 <pre><code>bspace:set-current-experiment &quot;my-experiment&quot;</code></pre>
 <h3 id="bspaceget-experiments">bspace:get-experiments</h3>
 <h4 id="bspaceget-experiments-1">bspace:get-experiments</h4>
-<p>Report a description of the current experiments, indicating whether
-each was created in the GUI or the code.</p>
+<p>Report a list of all BehaviorSpace experiments created
+programmatically, followed by all BehaviorSpace experiments created in
+the GUI.</p>
 <h3 id="bspaceget-current-experiment">bspace:get-current-experiment</h3>
 <h4
 id="bspaceget-current-experiment-1">bspace:get-current-experiment</h4>
@@ -223,6 +238,54 @@ specified in the first input. An error will be thrown if no experiment
 exists with the specified name.</p>
 <p>Example:</p>
 <pre><code>bspace:get-parameters &quot;my-experiment&quot;</code></pre>
+<p>Sample output:</p>
+<pre><code>EXPERIMENT PARAMETERS:
+
+Variable values:
+    
+Repetitions:
+    1
+Sequential run order:
+    true
+Metrics:
+    List(&quot;count turtles&quot;)
+Run metrics every step:
+    true
+Run metrics condition:
+    
+Pre experiment commands:
+    
+Setup commands:
+    setup
+    
+Go commands:
+    go
+    
+Post run commands:
+    
+Post experiment commands:
+    
+Stop condtion:
+    
+Time limit:
+    0
+
+RUN OPTIONS:
+
+Spreadsheet:
+    
+Table:
+    
+Stats:
+    
+Lists:
+    
+Update view:
+    true
+Update plots:
+    true
+Parallel runs:
+    6</code></pre>
 <h3 id="bspaceexperiment-exists">bspace:experiment-exists</h3>
 <h4 id="bspaceexperiment-exists-string">bspace:experiment-exists
 <em>string</em></h4>
@@ -241,12 +304,15 @@ bspace:valid-experiment-name &quot;my-experiment&quot; ; true
 bspace:create-experiment &quot;my-experiment&quot; true
 bspace:valid-experiment-name &quot;my-experiment&quot; false</code></pre>
 <h3 id="bspaceset-variables">bspace:set-variables</h3>
-<h4 id="bspaceset-variables-string">bspace:set-variables
-<em>string</em></h4>
-<p>Set the variables to vary for the current working experiment. An
-error will be thrown if no current working experiment has been set.</p>
+<h4 id="bspaceset-variables-list-of-strings">bspace:set-variables
+<em>list of strings</em></h4>
+<p>Set the variables to vary for the current working experiment. Each
+element of the input list should contain one constant or sub-experiment
+specification. An error will be thrown if no current working experiment
+has been set. Note that nested quotation marks must be escaped double
+quotes, using single quotes will cause errors.</p>
 <p>Example:</p>
-<pre><code>bspace:set-variables &quot;[ &#39;var1&#39; 0 5 20 ]&quot;</code></pre>
+<pre><code>bspace:set-variables [ &quot;[ \&quot;var1\&quot; 0 5 20 ]&quot; ]</code></pre>
 <h3 id="bspaceset-repetitions">bspace:set-repetitions</h3>
 <h4 id="bspaceset-repetitions-number">bspace:set-repetitions
 <em>number</em></h4>
@@ -284,8 +350,8 @@ set.</p>
 <h3
 id="bspaceset-run-metrics-condition">bspace:set-run-metrics-condition</h3>
 <h4
-id="bspaceset-run-metrics-condition-reporter-block">bspace:set-run-metrics-condition
-<em>reporter block</em></h4>
+id="bspaceset-run-metrics-condition-anonymous-reporter">bspace:set-run-metrics-condition
+<em>anonymous reporter</em></h4>
 <p>Set the run metrics condition for the current working experiment. An
 error will be thrown if no current working experiment has been set.</p>
 <p>Example:</p>
@@ -293,8 +359,8 @@ error will be thrown if no current working experiment has been set.</p>
 <h3
 id="bspaceset-pre-experiment-commands">bspace:set-pre-experiment-commands</h3>
 <h4
-id="bspaceset-pre-experiment-commands-command-block">bspace:set-pre-experiment-commands
-<em>command block</em></h4>
+id="bspaceset-pre-experiment-commands-anonymous-command">bspace:set-pre-experiment-commands
+<em>anonymous command</em></h4>
 <p>Set the pre-experiment commands for the current working experiment.
 An error will be thrown if no current working experiment has been
 set.</p>
@@ -302,31 +368,31 @@ set.</p>
 <pre><code>bspace:set-pre-experiment-commands [ clear-all ]</code></pre>
 <h3 id="bspaceset-setup-commands">bspace:set-setup-commands</h3>
 <h4
-id="bspaceset-setup-commands-command-block">bspace:set-setup-commands
-<em>command block</em></h4>
+id="bspaceset-setup-commands-anonymous-command">bspace:set-setup-commands
+<em>anonymous command</em></h4>
 <p>Set the setup commands for the current working experiment. An error
 will be thrown if no current working experiment has been set.</p>
 <p>Example:</p>
 <pre><code>bspace:set-setup-commands [ clear-all create-turtles 50 ]</code></pre>
 <h3 id="bspaceset-go-commands">bspace:set-go-commands</h3>
-<h4 id="bspaceset-go-commands-command-block">bspace:set-go-commands
-<em>command block</em></h4>
+<h4 id="bspaceset-go-commands-anonymous-command">bspace:set-go-commands
+<em>anonymous command</em></h4>
 <p>Set the go commands for the current working experiment. An error will
 be thrown if no current working experiment has been set.</p>
 <p>Example:</p>
 <pre><code>bspace:set-go-commands [ myFunction ]</code></pre>
 <h3 id="bspaceset-stop-condition">bspace:set-stop-condition</h3>
 <h4
-id="bspaceset-stop-condition-reporter-block">bspace:set-stop-condition
-<em>reporter block</em></h4>
+id="bspaceset-stop-condition-anonymous-reporter">bspace:set-stop-condition
+<em>anonymous reporter</em></h4>
 <p>Set the stop condition for the current working experiment. An error
 will be thrown if no current working experiment has been set.</p>
 <p>Example:</p>
 <pre><code>bspace:set-stop-condition [ ticks &gt; 1000 ]</code></pre>
 <h3 id="bspaceset-post-run-commands">bspace:set-post-run-commands</h3>
 <h4
-id="bspaceset-post-run-commands-command-block">bspace:set-post-run-commands
-<em>command block</em></h4>
+id="bspaceset-post-run-commands-anonymous-command">bspace:set-post-run-commands
+<em>anonymous command</em></h4>
 <p>Set the post-run commands for the current working experiment. An
 error will be thrown if no current working experiment has been set.</p>
 <p>Example:</p>
@@ -334,8 +400,8 @@ error will be thrown if no current working experiment has been set.</p>
 <h3
 id="bspaceset-post-experiment-commands">bspace:set-post-experiment-commands</h3>
 <h4
-id="bspaceset-post-experiment-commands-command-block">bspace:set-post-experiment-commands
-<em>command block</em></h4>
+id="bspaceset-post-experiment-commands-anonymous-command">bspace:set-post-experiment-commands
+<em>anonymous command</em></h4>
 <p>Set the post-experiment commands for the current working experiment.
 An error will be thrown if no current working experiment has been
 set.</p>
@@ -422,28 +488,28 @@ will be thrown if no current working experiment has been set.</p>
 experiment. An error will be thrown if no current working experiment has
 been set.</p>
 <p>Example:</p>
-<pre><code>bspace:set-spreadsheet &quot;/Users/johndoe/Documents/exp-sheet.csv&quot;</code></pre>
+<pre><code>bspace:set-spreadsheet &quot;/Users/hacker53/Documents/exp-sheet.csv&quot;</code></pre>
 <h3 id="bspaceset-table">bspace:set-table</h3>
 <h4 id="bspaceset-table-string">bspace:set-table <em>string</em></h4>
 <p>Set the path for the table file for the current working experiment.
 An error will be thrown if no current working experiment has been
 set.</p>
 <p>Example:</p>
-<pre><code>bspace:set-table &quot;/Users/johndoe/Documents/exp-table.csv&quot;</code></pre>
+<pre><code>bspace:set-table &quot;/Users/hacker53/Documents/exp-table.csv&quot;</code></pre>
 <h3 id="bspaceset-stats">bspace:set-stats</h3>
 <h4 id="bspaceset-stats-string">bspace:set-stats <em>string</em></h4>
 <p>Set the path for the stats file for the current working experiment.
 An error will be thrown if no current working experiment has been
 set.</p>
 <p>Example:</p>
-<pre><code>bspace:set-stats &quot;/Users/johndoe/Documents/exp-stats.csv&quot;</code></pre>
+<pre><code>bspace:set-stats &quot;/Users/hacker53/Documents/exp-stats.csv&quot;</code></pre>
 <h3 id="bspaceset-lists">bspace:set-lists</h3>
 <h4 id="bspaceset-lists-string">bspace:set-lists <em>string</em></h4>
 <p>Set the path for the lists file for the current working experiment.
 An error will be thrown if no current working experiment has been
 set.</p>
 <p>Example:</p>
-<pre><code>bspace:set-lists &quot;/Users/johndoe/Documents/exp-lists.csv&quot;</code></pre>
+<pre><code>bspace:set-lists &quot;/Users/hacker53/Documents/exp-lists.csv&quot;</code></pre>
 <h3 id="bspaceset-update-view">bspace:set-update-view</h3>
 <h4 id="bspaceset-update-view-boolean">bspace:set-update-view
 <em>boolean</em></h4>
@@ -520,7 +586,7 @@ specified in the first input. The specified file must be a spreadsheet
 output to ensure proper ordering of values. An error will be thrown if
 any of the inputs are invalid.</p>
 <p>Example:</p>
-<pre><code>bspace:get-output-metric &quot;/Users/johndoe/Documents/spreadsheet.csv&quot; &quot;count turtles&quot; 3</code></pre>
+<pre><code>bspace:get-output-metric &quot;/Users/hacker53/Documents/spreadsheet.csv&quot; &quot;count turtles&quot; 3</code></pre>
 <h3
 id="bspacegoto-behaviorspace-documentation">bspace:goto-behaviorspace-documentation</h3>
 <h4

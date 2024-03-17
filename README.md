@@ -357,11 +357,12 @@ bspace:valid-experiment-name "my-experiment" false
 
 Set the variables to vary for the current working experiment. Each element of the input list should contain one
 constant or sub-experiment specification. An error will be thrown if no current working experiment has been set.
+Note that nested quotation marks must be escaped double quotes, using single quotes will cause errors.
 
 Example:
 
 ```
-bspace:set-variables [ "[ 'var1' 0 5 20 ]" ]
+bspace:set-variables [ "[ \"var1\" 0 5 20 ]" ]
 ```
 
 ### bspace:set-repetitions
