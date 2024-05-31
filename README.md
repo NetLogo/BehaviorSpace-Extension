@@ -393,15 +393,18 @@ bspace:set-sequential-run-order true
 
 ### bspace:set-metrics
 
-#### bspace:set-metrics *list*
+#### bspace:set-metrics *anonymous reporter*
+#### (bspace:set-metrics *anonymous reporter* ...)
 
 Set the metrics commands for the current working experiment. An error will be thrown if no current working experiment
-has been set. The first input must be a list of string commands.
+has been set. To set only one metric, the primitive can be called as normal with one input, but to set multiple
+metrics, the entire command must be surrounded with parentheses.
 
 Example:
 
 ```
-bspace:set-metrics [ "count turtles", "count patches" ]
+bspace:set-metrics [ count turtles ]
+(bspace:set-metrics [ count turtles ] [ count patches ])
 ```
 
 ### bspace:set-run-metrics-every-step

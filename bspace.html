@@ -331,12 +331,18 @@ set.</p>
 <p>Example:</p>
 <pre><code>bspace:set-sequential-run-order true</code></pre>
 <h3 id="bspaceset-metrics">bspace:set-metrics</h3>
-<h4 id="bspaceset-metrics-list">bspace:set-metrics <em>list</em></h4>
+<h4 id="bspaceset-metrics-anonymous-reporter">bspace:set-metrics
+<em>anonymous reporter</em></h4>
+<h4 id="bspaceset-metrics-anonymous-reporter-1">(bspace:set-metrics
+<em>anonymous reporter</em> …)</h4>
 <p>Set the metrics commands for the current working experiment. An error
-will be thrown if no current working experiment has been set. The first
-input must be a list of string commands.</p>
+will be thrown if no current working experiment has been set. To set
+only one metric, the primitive can be called as normal with one input,
+but to set multiple metrics, the entire command must be surrounded with
+parentheses.</p>
 <p>Example:</p>
-<pre><code>bspace:set-metrics [ &quot;count turtles&quot;, &quot;count patches&quot; ]</code></pre>
+<pre><code>bspace:set-metrics [ count turtles ]
+(bspace:set-metrics [ count turtles ] [ count patches ])</code></pre>
 <h3
 id="bspaceset-run-metrics-every-step">bspace:set-run-metrics-every-step</h3>
 <h4
