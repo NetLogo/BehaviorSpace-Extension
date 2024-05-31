@@ -180,7 +180,7 @@ object SetStopCondition extends Command {
 
 object SetMetrics extends Command {
   override def getSyntax = {
-    commandSyntax(right = List(ListType | StringType)) // weird parse error if code instead of strings, fix later
+    commandSyntax(right = List(ReporterType | RepeatableType))
   }
 
   def perform(args: Array[Argument], context: Context) {
@@ -189,7 +189,8 @@ object SetMetrics extends Command {
         
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
 
-    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).metrics = args(0).getList.toList.map(_.toString)
+    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).metrics =
+      args.map(x => BehaviorSpaceExtension.extractSource(x.getReporter)).toList
   }
 }
 
