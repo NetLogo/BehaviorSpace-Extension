@@ -42,6 +42,7 @@ Stats: empty
 Lists: empty
 Update View: true
 Update Plots And Monitors: true
+Mirror Headless Output: false
 
 Any properties can also be set explicitly to other default values. For code blocks, you can specify "do nothing" with
 an empty pair of square brackets.
@@ -106,6 +107,7 @@ an empty pair of square brackets.
 [`bspace:set-update-view`](#bspaceset-update-view)
 [`bspace:set-update-plots`](#bspaceset-update-plots)
 [`bspace:set-parallel-runs`](#bspaceset-parallel-runs)
+[`bspace:set-mirror-headless-output`](#bspaceset-mirror-headless-output)
 
 ### Getting Experiment Run Conditions
 
@@ -116,6 +118,7 @@ an empty pair of square brackets.
 [`bspace:get-update-view`](#bspaceget-update-view)
 [`bspace:get-update-plots`](#bspaceget-update-plots)
 [`bspace:get-parallel-runs`](#bspaceget-parallel-runs)
+[`bspace:get-mirror-headless-output`](#bspaceget-mirror-headless-output)
 
 ### Processing BehaviorSpace Output
 
@@ -321,6 +324,8 @@ Update plots:
 	true
 Parallel runs:
 	6
+Mirror Headless Output:
+	false
 ```
 
 ### bspace:experiment-exists
@@ -706,6 +711,19 @@ Example:
 bspace:set-parallel-runs 3
 ```
 
+### bspace:set-mirror-headless-output
+
+#### bspace:set-mirror-headless-output *boolean*
+
+Set whether the current working experiment should display its background output in the Command Center, if running in
+the GUI.
+
+Example:
+
+```
+bspace:set-mirror-headless-output true
+```
+
 ### bspace:get-spreadsheet
 
 #### bspace:get-spreadsheet
@@ -758,6 +776,13 @@ experiment has been set.
 
 Report the number of parallel runs for the current working experiment. An error will be thrown if no current working
 experiment has been set.
+
+### bspace:get-mirror-headless-output
+
+#### bspace:get-mirror-headless-output
+
+Report whether the current working experiment will display its background output in the Command Center, if running in
+the GUI.
 
 ### bspace:get-output-metric
 

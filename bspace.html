@@ -35,7 +35,8 @@ Run Metrics Condition: empty Time Limit: 0 Stop Condition: empty
 Metrics: empty Variables: empty Threads: determined by number of
 processor cores Recommended Max Threads: determined by number of
 processor cores Table: empty Spreadsheet: empty Stats: empty Lists:
-empty Update View: true Update Plots And Monitors: true</p>
+empty Update View: true Update Plots And Monitors: true Mirror Headless
+Output: false</p>
 <p>Any properties can also be set explicitly to other default values.
 For code blocks, you can specify “do nothing” with an empty pair of
 square brackets.</p>
@@ -122,7 +123,9 @@ href="#bspaceset-list"><code>bspace:set-lists</code></a> <a
 href="#bspaceset-update-view"><code>bspace:set-update-view</code></a> <a
 href="#bspaceset-update-plots"><code>bspace:set-update-plots</code></a>
 <a
-href="#bspaceset-parallel-runs"><code>bspace:set-parallel-runs</code></a></p>
+href="#bspaceset-parallel-runs"><code>bspace:set-parallel-runs</code></a>
+<a
+href="#bspaceset-mirror-headless-output"><code>bspace:set-mirror-headless-output</code></a></p>
 <h3 id="getting-experiment-run-conditions">Getting Experiment Run
 Conditions</h3>
 <p><a
@@ -133,7 +136,9 @@ href="#bspaceget-list"><code>bspace:get-lists</code></a> <a
 href="#bspaceget-update-view"><code>bspace:get-update-view</code></a> <a
 href="#bspaceget-update-plots"><code>bspace:get-update-plots</code></a>
 <a
-href="#bspaceget-parallel-runs"><code>bspace:get-parallel-runs</code></a></p>
+href="#bspaceget-parallel-runs"><code>bspace:get-parallel-runs</code></a>
+<a
+href="#bspaceget-mirror-headless-output"><code>bspace:get-mirror-headless-output</code></a></p>
 <h3 id="processing-behaviorspace-output">Processing BehaviorSpace
 Output</h3>
 <p><a
@@ -285,7 +290,9 @@ Update view:
 Update plots:
     true
 Parallel runs:
-    6</code></pre>
+    6
+Mirror Headless Output:
+    false</code></pre>
 <h3 id="bspaceexperiment-exists">bspace:experiment-exists</h3>
 <h4 id="bspaceexperiment-exists-string">bspace:experiment-exists
 <em>string</em></h4>
@@ -539,6 +546,15 @@ An error will be thrown if no current working experiment has been
 set.</p>
 <p>Example:</p>
 <pre><code>bspace:set-parallel-runs 3</code></pre>
+<h3
+id="bspaceset-mirror-headless-output">bspace:set-mirror-headless-output</h3>
+<h4
+id="bspaceset-mirror-headless-output-boolean">bspace:set-mirror-headless-output
+<em>boolean</em></h4>
+<p>Set whether the current working experiment should display its
+background output in the Command Center, if running in the GUI.</p>
+<p>Example:</p>
+<pre><code>bspace:set-mirror-headless-output true</code></pre>
 <h3 id="bspaceget-spreadsheet">bspace:get-spreadsheet</h3>
 <h4 id="bspaceget-spreadsheet-1">bspace:get-spreadsheet</h4>
 <p>Report the spreadsheet location for the current working experiment.
@@ -582,6 +598,12 @@ set.</p>
 <p>Report the number of parallel runs for the current working
 experiment. An error will be thrown if no current working experiment has
 been set.</p>
+<h3
+id="bspaceget-mirror-headless-output">bspace:get-mirror-headless-output</h3>
+<h4
+id="bspaceget-mirror-headless-output-1">bspace:get-mirror-headless-output</h4>
+<p>Report whether the current working experiment will display its
+background output in the Command Center, if running in the GUI.</p>
 <h3 id="bspaceget-output-metric">bspace:get-output-metric</h3>
 <h4
 id="bspaceget-output-metric-string-string-number">bspace:get-output-metric
