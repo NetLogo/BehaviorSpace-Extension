@@ -9,6 +9,7 @@ import org.nlogo.core.LogoList
 import org.nlogo.core.Syntax._
 import org.nlogo.fileformat.{ LabLoader, LabSaver }
 import org.nlogo.headless.Main
+import org.nlogo.nvm.ExtensionContext
 import org.nlogo.nvm.LabInterface.Settings
 import org.nlogo.workspace.AbstractWorkspace
 
@@ -97,7 +98,11 @@ object RunExperiment extends Command {
 
     Main.runExperimentWithProtocol(new Settings(context.workspace.getModelPath, None, None, table, spreadsheet,
                                                 stats, lists, None, protocol.runOptions.threadCount, false,
-                                                protocol.runOptions.updatePlotsAndMonitors), protocol,
+                                                protocol.runOptions.updatePlotsAndMonitors,
+                                                if (protocol.runOptions.mirrorHeadlessOutput)
+                                                  Some(context.asInstanceOf[ExtensionContext].nvmContext.workspace)
+                                                else
+                                                  None), protocol,
                                   () => {
                                     BehaviorSpaceExtension.experimentStack -= protocol.name
                                   })
@@ -324,6 +329,7 @@ object GetParameters extends Reporter {
     result += "Update view:\n\t" + protocol.runOptions.updateView.toString + "\n"
     result += "Update plots:\n\t" + protocol.runOptions.updatePlotsAndMonitors.toString + "\n"
     result += "Parallel runs:\n\t" + protocol.runOptions.threadCount.toString + "\n"
+    result += "Mirror headless output:\n\t" + protocol.runOptions.mirrorHeadlessOutput.toString + "\n"
 
     result
   }

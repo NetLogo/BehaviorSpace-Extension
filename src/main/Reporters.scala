@@ -513,3 +513,27 @@ object GetRecommendedMaxParallelRuns extends Reporter {
     LabDefaultValues.getRecommendedMaxThreads
   }
 }
+
+object GetMirrorHeadlessOutput extends Reporter {
+  override def getSyntax = {
+    reporterSyntax(ret = BooleanType)
+  }
+
+  override def report(args: Array[Argument], context: Context): java.lang.Boolean = {
+    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
+      BehaviorSpaceExtension.nameError(context, "noCurrent")
+      return LabDefaultValues.getDefaultMirrorHeadlessOutput
+    }
+        
+    return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
+      case ExperimentType.GUI =>
+        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment)
+                                                     .get.runOptions.mirrorHeadlessOutput
+      case ExperimentType.Code =>
+        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).mirrorHeadlessOutput
+      case _ =>
+        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
+        LabDefaultValues.getDefaultMirrorHeadlessOutput
+    }
+  }
+}
