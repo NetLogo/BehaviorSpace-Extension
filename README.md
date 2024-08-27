@@ -228,7 +228,8 @@ bspace:export-experiment "/Users/hacker53/Documents/my-experiment.xml"
 #### bspace:clear-experiments
 
 Clear the list of stored experiments that have been created in the code, and reset all experiments that have been
-paused after running from the code. The model and all experiments created in the GUI will remain unchanged.
+paused after running from the code. Any running experiments that were created in the code will be aborted, but the
+model and all experiments created in the GUI will remain unchanged.
 
 Example:
 

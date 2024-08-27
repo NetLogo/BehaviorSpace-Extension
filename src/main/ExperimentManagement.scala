@@ -9,8 +9,9 @@ import org.nlogo.core.LogoList
 import org.nlogo.core.Syntax._
 import org.nlogo.fileformat.{ LabLoader, LabSaver }
 import org.nlogo.headless.Main
+import org.nlogo.lab.Worker
 import org.nlogo.nvm.ExtensionContext
-import org.nlogo.nvm.LabInterface.Settings
+import org.nlogo.nvm.LabInterface
 import org.nlogo.workspace.AbstractWorkspace
 
 object CreateExperiment extends Command {
@@ -28,9 +29,9 @@ object CreateExperiment extends Command {
       return BehaviorSpaceExtension.nameError(context, "emptyName")
 
     if (BehaviorSpaceExtension.experiments.contains(name))
-      BehaviorSpaceExtension.experiments(name) = new ExperimentData()
+      BehaviorSpaceExtension.experiments(name) = new ExperimentData
     else
-      BehaviorSpaceExtension.experiments += ((name, new ExperimentData()))
+      BehaviorSpaceExtension.experiments += ((name, new ExperimentData))
 
     BehaviorSpaceExtension.experiments(name).name = name
   }
@@ -73,7 +74,7 @@ object RunExperiment extends Command {
       return BehaviorSpaceExtension.nameError(context, "recursive")
     }
 
-    BehaviorSpaceExtension.experimentStack += protocol.name
+    BehaviorSpaceExtension.experimentStack += ((protocol.name, null))
 
     var outputPath = ""
 
@@ -96,16 +97,21 @@ object RunExperiment extends Command {
       if (protocol.runOptions.lists.trim.isEmpty) None
       else Some((new PrintWriter(new FileWriter(protocol.runOptions.lists.trim)), outputPath))
 
-    Main.runExperimentWithProtocol(new Settings(context.workspace.getModelPath, None, None, table, spreadsheet,
-                                                stats, lists, None, protocol.runOptions.threadCount, false,
-                                                protocol.runOptions.updatePlotsAndMonitors,
-                                                if (protocol.runOptions.mirrorHeadlessOutput)
-                                                  Some(context.asInstanceOf[ExtensionContext].nvmContext.workspace)
-                                                else
-                                                  None), protocol,
-                                  () => {
-                                    BehaviorSpaceExtension.experimentStack -= protocol.name
-                                  })
+    Main.runExperimentWithProtocol(new LabInterface.Settings(context.workspace.getModelPath, None, None, table,
+                                                             spreadsheet, stats, lists, None,
+                                                             protocol.runOptions.threadCount, false,
+                                                             protocol.runOptions.updatePlotsAndMonitors,
+                                                             if (protocol.runOptions.mirrorHeadlessOutput)
+                                                               Some(context.asInstanceOf[ExtensionContext].
+                                                                    nvmContext.workspace)
+                                                             else
+                                                               None), protocol,
+                                   (worker: LabInterface.Worker) => {
+                                     BehaviorSpaceExtension.experimentStack(protocol.name) = worker.asInstanceOf[Worker]
+                                   },
+                                   () => {
+                                     BehaviorSpaceExtension.experimentStack -= protocol.name
+                                   })
   }
 }
 
@@ -232,7 +238,13 @@ object ClearExperiments extends Command {
   }
 
   def perform(args: Array[Argument], context: Context) {
+    for ((_, worker) <- BehaviorSpaceExtension.experimentStack) {
+      if (worker != null)
+        worker.abort()
+    }
+
     BehaviorSpaceExtension.experiments.clear()
+    BehaviorSpaceExtension.experimentStack.clear()
 
     BehaviorSpaceExtension.currentExperiment = ""
   }
