@@ -2,13 +2,14 @@
 
 package org.nlogo.extensions.bspace
 
-import org.nlogo.api.{ AnonymousProcedure, Argument, Command, Context, DefaultClassManager, LabDefaultValues,
-                       LabProtocol, LabRunOptions, PrimitiveManager, RefValueSet }
-import org.nlogo.window.GUIWorkspace
-
 import javax.swing.JOptionPane
 
-import scala.collection.mutable.{ Map, Set }
+import org.nlogo.api.{ AnonymousProcedure, Argument, Command, Context, DefaultClassManager, LabDefaultValues,
+                       LabProtocol, LabRunOptions, PrimitiveManager, RefValueSet }
+import org.nlogo.lab.Worker
+import org.nlogo.window.GUIWorkspace
+
+import scala.collection.mutable.Map
 
 class ExperimentData {
   var name = ""
@@ -43,7 +44,7 @@ object ExperimentType extends Enumeration {
 
 object BehaviorSpaceExtension {
   val experiments = Map[String, ExperimentData]()
-  val experimentStack = Set[String]()
+  val experimentStack = Map[String, Worker]()
 
   var currentExperiment = ""
 
@@ -107,7 +108,7 @@ object BehaviorSpaceExtension {
   }
 
   def dataFromProtocol(protocol: LabProtocol): ExperimentData = {
-    val data = new ExperimentData()
+    val data = new ExperimentData
 
     data.name = protocol.name
     data.preExperimentCommands = protocol.preExperimentCommands
