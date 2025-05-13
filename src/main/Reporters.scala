@@ -13,7 +13,7 @@ object GotoBehaviorspaceDocumentation extends Command {
     commandSyntax()
   }
 
-  def perform(args: Array[Argument], context: Context) {
+  def perform(args: Array[Argument], context: Context): Unit = {
     BrowserLauncher.openPath(BrowserLauncher.docPath("behaviorspace.html"), "")
   }
 }
@@ -23,7 +23,7 @@ object GotoBspaceExtensionDocumentation extends Command {
     commandSyntax()
   }
 
-  def perform(args: Array[Argument], context: Context) {
+  def perform(args: Array[Argument], context: Context): Unit = {
     // will fill in once i know the link
   }
 }
@@ -38,7 +38,7 @@ object GetPreExperimentCommands extends Reporter {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
-        
+
     return (BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
         context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.preExperimentCommands
@@ -61,7 +61,7 @@ object GetSetupCommands extends Reporter {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
-        
+
     return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
         context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.setupCommands
@@ -84,7 +84,7 @@ object GetGoCommands extends Reporter {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
-        
+
     return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
         context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.goCommands
@@ -107,7 +107,7 @@ object GetPostRunCommands extends Reporter {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
-        
+
     return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
         context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.postRunCommands
@@ -130,7 +130,7 @@ object GetPostExperimentCommands extends Reporter {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
-        
+
     return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
         context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.postExperimentCommands
@@ -151,17 +151,18 @@ object GetRepetitions extends Reporter {
   override def report(args: Array[Argument], context: Context): java.lang.Double = {
     if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
-      return LabDefaultValues.getDefaultRepetitions
+      return LabDefaultValues.getDefaultRepetitions.toDouble
     }
-        
+
     return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.repetitions
+        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment)
+          .get.repetitions.toDouble
       case ExperimentType.Code =>
-        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).repetitions
+        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).repetitions.toDouble
       case _ =>
         BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
-        LabDefaultValues.getDefaultRepetitions
+        LabDefaultValues.getDefaultRepetitions.toDouble
     }
   }
 }
@@ -176,7 +177,7 @@ object GetSequentialRunOrder extends Reporter {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return LabDefaultValues.getDefaultSequentialRunOrder
     }
-        
+
     return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
         context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.sequentialRunOrder
@@ -199,7 +200,7 @@ object GetRunMetricsEveryStep extends Reporter {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return LabDefaultValues.getDefaultRunMetricsEveryStep
     }
-        
+
     return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
         context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.runMetricsEveryStep
@@ -222,7 +223,7 @@ object GetRunMetricsCondition extends Reporter {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
-        
+
     return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
         context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.runMetricsCondition
@@ -243,17 +244,18 @@ object GetTimeLimit extends Reporter {
   override def report(args: Array[Argument], context: Context): java.lang.Double = {
     if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
-      return LabDefaultValues.getDefaultTimeLimit
+      return LabDefaultValues.getDefaultTimeLimit.toDouble
     }
-        
+
     return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.timeLimit
+        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment)
+          .get.timeLimit.toDouble
       case ExperimentType.Code =>
-        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).timeLimit
+        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).timeLimit.toDouble
       case _ =>
         BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
-        LabDefaultValues.getDefaultTimeLimit
+        LabDefaultValues.getDefaultTimeLimit.toDouble
     }
   }
 }
@@ -268,7 +270,7 @@ object GetStopCondition extends Reporter {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
-        
+
     return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
         context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.exitCondition
@@ -341,17 +343,18 @@ object GetParallelRuns extends Reporter {
   override def report(args: Array[Argument], context: Context): java.lang.Double = {
     if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
-      return LabDefaultValues.getDefaultThreads
+      return LabDefaultValues.getDefaultThreads.toDouble
     }
-        
+
     return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.runOptions.threadCount
+        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment)
+          .get.runOptions.threadCount.toDouble
       case ExperimentType.Code =>
-        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).threadCount
+        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).threadCount.toDouble
       case _ =>
         BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
-        LabDefaultValues.getDefaultThreads
+        LabDefaultValues.getDefaultThreads.toDouble
     }
   }
 }
@@ -366,7 +369,7 @@ object GetTable extends Reporter {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
-        
+
     return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
         context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.runOptions.table
@@ -389,7 +392,7 @@ object GetSpreadsheet extends Reporter {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
-        
+
     return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
         context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.runOptions.spreadsheet
@@ -412,7 +415,7 @@ object GetStats extends Reporter {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
-        
+
     return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
         context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.runOptions.stats
@@ -435,7 +438,7 @@ object GetLists extends Reporter {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return ""
     }
-        
+
     return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
         context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.runOptions.lists
@@ -458,7 +461,7 @@ object GetUpdateView extends Reporter {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return LabDefaultValues.getDefaultUpdateView
     }
-        
+
     return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
         context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.runOptions.updateView
@@ -481,7 +484,7 @@ object GetUpdatePlots extends Reporter {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return LabDefaultValues.getDefaultUpdatePlotsAndMonitors
     }
-        
+
     return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
         context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.runOptions.updatePlotsAndMonitors
@@ -500,7 +503,7 @@ object GetDefaultParallelRuns extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): java.lang.Double = {
-    LabDefaultValues.getDefaultThreads
+    LabDefaultValues.getDefaultThreads.toDouble
   }
 }
 
@@ -510,7 +513,7 @@ object GetRecommendedMaxParallelRuns extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): java.lang.Double = {
-    LabDefaultValues.getRecommendedMaxThreads
+    LabDefaultValues.getRecommendedMaxThreads.toDouble
   }
 }
 
@@ -524,7 +527,7 @@ object GetMirrorHeadlessOutput extends Reporter {
       BehaviorSpaceExtension.nameError(context, "noCurrent")
       return LabDefaultValues.getDefaultMirrorHeadlessOutput
     }
-        
+
     return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
         context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment)

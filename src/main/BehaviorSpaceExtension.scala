@@ -83,7 +83,7 @@ object BehaviorSpaceExtension {
     }
   }
 
-  def nameError(context: Context, message: String, keys: String*) {
+  def nameError(context: Context, message: String, keys: String*): Unit = {
     if (context.workspace.isHeadless)
       throw new RuntimeException(replaceErrorString(message, keys))
 
@@ -157,7 +157,7 @@ object BehaviorSpaceExtension {
 }
 
 class BehaviorSpaceExtension extends DefaultClassManager {
-  def load(manager: PrimitiveManager) {
+  def load(manager: PrimitiveManager): Unit = {
     manager.addPrimitive("create-experiment", CreateExperiment)
     manager.addPrimitive("delete-experiment", DeleteExperiment)
     manager.addPrimitive("run-experiment", RunExperiment)

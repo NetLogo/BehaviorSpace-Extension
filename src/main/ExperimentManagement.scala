@@ -19,7 +19,7 @@ object CreateExperiment extends Command {
     commandSyntax(right = List(StringType, BooleanType))
   }
 
-  def perform(args: Array[Argument], context: Context) {
+  def perform(args: Array[Argument], context: Context): Unit = {
     val name = args(0).getString.trim
 
     if (!args(1).getBooleanValue &&
@@ -42,7 +42,7 @@ object DeleteExperiment extends Command {
     commandSyntax(right = List(StringType))
   }
 
-  def perform(args: Array[Argument], context: Context) {
+  def perform(args: Array[Argument], context: Context): Unit = {
     val name = args(0).getString.trim
 
     if (!BehaviorSpaceExtension.validateForEditing(name, context)) return
@@ -56,10 +56,10 @@ object RunExperiment extends Command {
     commandSyntax()
   }
 
-  def perform(args: Array[Argument], context: Context) {
+  def perform(args: Array[Argument], context: Context): Unit = {
     if (BehaviorSpaceExtension.currentExperiment.isEmpty)
       return BehaviorSpaceExtension.nameError(context, "noCurrent")
-        
+
     val protocol = BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
         context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get
@@ -120,12 +120,12 @@ object RenameExperiment extends Command {
     commandSyntax(right = List(StringType))
   }
 
-  def perform(args: Array[Argument], context: Context) {
+  def perform(args: Array[Argument], context: Context): Unit = {
     if (BehaviorSpaceExtension.currentExperiment.isEmpty)
       return BehaviorSpaceExtension.nameError(context, "noCurrent")
 
     val name = args(0).getString.trim
-        
+
     if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
     if (BehaviorSpaceExtension.experimentType(name, context) != ExperimentType.None)
       return BehaviorSpaceExtension.nameError(context, "noExperiment", name)
@@ -148,7 +148,7 @@ object DuplicateExperiment extends Command {
     commandSyntax(right = List(StringType))
   }
 
-  def perform(args: Array[Argument], context: Context) {
+  def perform(args: Array[Argument], context: Context): Unit = {
     if (BehaviorSpaceExtension.currentExperiment.isEmpty)
       return BehaviorSpaceExtension.nameError(context, "noCurrent")
 
@@ -180,7 +180,7 @@ object ImportExperiments extends Command {
     commandSyntax(right = List(StringType))
   }
 
-  def perform(args: Array[Argument], context: Context) {
+  def perform(args: Array[Argument], context: Context): Unit = {
     val path = args(0).getString.trim
 
     try {
@@ -205,12 +205,12 @@ object ExportExperiment extends Command {
     commandSyntax(right = List(StringType, BooleanType))
   }
 
-  def perform(args: Array[Argument], context: Context) {
+  def perform(args: Array[Argument], context: Context): Unit = {
     if (BehaviorSpaceExtension.currentExperiment.isEmpty)
       return BehaviorSpaceExtension.nameError(context, "noCurrent")
 
     val path = args(0).getString.trim
-        
+
     val protocol = BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
         context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get
@@ -237,7 +237,7 @@ object ClearExperiments extends Command {
     commandSyntax()
   }
 
-  def perform(args: Array[Argument], context: Context) {
+  def perform(args: Array[Argument], context: Context): Unit = {
     for ((_, worker) <- BehaviorSpaceExtension.experimentStack) {
       if (worker != null)
         worker.abort()
@@ -255,7 +255,7 @@ object SetCurrentExperiment extends Command {
     commandSyntax(right = List(StringType))
   }
 
-  def perform(args: Array[Argument], context: Context) {
+  def perform(args: Array[Argument], context: Context): Unit = {
     BehaviorSpaceExtension.currentExperiment = args(0).getString.trim
   }
 }

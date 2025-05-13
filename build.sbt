@@ -6,10 +6,10 @@ name       := "BehaviorSpaceExtension"
 version    := "1.0.0"
 isSnapshot := true
 
-scalaVersion          := "2.12.12"
+scalaVersion          := "3.7.0"
 Compile / scalaSource := baseDirectory.value / "src" / "main"
 scalacOptions        ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings", "-encoding", "us-ascii", "-release", "11")
 
 netLogoExtName      := "bspace"
 netLogoClassManager := "org.nlogo.extensions.bspace.BehaviorSpaceExtension"
-netLogoVersion      := "6.4.0"
+netLogoVersion      := "7.0.0-beta1"
