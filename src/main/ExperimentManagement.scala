@@ -100,18 +100,18 @@ object RunExperiment extends Command {
     Main.runExperimentWithProtocol(new LabInterface.Settings(context.workspace.getModelPath, None, None, table,
                                                              spreadsheet, stats, lists, None,
                                                              protocol.runOptions.threadCount, false,
-                                                             protocol.runOptions.updatePlotsAndMonitors,
-                                                             if (protocol.runOptions.mirrorHeadlessOutput)
-                                                               Some(context.asInstanceOf[ExtensionContext].
-                                                                    nvmContext.workspace)
-                                                             else
-                                                               None), protocol,
+                                                             protocol.runOptions.updatePlotsAndMonitors), protocol,
                                    (worker: LabInterface.Worker) => {
-                                     BehaviorSpaceExtension.experimentStack(protocol.name) = worker.asInstanceOf[Worker]
+                                     BehaviorSpaceExtension.experimentStack(protocol.name) =
+                                      worker.asInstanceOf[Worker]
                                    },
                                    () => {
                                      BehaviorSpaceExtension.experimentStack -= protocol.name
-                                   })
+                                   }, if (protocol.runOptions.mirrorHeadlessOutput) {
+                                        context.asInstanceOf[ExtensionContext].nvmContext.workspace.primaryWorkspace
+                                      } else {
+                                        None
+                                      })
   }
 }
 
