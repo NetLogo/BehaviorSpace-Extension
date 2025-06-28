@@ -256,7 +256,14 @@ object SetCurrentExperiment extends Command {
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    BehaviorSpaceExtension.currentExperiment = args(0).getString.trim
+    val name = args(0).getString.trim
+
+    BehaviorSpaceExtension.experimentType(name, context) match {
+      case ExperimentType.None =>
+        BehaviorSpaceExtension.nameError(context, "noExperiment", name)
+      case _ =>
+        BehaviorSpaceExtension.currentExperiment = name
+    }
   }
 }
 
