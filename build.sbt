@@ -2,7 +2,7 @@ import org.nlogo.build.NetLogoExtension
 
 enablePlugins(NetLogoExtension)
 
-name       := "BehaviorSpaceExtension"
+name       := "bspace"
 version    := "1.0.0"
 isSnapshot := true
 

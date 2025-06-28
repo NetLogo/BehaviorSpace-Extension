@@ -24,7 +24,7 @@ object GotoBspaceExtensionDocumentation extends Command {
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    // will fill in once i know the link
+    BrowserLauncher.openPath(BrowserLauncher.docPath("bspace.html"), "")
   }
 }
 
