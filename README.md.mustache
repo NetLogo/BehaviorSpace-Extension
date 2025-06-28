@@ -1,5 +1,7 @@
+<title>NetLogo {{version}} User Manual: BehaviorSpace Extension</title>
+<link rel="stylesheet" href="netlogo.css" type="text/css">
 
-# BehaviorSpace Extension for NetLogo
+# NetLogo BehaviorSpace Extension
 
 The BehaviorSpace extension allows you to create and run BehaviorSpace experiments from NetLogo code. You can use the
 extension alone or in combination with the GUI BehaviorSpace tool, and you can run experiments created in the GUI tool
@@ -21,119 +23,123 @@ created in the code will persist for the duration of the current NetLogo session
 
 Experiments created in the code will have the following default values:
 
-Pre Experiment Commands: empty
-Setup Commands: empty
-Go Commands: empty
-Post Run Commands: empty
-Post Experiment Commands: empty
-Repetitions: 1
-Sequential Run Order: true
-Run Metrics Every Step: true
-Run Metrics Condition: empty
-Time Limit: 0
-Stop Condition: empty
-Metrics: empty
-Variables: empty
-Threads: determined by number of processor cores
-Recommended Max Threads: determined by number of processor cores
-Table: empty
-Spreadsheet: empty
-Stats: empty
-Lists: empty
-Update View: true
-Update Plots And Monitors: true
-Mirror Headless Output: false
+- Pre Experiment Commands: empty
+- Setup Commands: empty
+- Go Commands: empty
+- Post Run Commands: empty
+- Post Experiment Commands: empty
+- Repetitions: 1
+- Sequential Run Order: true
+- Run Metrics Every Step: true
+- Run Metrics Condition: empty
+- Time Limit: 0
+- Stop Condition: empty
+- Metrics: empty
+- Variables: empty
+- Threads: determined by number of processor cores
+- Recommended Max Threads: determined by number of processor cores
+- Table: empty
+- Spreadsheet: empty
+- Stats: empty
+- Lists: empty
+- Update View: true
+- Update Plots And Monitors: true
+- Mirror Headless Output: false
 
-Any properties can also be set explicitly to other default values. For code blocks, you can specify "do nothing" with
-an empty pair of square brackets.
+All properties can be set explicitly to alternate values. For code blocks, you can specify that no code should be
+executed by using an empty pair of square brackets.
 
 ## Primitives
 
 ### Experiment Management
 
-[`bspace:create-experiment`](#bspacecreate-experiment)
-[`bspace:delete-experiment`](#bspacedelete-experiment)
-[`bspace:run-experiment`](#bspacerun-experiment)
-[`bspace:rename-experiment`](#bspacerename-experiment)
-[`bspace:duplicate-experiment`](#bspaceduplicate-experiment)
-[`bspace:import-experiments`](#bspaceimport-experiments)
-[`bspace:export-experiment`](#bspaceexport-experiment)
-[`bspace:clear-experiments`](#bspaceclear-experiments)
-[`bspace:set-current-experiment`](#bspaceset-current-experiment)
-[`bspace:get-experiments`](#bspaceget-experiments)
-[`bspace:get-current-experiment`](#bspaceget-current-experiment)
-[`bspace:get-parameters`](#bspaceget-parameters)
-[`bspace:experiment-exists`](#bspaceexperiment-exists)
-[`bspace:valid-experiment-name`](#bspacevalid-experiment-name)
+[`bspace:create-experiment`](#bspacecreate-experiment)<br>
+[`bspace:delete-experiment`](#bspacedelete-experiment)<br>
+[`bspace:run-experiment`](#bspacerun-experiment)<br>
+[`bspace:rename-experiment`](#bspacerename-experiment)<br>
+[`bspace:duplicate-experiment`](#bspaceduplicate-experiment)<br>
+[`bspace:import-experiments`](#bspaceimport-experiments)<br>
+[`bspace:export-experiment`](#bspaceexport-experiment)<br>
+[`bspace:clear-experiments`](#bspaceclear-experiments)<br>
+[`bspace:set-current-experiment`](#bspaceset-current-experiment)<br>
+[`bspace:get-experiments`](#bspaceget-experiments)<br>
+[`bspace:get-current-experiment`](#bspaceget-current-experiment)<br>
+[`bspace:get-parameters`](#bspaceget-parameters)<br>
+[`bspace:experiment-exists`](#bspaceexperiment-exists)<br>
+[`bspace:valid-experiment-name`](#bspacevalid-experiment-name)<br>
 
 ### Setting Experiment Parameters
 
-[`bspace:set-variables`](#bspaceset-variables)
-[`bspace:set-repetitions`](#bspaceset-repetitions)
-[`bspace:set-sequential-run-order`](#bspaceset-sequential-run-order)
-[`bspace:set-metrics`](#bspaceset-metrics)
-[`bspace:set-run-metrics-every-step`](#bspaceset-run-metrics-every-step)
-[`bspace:set-run-metrics-condition`](#bspaceset-run-metrics-condition)
-[`bspace:set-pre-experiment-commands`](#bspaceset-pre-experiment-commands)
-[`bspace:set-setup-commands`](#bspaceset-setup-commands)
-[`bspace:set-go-commands`](#bspaceset-go-commands)
-[`bspace:set-stop-condition`](#bspaceset-stop-condition)
-[`bspace:set-post-run-commands`](#bspaceset-post-run-commands)
-[`bspace:set-post-experiment-commands`](#bspaceset-post-experiment-commands)
-[`bspace:set-time-limit`](#bspaceset-time-limit)
+[`bspace:set-variables`](#bspaceset-variables)<br>
+[`bspace:set-repetitions`](#bspaceset-repetitions)<br>
+[`bspace:set-sequential-run-order`](#bspaceset-sequential-run-order)<br>
+[`bspace:set-metrics`](#bspaceset-metrics)<br>
+[`bspace:set-run-metrics-every-step`](#bspaceset-run-metrics-every-step)<br>
+[`bspace:set-run-metrics-condition`](#bspaceset-run-metrics-condition)<br>
+[`bspace:set-pre-experiment-commands`](#bspaceset-pre-experiment-commands)<br>
+[`bspace:set-setup-commands`](#bspaceset-setup-commands)<br>
+[`bspace:set-go-commands`](#bspaceset-go-commands)<br>
+[`bspace:set-stop-condition`](#bspaceset-stop-condition)<br>
+[`bspace:set-post-run-commands`](#bspaceset-post-run-commands)<br>
+[`bspace:set-post-experiment-commands`](#bspaceset-post-experiment-commands)<br>
+[`bspace:set-time-limit`](#bspaceset-time-limit)<br>
 
 ### Getting Experiment Parameters
 
-[`bspace:get-variables`](#bspaceget-variables)
-[`bspace:get-repetitions`](#bspaceget-repetitions)
-[`bspace:get-sequential-run-order`](#bspaceget-sequential-run-order)
-[`bspace:get-metrics`](#bspaceget-metrics)
-[`bspace:get-run-metrics-every-step`](#bspaceget-run-metrics-every-step)
-[`bspace:get-run-metrics-condition`](#bspaceget-run-metrics-condition)
-[`bspace:get-pre-experiment-commands`](#bspaceget-pre-experiment-commands)
-[`bspace:get-setup-commands`](#bspaceget-setup-commands)
-[`bspace:get-go-commands`](#bspaceget-go-commands)
-[`bspace:get-stop-condition`](#bspaceget-stop-condition)
-[`bspace:get-post-run-commands`](#bspaceget-post-run-commands)
-[`bspace:get-post-experiment-commands`](#bspaceget-post-experiment-commands)
-[`bspace:get-time-limit`](#bspaceget-time-limit)
+[`bspace:get-variables`](#bspaceget-variables)<br>
+[`bspace:get-repetitions`](#bspaceget-repetitions)<br>
+[`bspace:get-sequential-run-order`](#bspaceget-sequential-run-order)<br>
+[`bspace:get-metrics`](#bspaceget-metrics)<br>
+[`bspace:get-run-metrics-every-step`](#bspaceget-run-metrics-every-step)<br>
+[`bspace:get-run-metrics-condition`](#bspaceget-run-metrics-condition)<br>
+[`bspace:get-pre-experiment-commands`](#bspaceget-pre-experiment-commands)<br>
+[`bspace:get-setup-commands`](#bspaceget-setup-commands)<br>
+[`bspace:get-go-commands`](#bspaceget-go-commands)<br>
+[`bspace:get-stop-condition`](#bspaceget-stop-condition)<br>
+[`bspace:get-post-run-commands`](#bspaceget-post-run-commands)<br>
+[`bspace:get-post-experiment-commands`](#bspaceget-post-experiment-commands)<br>
+[`bspace:get-time-limit`](#bspaceget-time-limit)<br>
 
 ### Setting Experiment Run Conditions
 
-[`bspace:set-spreadsheet`](#bspaceset-spreadsheet)
-[`bspace:set-table`](#bspaceset-table)
-[`bspace:set-stats`](#bspaceset-stats)
-[`bspace:set-lists`](#bspaceset-list)
-[`bspace:set-update-view`](#bspaceset-update-view)
-[`bspace:set-update-plots`](#bspaceset-update-plots)
-[`bspace:set-parallel-runs`](#bspaceset-parallel-runs)
-[`bspace:set-mirror-headless-output`](#bspaceset-mirror-headless-output)
+[`bspace:set-spreadsheet`](#bspaceset-spreadsheet)<br>
+[`bspace:set-table`](#bspaceset-table)<br>
+[`bspace:set-stats`](#bspaceset-stats)<br>
+[`bspace:set-lists`](#bspaceset-list)<br>
+[`bspace:set-update-view`](#bspaceset-update-view)<br>
+[`bspace:set-update-plots`](#bspaceset-update-plots)<br>
+[`bspace:set-parallel-runs`](#bspaceset-parallel-runs)<br>
+[`bspace:set-mirror-headless-output`](#bspaceset-mirror-headless-output)<br>
 
 ### Getting Experiment Run Conditions
 
-[`bspace:get-spreadsheet`](#bspaceget-spreadsheet)
-[`bspace:get-table`](#bspaceget-table)
-[`bspace:get-stats`](#bspaceget-stats)
-[`bspace:get-lists`](#bspaceget-list)
-[`bspace:get-update-view`](#bspaceget-update-view)
-[`bspace:get-update-plots`](#bspaceget-update-plots)
-[`bspace:get-parallel-runs`](#bspaceget-parallel-runs)
-[`bspace:get-mirror-headless-output`](#bspaceget-mirror-headless-output)
+[`bspace:get-spreadsheet`](#bspaceget-spreadsheet)<br>
+[`bspace:get-table`](#bspaceget-table)<br>
+[`bspace:get-stats`](#bspaceget-stats)<br>
+[`bspace:get-lists`](#bspaceget-list)<br>
+[`bspace:get-update-view`](#bspaceget-update-view)<br>
+[`bspace:get-update-plots`](#bspaceget-update-plots)<br>
+[`bspace:get-parallel-runs`](#bspaceget-parallel-runs)<br>
+[`bspace:get-mirror-headless-output`](#bspaceget-mirror-headless-output)<br>
 
 ### Experiment Information
 
-[`bspace:goto-behaviorspace-documentation`](#bspacegoto-behaviorspace-documentation)
-[`bspace:goto-bspace-extension-documentation`](#bspacegoto-bspace-extension-documentation)
-[`bspace:get-default-parallel-runs`](#bspaceget-default-parallel-runs)
+[`bspace:goto-behaviorspace-documentation`](#bspacegoto-behaviorspace-documentation)<br>
+[`bspace:goto-bspace-extension-documentation`](#bspacegoto-bspace-extension-documentation)<br>
+[`bspace:get-default-parallel-runs`](#bspaceget-default-parallel-runs)<br>
 [`bspace:get-recommended-max-parallel-runs`](#bspaceget-recommended-max-parallel-runs)
+
+## Primitive Details
 
 ### bspace:create-experiment
 
 #### bspace:create-experiment *string* *boolean*
 
-Create a new experiment specified in the first input. If an experiment already exists with that name and
+Create a new experiment with the name specified in the first input. If an experiment already exists with that name and
 the second input is true, that experiment will be overwritten with the default experiment. If an experiment already
-exists with that name and the second input is false, an error will be thrown.
+exists with that name and the second input is false, an error will be thrown. The newly created experiment will be
+stored until NetLogo is closed or the stored experiments are cleared with
+[`bspace:clear-experiments`](#bspaceclear-experiments).
 
 Example:
 
@@ -145,7 +151,8 @@ bspace:create-experiment "my-experiment" true
 
 #### bspace:delete-experiment *string*
 
-Delete the experiment specified in the first input. An error will be thrown if the specified experiment does not exist.
+Delete the experiment with the name specified in the first input. An error will be thrown if the specified experiment
+does not exist.
 
 Example:
 
@@ -157,13 +164,8 @@ bspace:delete-experiment "my-experiment"
 
 #### bspace:run-experiment
 
-Run the current working experiment. An error will be thrown if no current working experiment has been set.
-
-Example:
-
-```
-bspace:run-experiment
-```
+Run the current working experiment (see [`bspace:set-current-experiment`](#bspaceset-current-experiment)). An error
+will be thrown if no current working experiment has been set.
 
 ### bspace:rename-experiment
 
@@ -183,8 +185,8 @@ bspace:rename-experiment "another-experiment"
 #### bspace:duplicate-experiment *string*
 
 Make a copy of the current working experiment and rename the copy to the name specified in the first input, then set
-the current working experiment to the new experiment. An error will be thrown if no current working experiment has
-been set.
+the current working experiment to the newly created experiment. An error will be thrown if no current working
+experiment has been set.
 
 Example:
 
@@ -196,8 +198,8 @@ bspace:duplicate-experiment "my-experiment-copy"
 
 #### bspace:import-experiments *string*
 
-Import the experiments contained in the file at the specified location. An error will be thrown for each experiment
-that has a name that already exists, but the remaining experiments will be succesfully imported.
+Import the experiments contained in the file at the specified path. An error will be thrown for each experiment that
+has a name that already exists, but the remaining experiments will be succesfully imported.
 
 Example:
 
@@ -223,19 +225,12 @@ bspace:export-experiment "/Users/hacker53/Documents/my-experiment.xml"
 
 #### bspace:clear-experiments
 
-Clear the list of stored experiments that have been created in the code, and reset all experiments that have been
-paused after running from the code. Any running experiments that were created in the code will be aborted, but the
-model and all experiments created in the GUI will remain unchanged.
-
-Example:
-
-```
-bspace:clear-experiments
-```
+Clear the list of stored experiments that have been created in the code. Any currently running experiments that were
+created in the code will be aborted, but the model and all experiments created in the GUI will remain unchanged.
 
 ### bspace:set-current-experiment
 
-#### bspace:set-current-experient *string*
+#### bspace:set-current-experiment *string*
 
 Set the current working experiment to the name specified in the first input.
 
@@ -341,7 +336,8 @@ bspace:experiment-exists "my-experiment"
 
 #### bspace:valid-experiment-name *string*
 
-Report whether the specified name is a valid experiment name.
+Report whether the specified name is a valid experiment name. An experiment name is valid if it is not empty and if no
+other experiment currently exists with the specified name.
 
 Example:
 
@@ -350,7 +346,7 @@ bspace:valid-experiment-name "" ; false
 bspace:valid-experiment-name "my-experiment" ; true
 
 bspace:create-experiment "my-experiment" true
-bspace:valid-experiment-name "my-experiment" false
+bspace:valid-experiment-name "my-experiment" ; false
 ```
 
 ### bspace:set-variables
@@ -359,7 +355,7 @@ bspace:valid-experiment-name "my-experiment" false
 
 Set the variables to vary for the current working experiment. Each element of the input list should contain one
 constant or sub-experiment specification. An error will be thrown if no current working experiment has been set.
-Note that nested quotation marks must be escaped double quotes, using single quotes will cause errors.
+Note that nested double quotes must be escaped, and using single quotes will cause errors.
 
 Example:
 
@@ -785,13 +781,13 @@ the GUI.
 
 #### bspace:goto-behaviorspace-documentation
 
-Open the BehaviorSpace documentation page in a browser window.
+Open the BehaviorSpace GUI documentation page in a browser window.
 
 ### bspace:goto-bspace-extension-documentation
 
 #### bspace:goto-bspace-extension-documentation
 
-Open the bspace extension documentation page in a browser window.
+Open the BehaviorSpace extension documentation page in a browser window.
 
 ### bspace:get-default-parallel-runs
 
