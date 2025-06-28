@@ -108,7 +108,7 @@ object RunExperiment extends Command {
                                    () => {
                                      BehaviorSpaceExtension.experimentStack -= protocol.name
                                    }, if (protocol.runOptions.mirrorHeadlessOutput) {
-                                        context.asInstanceOf[ExtensionContext].nvmContext.workspace.primaryWorkspace
+                                        context.asInstanceOf[ExtensionContext].nvmContext.workspace.getPrimaryWorkspace
                                       } else {
                                         None
                                       })
@@ -281,7 +281,7 @@ object GetExperiments extends Reporter {
 
     result += "GUI Experiments:\n"
 
-    for (exp <- context.workspace.getBehaviorSpaceExperiments.toSeq.sortBy(_.name)) {
+    for (exp <- context.workspace.getBehaviorSpaceExperiments.sortBy(_.name)) {
       result += "\t" + exp.name + "\n"
     }
 

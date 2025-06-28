@@ -52,8 +52,8 @@ object BehaviorSpaceExtension {
   private val errors = Map[String, String](
     "alreadyExists" -> "An experiment already exists with the name \"$0\".",
     "emptyName" -> "Experiment name cannot be empty.",
-    "noCurrent" -> """You must set a current working experiment before running\n
-                      bspace commands with no specified experiment name.""",
+    "noCurrent" -> """<html>You must set a current working experiment before running\n
+                      bspace commands with no specified experiment name.</html>""",
     "noExperiment" -> "No experiment exists with the name \"$0\".",
     "recursive" -> "Cannot run an experiment recursively.",
     "invalidFormat" -> "Invalid format in \"$0\".",
