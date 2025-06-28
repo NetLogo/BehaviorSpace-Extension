@@ -59,7 +59,6 @@ object BehaviorSpaceExtension {
     "invalidFormat" -> "Invalid format in \"$0\".",
     "fileExists" -> "File \"$0\" already exists.",
     "gui" -> "Experiment \"$0\" is a GUI experiment, it cannot be edited.",
-    "noMetric" -> "Metric \"$0\" does not exist in the specified output file.",
     "noRun" -> "Run \"$0\" does not exist in the specified output file."
   )
 
@@ -222,8 +221,6 @@ class BehaviorSpaceExtension extends DefaultClassManager {
     manager.addPrimitive("get-default-parallel-runs", GetDefaultParallelRuns)
     manager.addPrimitive("get-recommended-max-parallel-runs", GetRecommendedMaxParallelRuns)
     manager.addPrimitive("get-mirror-headless-output", GetMirrorHeadlessOutput)
-
-    manager.addPrimitive("get-output-metric", GetOutputMetric)
 
     BehaviorSpaceExtension.experiments.clear()
 

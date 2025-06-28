@@ -120,10 +120,6 @@ an empty pair of square brackets.
 [`bspace:get-parallel-runs`](#bspaceget-parallel-runs)
 [`bspace:get-mirror-headless-output`](#bspaceget-mirror-headless-output)
 
-### Processing BehaviorSpace Output
-
-[`bspace:get-output-metric`](#bspaceget-output-metric)
-
 ### Experiment Information
 
 [`bspace:goto-behaviorspace-documentation`](#bspacegoto-behaviorspace-documentation)
@@ -281,7 +277,7 @@ Sample output:
 EXPERIMENT PARAMETERS:
 
 Variable values:
-	
+
 Repetitions:
 	1
 Sequential run order:
@@ -291,34 +287,34 @@ Metrics:
 Run metrics every step:
 	true
 Run metrics condition:
-	
+
 Pre experiment commands:
-	
+
 Setup commands:
     setup
-	
+
 Go commands:
     go
-	
+
 Post run commands:
-	
+
 Post experiment commands:
-	
+
 Stop condtion:
-	
+
 Time limit:
 	0
 
 RUN OPTIONS:
 
 Spreadsheet:
-	
+
 Table:
-	
+
 Stats:
-	
+
 Lists:
-	
+
 Update view:
 	true
 Update plots:
@@ -784,20 +780,6 @@ experiment has been set.
 
 Report whether the current working experiment will display its background output in the Command Center, if running in
 the GUI.
-
-### bspace:get-output-metric
-
-#### bspace:get-output-metric *string* *string* *number*
-
-Report the list of values for the metric specified in the second input for the run number specified in the third input,
-from the file specified in the first input. The specified file must be a spreadsheet output to ensure proper ordering
-of values. An error will be thrown if any of the inputs are invalid.
-
-Example:
-
-```
-bspace:get-output-metric "/Users/hacker53/Documents/spreadsheet.csv" "count turtles" 3
-```
 
 ### bspace:goto-behaviorspace-documentation
 
