@@ -2,11 +2,12 @@
 
 package org.nlogo.extensions.bspace
 
-import javax.swing.JOptionPane
-
 import org.nlogo.api.{ AnonymousProcedure, Argument, Command, Context, DefaultClassManager, LabDefaultValues,
                        LabProtocol, LabRunOptions, PrimitiveManager, RefValueSet }
+import org.nlogo.core.I18N
 import org.nlogo.lab.Worker
+import org.nlogo.nvm.HaltException
+import org.nlogo.swing.OptionPane
 import org.nlogo.window.GUIWorkspace
 
 import scala.collection.mutable.Map
@@ -88,10 +89,11 @@ object BehaviorSpaceExtension {
       throw new RuntimeException(replaceErrorString(message, keys))
 
     else {
-      JOptionPane.showMessageDialog(context.workspace.asInstanceOf[GUIWorkspace].getFrame,
-                                    replaceErrorString(message, keys),
-                                    "Invalid",
-                                    JOptionPane.ERROR_MESSAGE)
+      if (new OptionPane(context.workspace.asInstanceOf[GUIWorkspace].getFrame,
+                         I18N.gui.get("tools.behaviorSpace.invalid"), replaceErrorString(message, keys),
+                         Seq(I18N.gui.get("common.buttons.ok"), I18N.gui.get("common.buttons.halt")),
+                         OptionPane.Icons.Error).getSelectedIndex != 0)
+        throw new HaltException(true)
     }
   }
 
