@@ -141,10 +141,10 @@ object BehaviorSpaceExtension {
     new LabProtocol(data.name, data.preExperimentCommands, data.setupCommands, data.goCommands, data.postRunCommands,
                     data.postExperimentCommands, data.repetitions, data.sequentialRunOrder, data.runMetricsEveryStep,
                     data.runMetricsCondition, data.timeLimit, data.exitCondition, data.metrics, data.constants,
-                    data.subExperiments, runOptions = new LabRunOptions(data.threadCount, data.table, data.spreadsheet,
-                                                                        data.stats, data.lists, data.updateView,
-                                                                        data.updatePlotsAndMonitors,
-                                                                        data.mirrorHeadlessOutput))
+                    data.subExperiments, runOptions = LabRunOptions(data.threadCount, data.table, data.spreadsheet,
+                                                                    data.stats, data.lists, data.updateView,
+                                                                    data.updatePlotsAndMonitors,
+                                                                    data.mirrorHeadlessOutput))
   }
 
   def removeQuotes(string: String): String = {

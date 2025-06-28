@@ -12,4 +12,4 @@ scalacOptions        ++= Seq("-deprecation", "-unchecked", "-Xfatal-warnings", "
 
 netLogoExtName      := "bspace"
 netLogoClassManager := "org.nlogo.extensions.bspace.BehaviorSpaceExtension"
-netLogoVersion      := "7.0.0-beta1"
+netLogoVersion      := "7.0.0-beta2-cfa301b"
