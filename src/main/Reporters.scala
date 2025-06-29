@@ -349,7 +349,7 @@ object GetParallelRuns extends Reporter {
     return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
         context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment)
-          .get.runOptions.threadCount.toDouble
+          .get.threadCount.toDouble
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).threadCount.toDouble
       case _ =>
@@ -372,7 +372,8 @@ object GetTable extends Reporter {
 
     return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.runOptions.table
+        context.workspace.getBehaviorSpaceExperiments
+          .find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.table
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).table
       case _ =>
@@ -395,7 +396,8 @@ object GetSpreadsheet extends Reporter {
 
     return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.runOptions.spreadsheet
+        context.workspace.getBehaviorSpaceExperiments
+          .find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.spreadsheet
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).spreadsheet
       case _ =>
@@ -418,7 +420,8 @@ object GetStats extends Reporter {
 
     return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.runOptions.stats
+        context.workspace.getBehaviorSpaceExperiments
+          .find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.stats
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).stats
       case _ =>
@@ -441,7 +444,8 @@ object GetLists extends Reporter {
 
     return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.runOptions.lists
+        context.workspace.getBehaviorSpaceExperiments
+          .find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.lists
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).lists
       case _ =>
@@ -464,7 +468,8 @@ object GetUpdateView extends Reporter {
 
     return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.runOptions.updateView
+        context.workspace.getBehaviorSpaceExperiments
+          .find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.updateView
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).updateView
       case _ =>
@@ -487,7 +492,8 @@ object GetUpdatePlots extends Reporter {
 
     return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.runOptions.updatePlotsAndMonitors
+        context.workspace.getBehaviorSpaceExperiments
+          .find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.updatePlotsAndMonitors
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).updatePlotsAndMonitors
       case _ =>
@@ -530,8 +536,8 @@ object GetMirrorHeadlessOutput extends Reporter {
 
     return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment)
-                                                     .get.runOptions.mirrorHeadlessOutput
+        context.workspace.getBehaviorSpaceExperiments
+          .find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.mirrorHeadlessOutput
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).mirrorHeadlessOutput
       case _ =>

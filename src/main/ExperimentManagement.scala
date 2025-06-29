@@ -28,12 +28,11 @@ object CreateExperiment extends Command {
     if (name.isEmpty)
       return BehaviorSpaceExtension.nameError(context, "emptyName")
 
-    if (BehaviorSpaceExtension.experiments.contains(name))
-      BehaviorSpaceExtension.experiments(name) = new ExperimentData
-    else
-      BehaviorSpaceExtension.experiments += ((name, new ExperimentData))
-
-    BehaviorSpaceExtension.experiments(name).name = name
+    if (BehaviorSpaceExtension.experiments.contains(name)) {
+      BehaviorSpaceExtension.experiments(name) = LabProtocol.defaultCodeProtocol(name)
+    } else {
+      BehaviorSpaceExtension.experiments += ((name, LabProtocol.defaultCodeProtocol(name)))
+    }
   }
 }
 
@@ -64,8 +63,7 @@ object RunExperiment extends Command {
       case ExperimentType.GUI =>
         context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get
       case ExperimentType.Code =>
-        BehaviorSpaceExtension.protocolFromData(
-          BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment))
+        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment)
       case _ =>
         return BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
     }
@@ -79,35 +77,35 @@ object RunExperiment extends Command {
     var outputPath = ""
 
     val spreadsheet =
-      if (protocol.runOptions.spreadsheet.trim.isEmpty) None
+      if (protocol.spreadsheet.trim.isEmpty) None
       else {
-        outputPath = protocol.runOptions.spreadsheet.trim
-        Some(new PrintWriter(new FileWriter(protocol.runOptions.spreadsheet.trim)))
+        outputPath = protocol.spreadsheet.trim
+        Some(new PrintWriter(new FileWriter(protocol.spreadsheet.trim)))
       }
     val table =
-      if (protocol.runOptions.table.trim.isEmpty) None
+      if (protocol.table.trim.isEmpty) None
       else {
-        outputPath = protocol.runOptions.table.trim
-        Some(new PrintWriter(new FileWriter(protocol.runOptions.table.trim)))
+        outputPath = protocol.table.trim
+        Some(new PrintWriter(new FileWriter(protocol.table.trim)))
       }
     val stats =
-      if (protocol.runOptions.stats.trim.isEmpty) None
-      else Some((new PrintWriter(new FileWriter(protocol.runOptions.stats.trim)), outputPath))
+      if (protocol.stats.trim.isEmpty) None
+      else Some((new PrintWriter(new FileWriter(protocol.stats.trim)), outputPath))
     val lists =
-      if (protocol.runOptions.lists.trim.isEmpty) None
-      else Some((new PrintWriter(new FileWriter(protocol.runOptions.lists.trim)), outputPath))
+      if (protocol.lists.trim.isEmpty) None
+      else Some((new PrintWriter(new FileWriter(protocol.lists.trim)), outputPath))
 
     Main.runExperimentWithProtocol(new LabInterface.Settings(context.workspace.getModelPath, None, None, table,
                                                              spreadsheet, stats, lists, None,
-                                                             protocol.runOptions.threadCount, false,
-                                                             protocol.runOptions.updatePlotsAndMonitors), protocol,
+                                                             protocol.threadCount, false,
+                                                             protocol.updatePlotsAndMonitors), protocol,
                                    (worker: LabInterface.Worker) => {
                                      BehaviorSpaceExtension.experimentStack(protocol.name) =
                                       worker.asInstanceOf[Worker]
                                    },
                                    () => {
                                      BehaviorSpaceExtension.experimentStack -= protocol.name
-                                   }, if (protocol.runOptions.mirrorHeadlessOutput) {
+                                   }, if (protocol.mirrorHeadlessOutput) {
                                         context.asInstanceOf[ExtensionContext].nvmContext.workspace.getPrimaryWorkspace
                                       } else {
                                         None
@@ -161,8 +159,7 @@ object DuplicateExperiment extends Command {
 
     val data = BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
       case ExperimentType.GUI =>
-        BehaviorSpaceExtension.dataFromProtocol(context.workspace.getBehaviorSpaceExperiments.
-                                                find(x => x.name == BehaviorSpaceExtension.currentExperiment).get)
+        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get
       case ExperimentType.Code =>
         BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment)
     }
@@ -191,7 +188,7 @@ object ImportExperiments extends Command {
         if (BehaviorSpaceExtension.experimentType(protocol.name, context) != ExperimentType.None)
           BehaviorSpaceExtension.nameError(context, "noExperiment", protocol.name)
         else
-          BehaviorSpaceExtension.experiments += ((protocol.name, BehaviorSpaceExtension.dataFromProtocol(protocol)))
+          BehaviorSpaceExtension.experiments += ((protocol.name, protocol))
       }
     } catch {
       case e: org.xml.sax.SAXParseException =>
@@ -215,7 +212,7 @@ object ExportExperiment extends Command {
       case ExperimentType.GUI =>
         context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get
       case ExperimentType.Code =>
-        BehaviorSpaceExtension.protocolFromData(BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment))
+        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment)
       case _ =>
         return BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
     }
@@ -311,7 +308,7 @@ object GetParameters extends Reporter {
       case ExperimentType.GUI =>
         context.workspace.getBehaviorSpaceExperiments.find(x => x.name == name).get
       case ExperimentType.Code =>
-        BehaviorSpaceExtension.protocolFromData(BehaviorSpaceExtension.experiments(name))
+        BehaviorSpaceExtension.experiments(name)
       case _ =>
         BehaviorSpaceExtension.nameError(context, "noExperiment", name)
 
@@ -341,14 +338,14 @@ object GetParameters extends Reporter {
 
     result += "RUN OPTIONS:\n\n"
 
-    result += "Spreadsheet:\n\t" + protocol.runOptions.spreadsheet + "\n"
-    result += "Table:\n\t" + protocol.runOptions.table + "\n"
-    result += "Stats:\n\t" + protocol.runOptions.stats + "\n"
-    result += "Lists:\n\t" + protocol.runOptions.lists + "\n"
-    result += "Update view:\n\t" + protocol.runOptions.updateView.toString + "\n"
-    result += "Update plots:\n\t" + protocol.runOptions.updatePlotsAndMonitors.toString + "\n"
-    result += "Parallel runs:\n\t" + protocol.runOptions.threadCount.toString + "\n"
-    result += "Mirror headless output:\n\t" + protocol.runOptions.mirrorHeadlessOutput.toString + "\n"
+    result += "Spreadsheet:\n\t" + protocol.spreadsheet + "\n"
+    result += "Table:\n\t" + protocol.table + "\n"
+    result += "Stats:\n\t" + protocol.stats + "\n"
+    result += "Lists:\n\t" + protocol.lists + "\n"
+    result += "Update view:\n\t" + protocol.updateView.toString + "\n"
+    result += "Update plots:\n\t" + protocol.updatePlotsAndMonitors.toString + "\n"
+    result += "Parallel runs:\n\t" + protocol.threadCount.toString + "\n"
+    result += "Mirror headless output:\n\t" + protocol.mirrorHeadlessOutput.toString + "\n"
 
     result
   }
