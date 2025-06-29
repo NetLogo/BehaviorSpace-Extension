@@ -455,54 +455,6 @@ object GetLists extends Reporter {
   }
 }
 
-object GetUpdateView extends Reporter {
-  override def getSyntax = {
-    reporterSyntax(ret = BooleanType)
-  }
-
-  override def report(args: Array[Argument], context: Context): java.lang.Boolean = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
-      BehaviorSpaceExtension.nameError(context, "noCurrent")
-      return LabDefaultValues.getDefaultUpdateView
-    }
-
-    return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
-      case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments
-          .find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.updateView
-      case ExperimentType.Code =>
-        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).updateView
-      case _ =>
-        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
-        LabDefaultValues.getDefaultUpdateView
-    }
-  }
-}
-
-object GetUpdatePlots extends Reporter {
-  override def getSyntax = {
-    reporterSyntax(ret = BooleanType)
-  }
-
-  override def report(args: Array[Argument], context: Context): java.lang.Boolean = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
-      BehaviorSpaceExtension.nameError(context, "noCurrent")
-      return LabDefaultValues.getDefaultUpdatePlotsAndMonitors
-    }
-
-    return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
-      case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments
-          .find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.updatePlotsAndMonitors
-      case ExperimentType.Code =>
-        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).updatePlotsAndMonitors
-      case _ =>
-        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
-        LabDefaultValues.getDefaultUpdatePlotsAndMonitors
-    }
-  }
-}
-
 object GetDefaultParallelRuns extends Reporter {
   override def getSyntax = {
     reporterSyntax(ret = NumberType)
