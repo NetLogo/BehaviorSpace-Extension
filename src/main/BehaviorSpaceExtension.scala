@@ -3,7 +3,7 @@
 package org.nlogo.extensions.bspace
 
 import org.nlogo.api.{ AnonymousProcedure, Argument, Command, Context, DefaultClassManager, LabDefaultValues,
-                       LabProtocol, LabRunOptions, PrimitiveManager, RefValueSet }
+                       LabProtocol, PrimitiveManager, RefValueSet }
 import org.nlogo.core.I18N
 import org.nlogo.lab.Worker
 import org.nlogo.nvm.HaltException
@@ -12,39 +12,13 @@ import org.nlogo.window.GUIWorkspace
 
 import scala.collection.mutable.Map
 
-class ExperimentData {
-  var name = ""
-  var preExperimentCommands = ""
-  var setupCommands = ""
-  var goCommands = ""
-  var postRunCommands = ""
-  var postExperimentCommands = ""
-  var repetitions = LabDefaultValues.getDefaultRepetitions
-  var sequentialRunOrder = LabDefaultValues.getDefaultSequentialRunOrder
-  var runMetricsEveryStep = LabDefaultValues.getDefaultRunMetricsEveryStep
-  var runMetricsCondition = ""
-  var timeLimit = LabDefaultValues.getDefaultTimeLimit
-  var exitCondition = ""
-  var metrics: List[String] = Nil
-  var constants: List[RefValueSet] = Nil
-  var subExperiments: List[List[RefValueSet]] = Nil
-  var threadCount = LabDefaultValues.getDefaultThreads
-  var table = ""
-  var spreadsheet = ""
-  var stats = ""
-  var lists = ""
-  var updateView = LabDefaultValues.getDefaultUpdateView
-  var updatePlotsAndMonitors = LabDefaultValues.getDefaultUpdatePlotsAndMonitors
-  var mirrorHeadlessOutput = false
-}
-
 object ExperimentType extends Enumeration {
   type ExperimentType = Value
   val GUI, Code, None = Value
 }
 
 object BehaviorSpaceExtension {
-  val experiments = Map[String, ExperimentData]()
+  val experiments = Map[String, LabProtocol]()
   val experimentStack = Map[String, Worker]()
 
   var currentExperiment = ""
@@ -106,46 +80,6 @@ object BehaviorSpaceExtension {
     }
 
     return error
-  }
-
-  def dataFromProtocol(protocol: LabProtocol): ExperimentData = {
-    val data = new ExperimentData
-
-    data.name = protocol.name
-    data.preExperimentCommands = protocol.preExperimentCommands
-    data.setupCommands = protocol.setupCommands
-    data.goCommands = protocol.goCommands
-    data.postRunCommands = protocol.postRunCommands
-    data.postExperimentCommands = protocol.postExperimentCommands
-    data.repetitions = protocol.repetitions
-    data.sequentialRunOrder = protocol.sequentialRunOrder
-    data.runMetricsEveryStep = protocol.runMetricsEveryStep
-    data.runMetricsCondition = protocol.runMetricsCondition
-    data.timeLimit = protocol.timeLimit
-    data.exitCondition = protocol.exitCondition
-    data.metrics = protocol.metrics
-    data.constants = protocol.constants
-    data.subExperiments = protocol.subExperiments
-    data.threadCount = protocol.runOptions.threadCount
-    data.table = protocol.runOptions.table
-    data.spreadsheet = protocol.runOptions.spreadsheet
-    data.stats = protocol.runOptions.stats
-    data.lists = protocol.runOptions.lists
-    data.updateView = protocol.runOptions.updateView
-    data.updatePlotsAndMonitors = protocol.runOptions.updatePlotsAndMonitors
-    data.mirrorHeadlessOutput = protocol.runOptions.mirrorHeadlessOutput
-
-    data
-  }
-
-  def protocolFromData(data: ExperimentData): LabProtocol = {
-    new LabProtocol(data.name, data.preExperimentCommands, data.setupCommands, data.goCommands, data.postRunCommands,
-                    data.postExperimentCommands, data.repetitions, data.sequentialRunOrder, data.runMetricsEveryStep,
-                    data.runMetricsCondition, data.timeLimit, data.exitCondition, data.metrics, data.constants,
-                    data.subExperiments, runOptions = LabRunOptions(data.threadCount, data.table, data.spreadsheet,
-                                                                    data.stats, data.lists, data.updateView,
-                                                                    data.updatePlotsAndMonitors,
-                                                                    data.mirrorHeadlessOutput))
   }
 
   def removeQuotes(string: String): String = {
