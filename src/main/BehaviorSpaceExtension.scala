@@ -2,8 +2,8 @@
 
 package org.nlogo.extensions.bspace
 
-import org.nlogo.api.{ AnonymousProcedure, Argument, Command, Context, DefaultClassManager, LabDefaultValues,
-                       LabProtocol, PrimitiveManager, RefValueSet }
+import org.nlogo.api.{ AnonymousProcedure, Argument, Command, Context, DefaultClassManager, ExtensionException,
+                       ExtensionManager, LabDefaultValues, LabProtocol, PrimitiveManager, RefValueSet }
 import org.nlogo.core.I18N
 import org.nlogo.lab.Worker
 import org.nlogo.nvm.HaltException
@@ -26,8 +26,7 @@ object BehaviorSpaceExtension {
   private val errors = Map[String, String](
     "alreadyExists" -> "An experiment already exists with the name \"$0\".",
     "emptyName" -> "Experiment name cannot be empty.",
-    "noCurrent" -> """<html>You must set a current working experiment before running\n
-                      bspace commands with no specified experiment name.</html>""",
+    "noCurrent" -> """You must set a current working experiment before running bspace commands with no specified experiment name""",
     "noExperiment" -> "No experiment exists with the name \"$0\".",
     "recursive" -> "Cannot run an experiment recursively.",
     "invalidFormat" -> "Invalid format in \"$0\".",
@@ -59,7 +58,7 @@ object BehaviorSpaceExtension {
 
   def nameError(context: Context, message: String, keys: String*): Unit = {
     if (context.workspace.isHeadless)
-      throw new RuntimeException(replaceErrorString(message, keys))
+      throw new ExtensionException(replaceErrorString(message, keys))
 
     else {
       if (new OptionPane(context.workspace.asInstanceOf[GUIWorkspace].getFrame,
@@ -102,7 +101,8 @@ class BehaviorSpaceExtension extends DefaultClassManager {
     manager.addPrimitive("export-experiment", ExportExperiment)
     manager.addPrimitive("clear-experiments", ClearExperiments)
     manager.addPrimitive("set-current-experiment", SetCurrentExperiment)
-    manager.addPrimitive("get-experiments", GetExperiments)
+    manager.addPrimitive("print-experiments", PrintExperiments)
+    manager.addPrimitive("get-experiment-list", GetExperimentList)
     manager.addPrimitive("get-current-experiment", GetCurrentExperiment)
     manager.addPrimitive("get-parameters", GetParameters)
     manager.addPrimitive("experiment-exists", ExperimentExists)
@@ -126,8 +126,6 @@ class BehaviorSpaceExtension extends DefaultClassManager {
     manager.addPrimitive("set-spreadsheet", SetSpreadsheet)
     manager.addPrimitive("set-stats", SetStats)
     manager.addPrimitive("set-lists", SetLists)
-    manager.addPrimitive("set-update-view", SetUpdateView)
-    manager.addPrimitive("set-update-plots", SetUpdatePlots)
     manager.addPrimitive("set-mirror-headless-output", SetMirrorHeadlessOutput)
 
     manager.addPrimitive("goto-behaviorspace-documentation", GotoBehaviorspaceDocumentation)
@@ -150,14 +148,13 @@ class BehaviorSpaceExtension extends DefaultClassManager {
     manager.addPrimitive("get-spreadsheet", GetSpreadsheet)
     manager.addPrimitive("get-stats", GetStats)
     manager.addPrimitive("get-lists", GetLists)
-    manager.addPrimitive("get-update-view", GetUpdateView)
-    manager.addPrimitive("get-update-plots", GetUpdatePlots)
     manager.addPrimitive("get-default-parallel-runs", GetDefaultParallelRuns)
     manager.addPrimitive("get-recommended-max-parallel-runs", GetRecommendedMaxParallelRuns)
     manager.addPrimitive("get-mirror-headless-output", GetMirrorHeadlessOutput)
+  }
 
+  override def runOnce(manager: ExtensionManager): Unit = {
     BehaviorSpaceExtension.experiments.clear()
-
     BehaviorSpaceExtension.currentExperiment = ""
   }
 }

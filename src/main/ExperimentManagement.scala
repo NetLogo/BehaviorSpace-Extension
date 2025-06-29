@@ -264,7 +264,7 @@ object SetCurrentExperiment extends Command {
   }
 }
 
-object GetExperiments extends Reporter {
+object PrintExperiments extends Reporter {
   override def getSyntax = {
     reporterSyntax(ret = StringType)
   }
@@ -284,6 +284,16 @@ object GetExperiments extends Reporter {
 
     result
   }
+}
+
+object GetExperimentList extends Reporter {
+  override def getSyntax = {
+    reporterSyntax(ret = ListType)
+  }
+
+  override def report(args: Array[Argument], context: Context): LogoList =
+    LogoList((BehaviorSpaceExtension.experiments.keys.toSeq ++
+              context.workspace.getBehaviorSpaceExperiments.map(_.name)).sorted*)
 }
 
 object GetCurrentExperiment extends Reporter {

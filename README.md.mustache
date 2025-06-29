@@ -42,8 +42,6 @@ Experiments created in the code will have the following default values:
 - Spreadsheet: empty
 - Stats: empty
 - Lists: empty
-- Update View: true
-- Update Plots And Monitors: true
 - Mirror Headless Output: false
 
 All properties can be set explicitly to alternate values. For code blocks, you can specify that no code should be
@@ -62,7 +60,8 @@ executed by using an empty pair of square brackets.
 [`bspace:export-experiment`](#bspaceexport-experiment)<br>
 [`bspace:clear-experiments`](#bspaceclear-experiments)<br>
 [`bspace:set-current-experiment`](#bspaceset-current-experiment)<br>
-[`bspace:get-experiments`](#bspaceget-experiments)<br>
+[`bspace:print-experiments`](#bspaceprint-experiments)<br>
+[`bspace:get-experiment-list`](#bspaceget-experiment-list)<br>
 [`bspace:get-current-experiment`](#bspaceget-current-experiment)<br>
 [`bspace:get-parameters`](#bspaceget-parameters)<br>
 [`bspace:experiment-exists`](#bspaceexperiment-exists)<br>
@@ -106,8 +105,6 @@ executed by using an empty pair of square brackets.
 [`bspace:set-table`](#bspaceset-table)<br>
 [`bspace:set-stats`](#bspaceset-stats)<br>
 [`bspace:set-lists`](#bspaceset-list)<br>
-[`bspace:set-update-view`](#bspaceset-update-view)<br>
-[`bspace:set-update-plots`](#bspaceset-update-plots)<br>
 [`bspace:set-parallel-runs`](#bspaceset-parallel-runs)<br>
 [`bspace:set-mirror-headless-output`](#bspaceset-mirror-headless-output)<br>
 
@@ -117,8 +114,6 @@ executed by using an empty pair of square brackets.
 [`bspace:get-table`](#bspaceget-table)<br>
 [`bspace:get-stats`](#bspaceget-stats)<br>
 [`bspace:get-lists`](#bspaceget-list)<br>
-[`bspace:get-update-view`](#bspaceget-update-view)<br>
-[`bspace:get-update-plots`](#bspaceget-update-plots)<br>
 [`bspace:get-parallel-runs`](#bspaceget-parallel-runs)<br>
 [`bspace:get-mirror-headless-output`](#bspaceget-mirror-headless-output)<br>
 
@@ -241,12 +236,19 @@ Example:
 bspace:set-current-experiment "my-experiment"
 ```
 
-### bspace:get-experiments
+### bspace:print-experiments
 
-#### bspace:get-experiments
+#### bspace:print-experiments
 
-Report a list of all BehaviorSpace experiments created programmatically, followed by all BehaviorSpace experiments
-created in the GUI.
+Report a formatted string with the names of all BehaviorSpace experiments created programmatically, followed by the
+names of all BehaviorSpace experiments created in the GUI. Each section is sorted alphabetically.
+
+### bspace:get-experiment-list
+
+#### bspace:get-experiment-list
+
+Report a list of names of all BehaviorSpace experiments, including both GUI and code experiments, sorted
+alphabetically.
 
 ### bspace:get-current-experiment
 
@@ -666,32 +668,6 @@ Example:
 bspace:set-lists "/Users/hacker53/Documents/exp-lists.csv"
 ```
 
-### bspace:set-update-view
-
-#### bspace:set-update-view *boolean*
-
-Set whether the current working experiment should update the view. An error will be thrown if no current working
-experiment has been set.
-
-Example:
-
-```
-bspace:set-update-view true
-```
-
-### bspace:set-update-plots
-
-#### bspace:set-update-view *boolean*
-
-Set whether the current working experiment should update the plots. An error will be thrown if no current working
-experiment has been set.
-
-Example:
-
-```
-bspace:set-update-view false
-```
-
 ### bspace:set-parallel-runs
 
 #### bspace:set-parallel-runs *number*
@@ -749,20 +725,6 @@ or the string "-" if the output is directed to standard output.
 Report the lists location for the current working experiment. An error will be thrown if no current working experiment
 has been set. Will report an empty string if no lists file was specified in the current working experiment, or the
 string "-" if the output is directed to standard output.
-
-### bspace:get-update-view
-
-#### bspace:get-update-view
-
-Report whether the current working experiment will update the view. An error will be thrown if no current working
-experiment has been set.
-
-### bspace:get-update-plots
-
-#### bspace:get-update-plots
-
-Report whether the current working experiment will update the plots. An error will be thrown if no current working
-experiment has been set.
 
 ### bspace:get-parallel-runs
 

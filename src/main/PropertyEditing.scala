@@ -295,36 +295,6 @@ object SetLists extends Command {
   }
 }
 
-object SetUpdateView extends Command {
-  override def getSyntax = {
-    commandSyntax(right = List(BooleanType))
-  }
-
-  def perform(args: Array[Argument], context: Context): Unit = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty)
-      return BehaviorSpaceExtension.nameError(context, "noCurrent")
-
-    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
-
-    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).updateView = args(0).getBooleanValue
-  }
-}
-
-object SetUpdatePlots extends Command {
-  override def getSyntax = {
-    commandSyntax(right = List(BooleanType))
-  }
-
-  def perform(args: Array[Argument], context: Context): Unit = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty)
-      return BehaviorSpaceExtension.nameError(context, "noCurrent")
-
-    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
-
-    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).updatePlotsAndMonitors = args(0).getBooleanValue
-  }
-}
-
 object SetMirrorHeadlessOutput extends Command {
   override def getSyntax = {
     commandSyntax(right = List(BooleanType))
