@@ -1,0 +1,72 @@
+DefaultExperiment
+  extensions [ bspace ]
+  O> bspace:create-experiment "test" true
+  O> bspace:set-current-experiment "test"
+  bspace:get-variables => ""
+  bspace:get-repetitions => 1
+  bspace:get-sequential-run-order => true
+  bspace:get-metrics => []
+  bspace:get-run-metrics-every-step => true
+  bspace:get-run-metrics-condition => ""
+  bspace:get-pre-experiment-commands => ""
+  bspace:get-setup-commands => ""
+  bspace:get-go-commands => ""
+  bspace:get-stop-condition => ""
+  bspace:get-post-run-commands => ""
+  bspace:get-post-experiment-commands => ""
+  bspace:get-time-limit => 0
+  bspace:get-spreadsheet => ""
+  bspace:get-table => ""
+  bspace:get-stats => ""
+  bspace:get-lists => ""
+  bspace:get-mirror-headless-output => false
+
+OverwriteSameName
+  extensions [ bspace ]
+  O> bspace:create-experiment "test" true
+  O> bspace:set-current-experiment "test"
+  O> bspace:set-time-limit 5
+  bspace:get-time-limit => 5
+  O> bspace:create-experiment "test" false => ERROR Extension exception: An experiment already exists with the name "test".
+  O> bspace:create-experiment "test" true
+  bspace:get-time-limit => 0
+
+OverwriteDifferentName
+  extensions [ bspace ]
+  O> bspace:create-experiment "test" true
+  O> bspace:set-current-experiment "test"
+  O> bspace:set-time-limit 5
+  O> bspace:create-experiment "test2" true
+  O> bspace:set-current-experiment "test2"
+  O> bspace:set-time-limit 10
+  O> bspace:create-experiment "test" false => ERROR Extension exception: An experiment already exists with the name "test".
+  O> bspace:create-experiment "test2" false => ERROR Extension exception: An experiment already exists with the name "test2".
+  O> bspace:create-experiment "test" true
+  bspace:get-time-limit => 10
+  O> bspace:set-current-experiment "test"
+  bspace:get-time-limit => 0
+
+ClearExperiments
+  extensions [ bspace ]
+  O> bspace:create-experiment "test" true
+  O> bspace:create-experiment "test2" true
+  bspace:get-experiment-list => ["test" "test2"]
+  O> bspace:clear-experiments
+  bspace:get-experiment-list => []
+
+NestedExperiment
+  extensions [ bspace ]
+  O> bspace:create-experiment "test" true
+  O> bspace:set-current-experiment "test"
+  O> bspace:set-post-experiment-commands [ bspace:delete-experiment "test3" ]
+  O> bspace:set-time-limit 1
+  O> bspace:create-experiment "test2" true
+  O> bspace:set-current-experiment "test2"
+  O> bspace:set-pre-experiment-commands [ /
+       bspace:create-experiment "test3" true /
+       bspace:set-current-experiment "test" /
+       bspace:run-experiment /
+     ]
+  O> bspace:set-time-limit 1
+  O> bspace:run-experiment
+  bspace:get-experiment-list => ["test" "test2"]
