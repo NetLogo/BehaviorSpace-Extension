@@ -95,6 +95,8 @@ object RunExperiment extends Command {
       if (protocol.lists.trim.isEmpty) None
       else Some((new PrintWriter(new FileWriter(protocol.lists.trim)), outputPath))
 
+    val loadedExtensions = context.workspace.getExtensionManager.loadedExtensionNames
+
     Main.runExperimentWithProtocol(new LabInterface.Settings(context.workspace.getModelPath, None, None, table,
                                                              spreadsheet, stats, lists, None,
                                                              protocol.threadCount, false,
@@ -109,7 +111,8 @@ object RunExperiment extends Command {
                                         context.asInstanceOf[ExtensionContext].nvmContext.workspace.getPrimaryWorkspace
                                       } else {
                                         None
-                                      })
+                                      },
+                                   loadedExtensions)
   }
 }
 
