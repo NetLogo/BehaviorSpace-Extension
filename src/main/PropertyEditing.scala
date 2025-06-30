@@ -11,389 +11,224 @@ import scala.util.{ Failure, Success }
 
 import BehaviorSpaceExtension._
 
-object SetPreExperimentCommands extends Command {
+// helper class for ensuring that a current experiment exists and is valid for editing (Isaac B 6/29/25)
+abstract class CurrentGuard extends Command {
+  protected def getCurrentExperiment(context: Context): Option[LabProtocol] = {
+    val current = getExperimentManager(context).getCurrentExperiment
+
+    if (current.isEmpty) {
+      nameError(context, "noCurrent")
+
+      return None
+    }
+
+    val protocol = current.get.protocol
+
+    if (current.get.tpe != ExperimentType.Code) {
+      nameError(context, protocol.name)
+
+      return None
+    }
+
+    Option(protocol)
+  }
+}
+
+object SetPreExperimentCommands extends CurrentGuard {
   override def getSyntax = {
     commandSyntax(right = List(CommandType))
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    val current = getExperimentManager(context).getCurrentExperiment
-
-    if (current.isEmpty)
-      return nameError(context, "noCurrent")
-
-    val protocol = current.get.protocol
-
-    if (current.get.tpe != ExperimentType.Code)
-      return nameError(context, "gui", protocol.name)
-
-    protocol.preExperimentCommands = extractSource(args(0).getCommand)
+    getCurrentExperiment(context).foreach(_.preExperimentCommands = extractSource(args(0).getCommand))
   }
 }
 
-object SetSetupCommands extends Command {
+object SetSetupCommands extends CurrentGuard {
   override def getSyntax = {
     commandSyntax(right = List(CommandType))
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    val current = getExperimentManager(context).getCurrentExperiment
-
-    if (current.isEmpty)
-      return nameError(context, "noCurrent")
-
-    val protocol = current.get.protocol
-
-    if (current.get.tpe != ExperimentType.Code)
-      return nameError(context, "gui", protocol.name)
-
-    protocol.setupCommands = extractSource(args(0).getCommand)
+    getCurrentExperiment(context).foreach(_.setupCommands = extractSource(args(0).getCommand))
   }
 }
 
-object SetGoCommands extends Command {
+object SetGoCommands extends CurrentGuard {
   override def getSyntax = {
     commandSyntax(right = List(CommandType))
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    val current = getExperimentManager(context).getCurrentExperiment
-
-    if (current.isEmpty)
-      return nameError(context, "noCurrent")
-
-    val protocol = current.get.protocol
-
-    if (current.get.tpe != ExperimentType.Code)
-      return nameError(context, "gui", protocol.name)
-
-    protocol.goCommands = extractSource(args(0).getCommand)
+    getCurrentExperiment(context).foreach(_.goCommands = extractSource(args(0).getCommand))
   }
 }
 
-object SetPostRunCommands extends Command {
+object SetPostRunCommands extends CurrentGuard {
   override def getSyntax = {
     commandSyntax(right = List(CommandType))
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    val current = getExperimentManager(context).getCurrentExperiment
-
-    if (current.isEmpty)
-      return nameError(context, "noCurrent")
-
-    val protocol = current.get.protocol
-
-    if (current.get.tpe != ExperimentType.Code)
-      return nameError(context, "gui", protocol.name)
-
-    protocol.postRunCommands = extractSource(args(0).getCommand)
+    getCurrentExperiment(context).foreach(_.postRunCommands = extractSource(args(0).getCommand))
   }
 }
 
-object SetPostExperimentCommands extends Command {
+object SetPostExperimentCommands extends CurrentGuard {
   override def getSyntax = {
     commandSyntax(right = List(CommandType))
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    val current = getExperimentManager(context).getCurrentExperiment
-
-    if (current.isEmpty)
-      return nameError(context, "noCurrent")
-
-    val protocol = current.get.protocol
-
-    if (current.get.tpe != ExperimentType.Code)
-      return nameError(context, "gui", protocol.name)
-
-    protocol.postExperimentCommands = extractSource(args(0).getCommand)
+    getCurrentExperiment(context).foreach(_.postExperimentCommands = extractSource(args(0).getCommand))
   }
 }
 
-object SetRepetitions extends Command {
+object SetRepetitions extends CurrentGuard {
   override def getSyntax = {
     commandSyntax(right = List(NumberType))
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    val current = getExperimentManager(context).getCurrentExperiment
-
-    if (current.isEmpty)
-      return nameError(context, "noCurrent")
-
-    val protocol = current.get.protocol
-
-    if (current.get.tpe != ExperimentType.Code)
-      return nameError(context, "gui", protocol.name)
-
-    protocol.repetitions = args(0).getIntValue
+    getCurrentExperiment(context).foreach(_.repetitions = args(0).getIntValue)
   }
 }
 
-object SetSequentialRunOrder extends Command {
+object SetSequentialRunOrder extends CurrentGuard {
   override def getSyntax = {
     commandSyntax(right = List(BooleanType))
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    val current = getExperimentManager(context).getCurrentExperiment
-
-    if (current.isEmpty)
-      return nameError(context, "noCurrent")
-
-    val protocol = current.get.protocol
-
-    if (current.get.tpe != ExperimentType.Code)
-      return nameError(context, "gui", protocol.name)
-
-    protocol.sequentialRunOrder = args(0).getBooleanValue
+    getCurrentExperiment(context).foreach(_.sequentialRunOrder = args(0).getBooleanValue)
   }
 }
 
-object SetRunMetricsEveryStep extends Command {
+object SetRunMetricsEveryStep extends CurrentGuard {
   override def getSyntax = {
     commandSyntax(right = List(BooleanType))
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    val current = getExperimentManager(context).getCurrentExperiment
-
-    if (current.isEmpty)
-      return nameError(context, "noCurrent")
-
-    val protocol = current.get.protocol
-
-    if (current.get.tpe != ExperimentType.Code)
-      return nameError(context, "gui", protocol.name)
-
-    protocol.runMetricsEveryStep = args(0).getBooleanValue
+    getCurrentExperiment(context).foreach(_.runMetricsEveryStep = args(0).getBooleanValue)
   }
 }
 
-object SetRunMetricsCondition extends Command {
+object SetRunMetricsCondition extends CurrentGuard {
   override def getSyntax = {
     commandSyntax(right = List(ReporterType))
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    val current = getExperimentManager(context).getCurrentExperiment
-
-    if (current.isEmpty)
-      return nameError(context, "noCurrent")
-
-    val protocol = current.get.protocol
-
-    if (current.get.tpe != ExperimentType.Code)
-      return nameError(context, "gui", protocol.name)
-
-    protocol.runMetricsCondition = extractSource(args(0).getReporter)
+    getCurrentExperiment(context).foreach(_.runMetricsCondition = extractSource(args(0).getReporter))
   }
 }
 
-object SetTimeLimit extends Command {
+object SetTimeLimit extends CurrentGuard {
   override def getSyntax = {
     commandSyntax(right = List(NumberType))
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    val current = getExperimentManager(context).getCurrentExperiment
-
-    if (current.isEmpty)
-      return nameError(context, "noCurrent")
-
-    val protocol = current.get.protocol
-
-    if (current.get.tpe != ExperimentType.Code)
-      return nameError(context, "gui", protocol.name)
-
-    protocol.timeLimit = args(0).getIntValue
+    getCurrentExperiment(context).foreach(_.timeLimit = args(0).getIntValue)
   }
 }
 
-object SetStopCondition extends Command {
+object SetStopCondition extends CurrentGuard {
   override def getSyntax = {
     commandSyntax(right = List(ReporterType))
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    val current = getExperimentManager(context).getCurrentExperiment
-
-    if (current.isEmpty)
-      return nameError(context, "noCurrent")
-
-    val protocol = current.get.protocol
-
-    if (current.get.tpe != ExperimentType.Code)
-      return nameError(context, "gui", protocol.name)
-
-    protocol.exitCondition = extractSource(args(0).getReporter)
+    getCurrentExperiment(context).foreach(_.exitCondition = extractSource(args(0).getReporter))
   }
 }
 
-object SetMetrics extends Command {
+object SetMetrics extends CurrentGuard {
   override def getSyntax = {
     commandSyntax(right = List(ReporterType | RepeatableType))
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    val current = getExperimentManager(context).getCurrentExperiment
-
-    if (current.isEmpty)
-      return nameError(context, "noCurrent")
-
-    val protocol = current.get.protocol
-
-    if (current.get.tpe != ExperimentType.Code)
-      return nameError(context, "gui", protocol.name)
-
-    protocol.metrics = args.map(x => extractSource(x.getReporter)).toList
+    getCurrentExperiment(context).foreach(_.metrics = args.map(x => extractSource(x.getReporter)).toList)
   }
 }
 
-object SetVariables extends Command {
+object SetVariables extends CurrentGuard {
   override def getSyntax = {
     commandSyntax(right = List(ListType | StringType))
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    val current = getExperimentManager(context).getCurrentExperiment
-
-    if (current.isEmpty)
-      return nameError(context, "noCurrent")
-
-    val protocol = current.get.protocol
-
-    if (current.get.tpe != ExperimentType.Code)
-      return nameError(context, "gui", protocol.name)
-
-    LabVariableParser.parseVariables(args(0).getList.mkString("\n"), protocol.repetitions, context.workspace.world,
-                                     context.workspace.asInstanceOf[AbstractWorkspace]) match {
-      case Success((constants, subExperiments)) =>
-        protocol.constants = constants
-        protocol.subExperiments = subExperiments
-      case Failure(t) =>
-        nameError(context, t.getMessage)
+    getCurrentExperiment(context).foreach { protocol =>
+      LabVariableParser.parseVariables(args(0).getList.mkString("\n"), protocol.repetitions, context.workspace.world,
+                                       context.workspace.asInstanceOf[AbstractWorkspace]) match {
+        case Success((constants, subExperiments)) =>
+          protocol.constants = constants
+          protocol.subExperiments = subExperiments
+        case Failure(t) =>
+          nameError(context, t.getMessage)
+      }
     }
   }
 }
 
-object SetParallelRuns extends Command {
+object SetParallelRuns extends CurrentGuard {
   override def getSyntax = {
     commandSyntax(right = List(NumberType))
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    val current = getExperimentManager(context).getCurrentExperiment
-
-    if (current.isEmpty)
-      return nameError(context, "noCurrent")
-
-    val protocol = current.get.protocol
-
-    if (current.get.tpe != ExperimentType.Code)
-      return nameError(context, "gui", protocol.name)
-
-    protocol.threadCount = args(0).getIntValue
+    getCurrentExperiment(context).foreach(_.threadCount = args(0).getIntValue)
   }
 }
 
-object SetTable extends Command {
+object SetTable extends CurrentGuard {
   override def getSyntax = {
     commandSyntax(right = List(StringType))
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    val current = getExperimentManager(context).getCurrentExperiment
-
-    if (current.isEmpty)
-      return nameError(context, "noCurrent")
-
-    val protocol = current.get.protocol
-
-    if (current.get.tpe != ExperimentType.Code)
-      return nameError(context, "gui", protocol.name)
-
-    protocol.table = args(0).getString
+    getCurrentExperiment(context).foreach(_.table = args(0).getString)
   }
 }
 
-object SetSpreadsheet extends Command {
+object SetSpreadsheet extends CurrentGuard {
   override def getSyntax = {
     commandSyntax(right = List(StringType))
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    val current = getExperimentManager(context).getCurrentExperiment
-
-    if (current.isEmpty)
-      return nameError(context, "noCurrent")
-
-    val protocol = current.get.protocol
-
-    if (current.get.tpe != ExperimentType.Code)
-      return nameError(context, "gui", protocol.name)
-
-    protocol.spreadsheet = args(0).getString
+    getCurrentExperiment(context).foreach(_.spreadsheet = args(0).getString)
   }
 }
 
-object SetStats extends Command {
+object SetStats extends CurrentGuard {
   override def getSyntax = {
     commandSyntax(right = List(StringType))
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    val current = getExperimentManager(context).getCurrentExperiment
-
-    if (current.isEmpty)
-      return nameError(context, "noCurrent")
-
-    val protocol = current.get.protocol
-
-    if (current.get.tpe != ExperimentType.Code)
-      return nameError(context, "gui", protocol.name)
-
-    protocol.stats = args(0).getString
+    getCurrentExperiment(context).foreach(_.stats = args(0).getString)
   }
 }
 
-object SetLists extends Command {
+object SetLists extends CurrentGuard {
   override def getSyntax = {
     commandSyntax(right = List(StringType))
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    val current = getExperimentManager(context).getCurrentExperiment
-
-    if (current.isEmpty)
-      return nameError(context, "noCurrent")
-
-    val protocol = current.get.protocol
-
-    if (current.get.tpe != ExperimentType.Code)
-      return nameError(context, "gui", protocol.name)
-
-    protocol.lists = args(0).getString
+    getCurrentExperiment(context).foreach(_.lists = args(0).getString)
   }
 }
 
-object SetMirrorHeadlessOutput extends Command {
+object SetMirrorHeadlessOutput extends CurrentGuard {
   override def getSyntax = {
     commandSyntax(right = List(BooleanType))
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    val current = getExperimentManager(context).getCurrentExperiment
-
-    if (current.isEmpty)
-      return nameError(context, "noCurrent")
-
-    val protocol = current.get.protocol
-
-    if (current.get.tpe != ExperimentType.Code)
-      return nameError(context, "gui", protocol.name)
-
-    protocol.mirrorHeadlessOutput = args(0).getBooleanValue
+    getCurrentExperiment(context).foreach(_.mirrorHeadlessOutput = args(0).getBooleanValue)
   }
 }
