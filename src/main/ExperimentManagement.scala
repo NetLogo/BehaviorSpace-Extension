@@ -7,13 +7,14 @@ import java.io.{ File, FileWriter, PrintWriter }
 import org.nlogo.api.{ Argument, Command, Context, LabProtocol, LabVariableParser, Reporter }
 import org.nlogo.core.LogoList
 import org.nlogo.core.Syntax._
-import org.nlogo.fileformat.{ LabLoader, LabSaver }
+import org.nlogo.fileformat.FileFormat
 import org.nlogo.headless.Main
 import org.nlogo.lab.Worker
 import org.nlogo.nvm.{ Experiment, ExperimentType, ExtensionContext, LabInterface }
 import org.nlogo.workspace.AbstractWorkspace
 
 import scala.io.Source
+import scala.util.{ Failure, Success }
 
 import BehaviorSpaceExtension._
 
@@ -170,18 +171,21 @@ object ImportExperiments extends Command {
     val path = args(0).getString.trim
     val manager = getExperimentManager(context)
 
-    try {
-      for (protocol <- new LabLoader(context.workspace.asInstanceOf[AbstractWorkspace].compiler.utilities)
-                                    (Source.fromFile(path).mkString, true,
-                                     scala.collection.mutable.Set[String]())) {
-        if (manager.getExperiment(protocol.name).isDefined) {
-          nameError(context, "alreadyExists", protocol.name)
-        } else {
-          manager.addExperiment(Experiment(protocol, ExperimentType.Code))
+    val loader = FileFormat.standardAnyLoader(context.workspace.isHeadless,
+                                              context.asInstanceOf[ExtensionContext].workspace.compiler.utilities,
+                                              true)
+
+    loader.readExperiments(Source.fromFile(path).mkString, true, Set()) match {
+      case Success((protocols, _)) =>
+        protocols.foreach { protocol =>
+          if (manager.getExperiment(protocol.name).isDefined) {
+            nameError(context, "alreadyExists", protocol.name)
+          } else {
+            manager.addExperiment(Experiment(protocol, ExperimentType.Code))
+          }
         }
-      }
-    } catch {
-      case e: org.xml.sax.SAXParseException =>
+
+      case _ =>
         nameError(context, "invalidFormat", path)
     }
   }
@@ -204,12 +208,18 @@ object ExportExperiment extends Command {
     if (!args(1).getBooleanValue && new File(path).exists)
       return nameError(context, "fileExists", path)
 
+    val loader = FileFormat.standardAnyLoader(context.workspace.isHeadless,
+                                              context.asInstanceOf[ExtensionContext].workspace.compiler.utilities,
+                                              true)
+
     val out = new PrintWriter(path)
 
-    out.write(s"${LabLoader.XMLVER}\n${LabLoader.DOCTYPE}\n")
-    out.write(LabSaver.save(List(current.get.protocol)))
+    val result = loader.writeExperiments(Seq(current.get.protocol), out)
 
     out.close()
+
+    if (result.isFailure)
+      nameError(context, "exportFailed")
   }
 }
 

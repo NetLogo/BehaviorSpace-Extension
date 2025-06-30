@@ -134,3 +134,43 @@ PreventRecursion
      ]
   O> bspace:set-time-limit 10
   O> bspace:run-experiment => ERROR Extension exception: Cannot run an experiment recursively.
+
+ExportImport
+  extensions [ bspace ]
+  globals [ path ]
+  O> __mkdir "tmp/bspace"
+  O> set path (word "tmp/bspace/test_bspace_" __nano-time ".xml")
+  O> bspace:create-experiment "test" true
+  O> bspace:set-current-experiment "test"
+  O> bspace:set-variables [ "[ \"test\" 0 2 10 ]" ]
+  O> bspace:set-repetitions 5
+  O> bspace:set-sequential-run-order false
+  O> bspace:set-metrics [ count turtles ]
+  O> bspace:set-run-metrics-every-step false
+  O> bspace:set-run-metrics-condition [ ticks mod 5 = 0 ]
+  O> bspace:set-pre-experiment-commands [ print "before" ]
+  O> bspace:set-setup-commands [ print "setup" ]
+  O> bspace:set-go-commands [ print "go" ]
+  O> bspace:set-stop-condition [ ticks >= 42]
+  O> bspace:set-post-run-commands [ print "end" ]
+  O> bspace:set-post-experiment-commands [ print "after" ]
+  O> bspace:set-time-limit 100
+  O> bspace:export-experiment path true
+  O> bspace:import-experiments path => ERROR Extension exception: An experiment already exists with the name "test".
+  O> bspace:clear-experiments
+  O> bspace:import-experiments path
+  O> bspace:set-current-experiment "test"
+  bspace:get-experiment-list => ["test"]
+  bspace:get-variables => "[\"test\" 0 2 10]"
+  bspace:get-repetitions => 5
+  bspace:get-sequential-run-order => false
+  bspace:get-metrics => ["count turtles"]
+  bspace:get-run-metrics-every-step => false
+  bspace:get-run-metrics-condition => "ticks mod 5 = 0"
+  bspace:get-pre-experiment-commands => "print \"before\""
+  bspace:get-setup-commands => "print \"setup\""
+  bspace:get-go-commands => "print \"go\""
+  bspace:get-stop-condition => "ticks >= 42"
+  bspace:get-post-run-commands => "print \"end\""
+  bspace:get-post-experiment-commands => "print \"after\""
+  bspace:get-time-limit => 100
