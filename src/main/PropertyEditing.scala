@@ -12,7 +12,7 @@ import scala.util.{ Failure, Success }
 import BehaviorSpaceExtension._
 
 // helper class for ensuring that a current experiment exists and is valid for editing (Isaac B 6/29/25)
-abstract class CurrentGuard extends Command {
+private abstract class CurrentGuardCommand extends Command {
   protected def getCurrentExperiment(context: Context): Option[LabProtocol] = {
     val current = getExperimentManager(context).getCurrentExperiment
 
@@ -34,7 +34,7 @@ abstract class CurrentGuard extends Command {
   }
 }
 
-object SetPreExperimentCommands extends CurrentGuard {
+object SetPreExperimentCommands extends CurrentGuardCommand {
   override def getSyntax = {
     commandSyntax(right = List(CommandType))
   }
@@ -44,7 +44,7 @@ object SetPreExperimentCommands extends CurrentGuard {
   }
 }
 
-object SetSetupCommands extends CurrentGuard {
+object SetSetupCommands extends CurrentGuardCommand {
   override def getSyntax = {
     commandSyntax(right = List(CommandType))
   }
@@ -54,7 +54,7 @@ object SetSetupCommands extends CurrentGuard {
   }
 }
 
-object SetGoCommands extends CurrentGuard {
+object SetGoCommands extends CurrentGuardCommand {
   override def getSyntax = {
     commandSyntax(right = List(CommandType))
   }
@@ -64,7 +64,7 @@ object SetGoCommands extends CurrentGuard {
   }
 }
 
-object SetPostRunCommands extends CurrentGuard {
+object SetPostRunCommands extends CurrentGuardCommand {
   override def getSyntax = {
     commandSyntax(right = List(CommandType))
   }
@@ -74,7 +74,7 @@ object SetPostRunCommands extends CurrentGuard {
   }
 }
 
-object SetPostExperimentCommands extends CurrentGuard {
+object SetPostExperimentCommands extends CurrentGuardCommand {
   override def getSyntax = {
     commandSyntax(right = List(CommandType))
   }
@@ -84,7 +84,7 @@ object SetPostExperimentCommands extends CurrentGuard {
   }
 }
 
-object SetRepetitions extends CurrentGuard {
+object SetRepetitions extends CurrentGuardCommand {
   override def getSyntax = {
     commandSyntax(right = List(NumberType))
   }
@@ -94,7 +94,7 @@ object SetRepetitions extends CurrentGuard {
   }
 }
 
-object SetSequentialRunOrder extends CurrentGuard {
+object SetSequentialRunOrder extends CurrentGuardCommand {
   override def getSyntax = {
     commandSyntax(right = List(BooleanType))
   }
@@ -104,7 +104,7 @@ object SetSequentialRunOrder extends CurrentGuard {
   }
 }
 
-object SetRunMetricsEveryStep extends CurrentGuard {
+object SetRunMetricsEveryStep extends CurrentGuardCommand {
   override def getSyntax = {
     commandSyntax(right = List(BooleanType))
   }
@@ -114,7 +114,7 @@ object SetRunMetricsEveryStep extends CurrentGuard {
   }
 }
 
-object SetRunMetricsCondition extends CurrentGuard {
+object SetRunMetricsCondition extends CurrentGuardCommand {
   override def getSyntax = {
     commandSyntax(right = List(ReporterType))
   }
@@ -124,7 +124,7 @@ object SetRunMetricsCondition extends CurrentGuard {
   }
 }
 
-object SetTimeLimit extends CurrentGuard {
+object SetTimeLimit extends CurrentGuardCommand {
   override def getSyntax = {
     commandSyntax(right = List(NumberType))
   }
@@ -134,7 +134,7 @@ object SetTimeLimit extends CurrentGuard {
   }
 }
 
-object SetStopCondition extends CurrentGuard {
+object SetStopCondition extends CurrentGuardCommand {
   override def getSyntax = {
     commandSyntax(right = List(ReporterType))
   }
@@ -144,7 +144,7 @@ object SetStopCondition extends CurrentGuard {
   }
 }
 
-object SetMetrics extends CurrentGuard {
+object SetMetrics extends CurrentGuardCommand {
   override def getSyntax = {
     commandSyntax(right = List(ReporterType | RepeatableType))
   }
@@ -154,7 +154,7 @@ object SetMetrics extends CurrentGuard {
   }
 }
 
-object SetVariables extends CurrentGuard {
+object SetVariables extends CurrentGuardCommand {
   override def getSyntax = {
     commandSyntax(right = List(ListType | StringType))
   }
@@ -173,7 +173,7 @@ object SetVariables extends CurrentGuard {
   }
 }
 
-object SetParallelRuns extends CurrentGuard {
+object SetParallelRuns extends CurrentGuardCommand {
   override def getSyntax = {
     commandSyntax(right = List(NumberType))
   }
@@ -183,7 +183,7 @@ object SetParallelRuns extends CurrentGuard {
   }
 }
 
-object SetTable extends CurrentGuard {
+object SetTable extends CurrentGuardCommand {
   override def getSyntax = {
     commandSyntax(right = List(StringType))
   }
@@ -193,7 +193,7 @@ object SetTable extends CurrentGuard {
   }
 }
 
-object SetSpreadsheet extends CurrentGuard {
+object SetSpreadsheet extends CurrentGuardCommand {
   override def getSyntax = {
     commandSyntax(right = List(StringType))
   }
@@ -203,7 +203,7 @@ object SetSpreadsheet extends CurrentGuard {
   }
 }
 
-object SetStats extends CurrentGuard {
+object SetStats extends CurrentGuardCommand {
   override def getSyntax = {
     commandSyntax(right = List(StringType))
   }
@@ -213,7 +213,7 @@ object SetStats extends CurrentGuard {
   }
 }
 
-object SetLists extends CurrentGuard {
+object SetLists extends CurrentGuardCommand {
   override def getSyntax = {
     commandSyntax(right = List(StringType))
   }
@@ -223,7 +223,7 @@ object SetLists extends CurrentGuard {
   }
 }
 
-object SetMirrorHeadlessOutput extends CurrentGuard {
+object SetMirrorHeadlessOutput extends CurrentGuardCommand {
   override def getSyntax = {
     commandSyntax(right = List(BooleanType))
   }

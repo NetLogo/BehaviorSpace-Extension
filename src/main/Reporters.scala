@@ -2,9 +2,11 @@
 
 package org.nlogo.extensions.bspace
 
-import org.nlogo.api.{ Argument, Command, Context, LabDefaultValues, LabVariableParser, Reporter }
+import java.lang.{ Boolean => JBoolean, Double => JDouble }
+
+import org.nlogo.api.{ Argument, Command, Context, LabDefaultValues, LabProtocol, LabVariableParser, Reporter }
 import org.nlogo.core.LogoList
-import org.nlogo.core.Syntax._
+import org.nlogo.core.Syntax
 import org.nlogo.nvm.Experiment
 import org.nlogo.swing.BrowserLauncher
 import org.nlogo.window.GUIWorkspace
@@ -12,9 +14,8 @@ import org.nlogo.window.GUIWorkspace
 import BehaviorSpaceExtension._
 
 object GotoBehaviorspaceDocumentation extends Command {
-  override def getSyntax = {
-    commandSyntax()
-  }
+  override def getSyntax: Syntax =
+    Syntax.commandSyntax()
 
   def perform(args: Array[Argument], context: Context): Unit = {
     BrowserLauncher.openPath(BrowserLauncher.docPath("behaviorspace.html"), "")
@@ -22,373 +23,196 @@ object GotoBehaviorspaceDocumentation extends Command {
 }
 
 object GotoBspaceExtensionDocumentation extends Command {
-  override def getSyntax = {
-    commandSyntax()
-  }
+  override def getSyntax: Syntax =
+    Syntax.commandSyntax()
 
   def perform(args: Array[Argument], context: Context): Unit = {
     BrowserLauncher.openPath(BrowserLauncher.docPath("bspace.html"), "")
   }
 }
 
-object GetPreExperimentCommands extends Reporter {
-  override def getSyntax = {
-    reporterSyntax(ret = StringType)
+// helper class for ensuring that a current experiment exists (Isaac B 6/30/25)
+abstract class CurrentGuardReporter extends Reporter {
+  protected def getCurrentExperiment(context: Context): Option[LabProtocol] = {
+    getExperimentManager(context).getCurrentExperiment match {
+      case Some(Experiment(protocol, _)) =>
+        Option(protocol)
+
+      case _ =>
+        nameError(context, "noCurrent")
+
+        None
+    }
   }
+}
+
+object GetPreExperimentCommands extends CurrentGuardReporter {
+  override def getSyntax: Syntax =
+    Syntax.reporterSyntax(ret = Syntax.StringType)
+
+  override def report(args: Array[Argument], context: Context): String =
+    getCurrentExperiment(context).map(_.preExperimentCommands).getOrElse("")
+}
+
+object GetSetupCommands extends CurrentGuardReporter {
+  override def getSyntax: Syntax =
+    Syntax.reporterSyntax(ret = Syntax.StringType)
+
+  override def report(args: Array[Argument], context: Context): String =
+    getCurrentExperiment(context).map(_.setupCommands).getOrElse("")
+}
+
+object GetGoCommands extends CurrentGuardReporter {
+  override def getSyntax: Syntax =
+    Syntax.reporterSyntax(ret = Syntax.StringType)
+
+  override def report(args: Array[Argument], context: Context): String =
+    getCurrentExperiment(context).map(_.goCommands).getOrElse("")
+}
+
+object GetPostRunCommands extends CurrentGuardReporter {
+  override def getSyntax: Syntax =
+    Syntax.reporterSyntax(ret = Syntax.StringType)
+
+  override def report(args: Array[Argument], context: Context): String =
+    getCurrentExperiment(context).map(_.postRunCommands).getOrElse("")
+}
+
+object GetPostExperimentCommands extends CurrentGuardReporter {
+ override def getSyntax: Syntax =
+    Syntax.reporterSyntax(ret = Syntax.StringType)
+
+  override def report(args: Array[Argument], context: Context): String =
+    getCurrentExperiment(context).map(_.postExperimentCommands).getOrElse("")
+}
+
+object GetRepetitions extends CurrentGuardReporter {
+  override def getSyntax: Syntax =
+    Syntax.reporterSyntax(ret = Syntax.NumberType)
+
+  override def report(args: Array[Argument], context: Context): JDouble =
+    getCurrentExperiment(context).map(_.repetitions.toDouble).getOrElse(0.0)
+}
+
+object GetSequentialRunOrder extends CurrentGuardReporter {
+  override def getSyntax: Syntax =
+    Syntax.reporterSyntax(ret = Syntax.BooleanType)
+
+  override def report(args: Array[Argument], context: Context): JBoolean =
+    getCurrentExperiment(context).map(_.sequentialRunOrder).getOrElse(false)
+}
+
+object GetRunMetricsEveryStep extends CurrentGuardReporter {
+  override def getSyntax: Syntax =
+    Syntax.reporterSyntax(ret = Syntax.BooleanType)
+
+  override def report(args: Array[Argument], context: Context): JBoolean =
+    getCurrentExperiment(context).map(_.runMetricsEveryStep).getOrElse(false)
+}
+
+object GetRunMetricsCondition extends CurrentGuardReporter {
+  override def getSyntax: Syntax =
+    Syntax.reporterSyntax(ret = Syntax.StringType)
+
+  override def report(args: Array[Argument], context: Context): String =
+    getCurrentExperiment(context).map(_.runMetricsCondition).getOrElse("")
+}
+
+object GetTimeLimit extends CurrentGuardReporter {
+  override def getSyntax: Syntax =
+    Syntax.reporterSyntax(ret = Syntax.NumberType)
+
+  override def report(args: Array[Argument], context: Context): JDouble =
+    getCurrentExperiment(context).map(_.timeLimit.toDouble).getOrElse(0.0)
+}
+
+object GetStopCondition extends CurrentGuardReporter {
+  override def getSyntax: Syntax =
+    Syntax.reporterSyntax(ret = Syntax.StringType)
+
+  override def report(args: Array[Argument], context: Context): String =
+    getCurrentExperiment(context).map(_.exitCondition).getOrElse("")
+}
+
+object GetMetrics extends CurrentGuardReporter {
+  override def getSyntax: Syntax =
+    Syntax.reporterSyntax(ret = Syntax.ListType | Syntax.StringType)
+
+  override def report(args: Array[Argument], context: Context): LogoList =
+    getCurrentExperiment(context).map(p => LogoList(p.metrics*)).getOrElse(LogoList())
+}
+
+object GetVariables extends CurrentGuardReporter {
+  override def getSyntax: Syntax =
+    Syntax.reporterSyntax(ret = Syntax.StringType)
 
   override def report(args: Array[Argument], context: Context): String = {
-    getExperimentManager(context).getCurrentExperiment match {
-      case Some(Experiment(protocol, _)) =>
-        protocol.preExperimentCommands
-
-      case _ =>
-        nameError(context, "noCurrent")
-
-        ""
-    }
+    getCurrentExperiment(context).map { protocol =>
+      LabVariableParser.combineVariables(protocol.constants, protocol.subExperiments)
+    }.getOrElse("")
   }
 }
 
-object GetSetupCommands extends Reporter {
-  override def getSyntax = {
-    reporterSyntax(ret = StringType)
-  }
+object GetParallelRuns extends CurrentGuardReporter {
+  override def getSyntax: Syntax =
+    Syntax.reporterSyntax(ret = Syntax.NumberType)
 
-  override def report(args: Array[Argument], context: Context): String = {
-    getExperimentManager(context).getCurrentExperiment match {
-      case Some(Experiment(protocol, _)) =>
-        protocol.setupCommands
-
-      case _ =>
-        nameError(context, "noCurrent")
-
-        ""
-    }
-  }
+  override def report(args: Array[Argument], context: Context): JDouble =
+    getCurrentExperiment(context).map(_.threadCount.toDouble).getOrElse(0.0)
 }
 
-object GetGoCommands extends Reporter {
-  override def getSyntax = {
-    reporterSyntax(ret = StringType)
-  }
+object GetTable extends CurrentGuardReporter {
+  override def getSyntax: Syntax =
+    Syntax.reporterSyntax(ret = Syntax.StringType)
 
-  override def report(args: Array[Argument], context: Context): String = {
-    getExperimentManager(context).getCurrentExperiment match {
-      case Some(Experiment(protocol, _)) =>
-        protocol.goCommands
-
-      case _ =>
-        nameError(context, "noCurrent")
-
-        ""
-    }
-  }
+  override def report(args: Array[Argument], context: Context): String =
+    getCurrentExperiment(context).map(_.table).getOrElse("")
 }
 
-object GetPostRunCommands extends Reporter {
-  override def getSyntax = {
-    reporterSyntax(ret = StringType)
-  }
+object GetSpreadsheet extends CurrentGuardReporter {
+  override def getSyntax: Syntax =
+    Syntax.reporterSyntax(ret = Syntax.StringType)
 
-  override def report(args: Array[Argument], context: Context): String = {
-    getExperimentManager(context).getCurrentExperiment match {
-      case Some(Experiment(protocol, _)) =>
-        protocol.postRunCommands
-
-      case _ =>
-        nameError(context, "noCurrent")
-
-        ""
-    }
-  }
+  override def report(args: Array[Argument], context: Context): String =
+    getCurrentExperiment(context).map(_.spreadsheet).getOrElse("")
 }
 
-object GetPostExperimentCommands extends Reporter {
-  override def getSyntax = {
-    reporterSyntax(ret = StringType)
-  }
+object GetStats extends CurrentGuardReporter {
+  override def getSyntax: Syntax =
+    Syntax.reporterSyntax(ret = Syntax.StringType)
 
-  override def report(args: Array[Argument], context: Context): String = {
-    getExperimentManager(context).getCurrentExperiment match {
-      case Some(Experiment(protocol, _)) =>
-        protocol.postExperimentCommands
-
-      case _ =>
-        nameError(context, "noCurrent")
-
-        ""
-    }
-  }
+  override def report(args: Array[Argument], context: Context): String =
+    getCurrentExperiment(context).map(_.stats).getOrElse("")
 }
 
-object GetRepetitions extends Reporter {
-  override def getSyntax = {
-    reporterSyntax(ret = NumberType)
-  }
+object GetLists extends CurrentGuardReporter {
+  override def getSyntax: Syntax =
+    Syntax.reporterSyntax(ret = Syntax.StringType)
 
-  override def report(args: Array[Argument], context: Context): java.lang.Double = {
-    getExperimentManager(context).getCurrentExperiment match {
-      case Some(Experiment(protocol, _)) =>
-        protocol.repetitions.toDouble
-
-      case _ =>
-        nameError(context, "noCurrent")
-
-        0
-    }
-  }
+  override def report(args: Array[Argument], context: Context): String =
+    getCurrentExperiment(context).map(_.lists).getOrElse("")
 }
 
-object GetSequentialRunOrder extends Reporter {
-  override def getSyntax = {
-    reporterSyntax(ret = BooleanType)
-  }
+object GetDefaultParallelRuns extends CurrentGuardReporter {
+  override def getSyntax: Syntax =
+    Syntax.reporterSyntax(ret = Syntax.NumberType)
 
-  override def report(args: Array[Argument], context: Context): java.lang.Boolean = {
-    getExperimentManager(context).getCurrentExperiment match {
-      case Some(Experiment(protocol, _)) =>
-        protocol.sequentialRunOrder
-
-      case _ =>
-        nameError(context, "noCurrent")
-
-        false
-    }
-  }
-}
-
-object GetRunMetricsEveryStep extends Reporter {
-  override def getSyntax = {
-    reporterSyntax(ret = BooleanType)
-  }
-
-  override def report(args: Array[Argument], context: Context): java.lang.Boolean = {
-    getExperimentManager(context).getCurrentExperiment match {
-      case Some(Experiment(protocol, _)) =>
-        protocol.runMetricsEveryStep
-
-      case _ =>
-        nameError(context, "noCurrent")
-
-        false
-    }
-  }
-}
-
-object GetRunMetricsCondition extends Reporter {
-  override def getSyntax = {
-    reporterSyntax(ret = StringType)
-  }
-
-  override def report(args: Array[Argument], context: Context): String = {
-    getExperimentManager(context).getCurrentExperiment match {
-      case Some(Experiment(protocol, _)) =>
-        protocol.runMetricsCondition
-
-      case _ =>
-        nameError(context, "noCurrent")
-
-        ""
-    }
-  }
-}
-
-object GetTimeLimit extends Reporter {
-  override def getSyntax = {
-    reporterSyntax(ret = NumberType)
-  }
-
-  override def report(args: Array[Argument], context: Context): java.lang.Double = {
-    getExperimentManager(context).getCurrentExperiment match {
-      case Some(Experiment(protocol, _)) =>
-        protocol.timeLimit.toDouble
-
-      case _ =>
-        nameError(context, "noCurrent")
-
-        0
-    }
-  }
-}
-
-object GetStopCondition extends Reporter {
-  override def getSyntax = {
-    reporterSyntax(ret = StringType)
-  }
-
-  override def report(args: Array[Argument], context: Context): String = {
-    getExperimentManager(context).getCurrentExperiment match {
-      case Some(Experiment(protocol, _)) =>
-        protocol.exitCondition
-
-      case _ =>
-        nameError(context, "noCurrent")
-
-        ""
-    }
-  }
-}
-
-object GetMetrics extends Reporter {
-  override def getSyntax = {
-    reporterSyntax(ret = ListType | StringType)
-  }
-
-  override def report(args: Array[Argument], context: Context): LogoList = {
-    getExperimentManager(context).getCurrentExperiment match {
-      case Some(Experiment(protocol, _)) =>
-        LogoList(protocol.metrics*)
-
-      case _ =>
-        nameError(context, "noCurrent")
-
-        LogoList()
-    }
-  }
-}
-
-object GetVariables extends Reporter {
-  override def getSyntax = {
-    reporterSyntax(ret = StringType)
-  }
-
-  override def report(args: Array[Argument], context: Context): String = {
-    getExperimentManager(context).getCurrentExperiment match {
-      case Some(Experiment(protocol, _)) =>
-        LabVariableParser.combineVariables(protocol.constants, protocol.subExperiments)
-
-      case _ =>
-        nameError(context, "noCurrent")
-
-        ""
-    }
-  }
-}
-
-object GetParallelRuns extends Reporter {
-  override def getSyntax = {
-    reporterSyntax(ret = NumberType)
-  }
-
-  override def report(args: Array[Argument], context: Context): java.lang.Double = {
-    getExperimentManager(context).getCurrentExperiment match {
-      case Some(Experiment(protocol, _)) =>
-        protocol.threadCount.toDouble
-
-      case _ =>
-        nameError(context, "noCurrent")
-
-        0
-    }
-  }
-}
-
-object GetTable extends Reporter {
-  override def getSyntax = {
-    reporterSyntax(ret = StringType)
-  }
-
-  override def report(args: Array[Argument], context: Context): String = {
-    getExperimentManager(context).getCurrentExperiment match {
-      case Some(Experiment(protocol, _)) =>
-        protocol.table
-
-      case _ =>
-        nameError(context, "noCurrent")
-
-        ""
-    }
-  }
-}
-
-object GetSpreadsheet extends Reporter {
-  override def getSyntax = {
-    reporterSyntax(ret = StringType)
-  }
-
-  override def report(args: Array[Argument], context: Context): String = {
-    getExperimentManager(context).getCurrentExperiment match {
-      case Some(Experiment(protocol, _)) =>
-        protocol.spreadsheet
-
-      case _ =>
-        nameError(context, "noCurrent")
-
-        ""
-    }
-  }
-}
-
-object GetStats extends Reporter {
-  override def getSyntax = {
-    reporterSyntax(ret = StringType)
-  }
-
-  override def report(args: Array[Argument], context: Context): String = {
-    getExperimentManager(context).getCurrentExperiment match {
-      case Some(Experiment(protocol, _)) =>
-        protocol.stats
-
-      case _ =>
-        nameError(context, "noCurrent")
-
-        ""
-    }
-  }
-}
-
-object GetLists extends Reporter {
-  override def getSyntax = {
-    reporterSyntax(ret = StringType)
-  }
-
-  override def report(args: Array[Argument], context: Context): String = {
-    getExperimentManager(context).getCurrentExperiment match {
-      case Some(Experiment(protocol, _)) =>
-        protocol.lists
-
-      case _ =>
-        nameError(context, "noCurrent")
-
-        ""
-    }
-  }
-}
-
-object GetDefaultParallelRuns extends Reporter {
-  override def getSyntax = {
-    reporterSyntax(ret = NumberType)
-  }
-
-  override def report(args: Array[Argument], context: Context): java.lang.Double = {
+  override def report(args: Array[Argument], context: Context): JDouble =
     LabDefaultValues.getDefaultThreads.toDouble
-  }
 }
 
-object GetRecommendedMaxParallelRuns extends Reporter {
-  override def getSyntax = {
-    reporterSyntax(ret = NumberType)
-  }
+object GetRecommendedMaxParallelRuns extends CurrentGuardReporter {
+  override def getSyntax: Syntax =
+    Syntax.reporterSyntax(ret = Syntax.NumberType)
 
-  override def report(args: Array[Argument], context: Context): java.lang.Double = {
+  override def report(args: Array[Argument], context: Context): JDouble =
     LabDefaultValues.getRecommendedMaxThreads.toDouble
-  }
 }
 
-object GetMirrorHeadlessOutput extends Reporter {
-  override def getSyntax = {
-    reporterSyntax(ret = BooleanType)
-  }
+object GetMirrorHeadlessOutput extends CurrentGuardReporter {
+  override def getSyntax: Syntax =
+    Syntax.reporterSyntax(ret = Syntax.BooleanType)
 
-  override def report(args: Array[Argument], context: Context): java.lang.Boolean = {
-    getExperimentManager(context).getCurrentExperiment match {
-      case Some(Experiment(protocol, _)) =>
-        protocol.mirrorHeadlessOutput
-
-      case _ =>
-        nameError(context, "noCurrent")
-
-        false
-    }
-  }
+  override def report(args: Array[Argument], context: Context): JBoolean =
+    getCurrentExperiment(context).map(_.mirrorHeadlessOutput).getOrElse(false)
 }
