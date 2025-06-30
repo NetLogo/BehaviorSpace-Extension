@@ -5,8 +5,11 @@ package org.nlogo.extensions.bspace
 import org.nlogo.api.{ Argument, Command, Context, LabDefaultValues, LabVariableParser, Reporter }
 import org.nlogo.core.LogoList
 import org.nlogo.core.Syntax._
+import org.nlogo.nvm.Experiment
 import org.nlogo.swing.BrowserLauncher
 import org.nlogo.window.GUIWorkspace
+
+import BehaviorSpaceExtension._
 
 object GotoBehaviorspaceDocumentation extends Command {
   override def getSyntax = {
@@ -34,20 +37,15 @@ object GetPreExperimentCommands extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): String = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
-      BehaviorSpaceExtension.nameError(context, "noCurrent")
-      return ""
-    }
+    getExperimentManager(context).getCurrentExperiment match {
+      case Some(Experiment(protocol, _)) =>
+        protocol.preExperimentCommands
 
-    return (BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
-      case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.preExperimentCommands
-      case ExperimentType.Code =>
-        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).preExperimentCommands
       case _ =>
-        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
+        nameError(context, "noCurrent")
+
         ""
-    }).toString
+    }
   }
 }
 
@@ -57,18 +55,13 @@ object GetSetupCommands extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): String = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
-      BehaviorSpaceExtension.nameError(context, "noCurrent")
-      return ""
-    }
+    getExperimentManager(context).getCurrentExperiment match {
+      case Some(Experiment(protocol, _)) =>
+        protocol.setupCommands
 
-    return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
-      case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.setupCommands
-      case ExperimentType.Code =>
-        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).setupCommands
       case _ =>
-        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
+        nameError(context, "noCurrent")
+
         ""
     }
   }
@@ -80,18 +73,13 @@ object GetGoCommands extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): String = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
-      BehaviorSpaceExtension.nameError(context, "noCurrent")
-      return ""
-    }
+    getExperimentManager(context).getCurrentExperiment match {
+      case Some(Experiment(protocol, _)) =>
+        protocol.goCommands
 
-    return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
-      case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.goCommands
-      case ExperimentType.Code =>
-        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).goCommands
       case _ =>
-        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
+        nameError(context, "noCurrent")
+
         ""
     }
   }
@@ -103,18 +91,13 @@ object GetPostRunCommands extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): String = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
-      BehaviorSpaceExtension.nameError(context, "noCurrent")
-      return ""
-    }
+    getExperimentManager(context).getCurrentExperiment match {
+      case Some(Experiment(protocol, _)) =>
+        protocol.postRunCommands
 
-    return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
-      case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.postRunCommands
-      case ExperimentType.Code =>
-        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).postRunCommands
       case _ =>
-        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
+        nameError(context, "noCurrent")
+
         ""
     }
   }
@@ -126,18 +109,13 @@ object GetPostExperimentCommands extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): String = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
-      BehaviorSpaceExtension.nameError(context, "noCurrent")
-      return ""
-    }
+    getExperimentManager(context).getCurrentExperiment match {
+      case Some(Experiment(protocol, _)) =>
+        protocol.postExperimentCommands
 
-    return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
-      case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.postExperimentCommands
-      case ExperimentType.Code =>
-        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).postExperimentCommands
       case _ =>
-        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
+        nameError(context, "noCurrent")
+
         ""
     }
   }
@@ -149,20 +127,14 @@ object GetRepetitions extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): java.lang.Double = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
-      BehaviorSpaceExtension.nameError(context, "noCurrent")
-      return LabDefaultValues.getDefaultRepetitions.toDouble
-    }
+    getExperimentManager(context).getCurrentExperiment match {
+      case Some(Experiment(protocol, _)) =>
+        protocol.repetitions.toDouble
 
-    return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
-      case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment)
-          .get.repetitions.toDouble
-      case ExperimentType.Code =>
-        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).repetitions.toDouble
       case _ =>
-        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
-        LabDefaultValues.getDefaultRepetitions.toDouble
+        nameError(context, "noCurrent")
+
+        0
     }
   }
 }
@@ -173,19 +145,14 @@ object GetSequentialRunOrder extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): java.lang.Boolean = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
-      BehaviorSpaceExtension.nameError(context, "noCurrent")
-      return LabDefaultValues.getDefaultSequentialRunOrder
-    }
+    getExperimentManager(context).getCurrentExperiment match {
+      case Some(Experiment(protocol, _)) =>
+        protocol.sequentialRunOrder
 
-    return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
-      case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.sequentialRunOrder
-      case ExperimentType.Code =>
-        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).sequentialRunOrder
       case _ =>
-        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
-        LabDefaultValues.getDefaultSequentialRunOrder
+        nameError(context, "noCurrent")
+
+        false
     }
   }
 }
@@ -196,19 +163,14 @@ object GetRunMetricsEveryStep extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): java.lang.Boolean = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
-      BehaviorSpaceExtension.nameError(context, "noCurrent")
-      return LabDefaultValues.getDefaultRunMetricsEveryStep
-    }
+    getExperimentManager(context).getCurrentExperiment match {
+      case Some(Experiment(protocol, _)) =>
+        protocol.runMetricsEveryStep
 
-    return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
-      case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.runMetricsEveryStep
-      case ExperimentType.Code =>
-        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).runMetricsEveryStep
       case _ =>
-        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
-        LabDefaultValues.getDefaultRunMetricsEveryStep
+        nameError(context, "noCurrent")
+
+        false
     }
   }
 }
@@ -219,18 +181,13 @@ object GetRunMetricsCondition extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): String = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
-      BehaviorSpaceExtension.nameError(context, "noCurrent")
-      return ""
-    }
+    getExperimentManager(context).getCurrentExperiment match {
+      case Some(Experiment(protocol, _)) =>
+        protocol.runMetricsCondition
 
-    return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
-      case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.runMetricsCondition
-      case ExperimentType.Code =>
-        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).runMetricsCondition
       case _ =>
-        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
+        nameError(context, "noCurrent")
+
         ""
     }
   }
@@ -242,20 +199,14 @@ object GetTimeLimit extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): java.lang.Double = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
-      BehaviorSpaceExtension.nameError(context, "noCurrent")
-      return LabDefaultValues.getDefaultTimeLimit.toDouble
-    }
+    getExperimentManager(context).getCurrentExperiment match {
+      case Some(Experiment(protocol, _)) =>
+        protocol.timeLimit.toDouble
 
-    return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
-      case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment)
-          .get.timeLimit.toDouble
-      case ExperimentType.Code =>
-        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).timeLimit.toDouble
       case _ =>
-        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
-        LabDefaultValues.getDefaultTimeLimit.toDouble
+        nameError(context, "noCurrent")
+
+        0
     }
   }
 }
@@ -266,18 +217,13 @@ object GetStopCondition extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): String = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
-      BehaviorSpaceExtension.nameError(context, "noCurrent")
-      return ""
-    }
+    getExperimentManager(context).getCurrentExperiment match {
+      case Some(Experiment(protocol, _)) =>
+        protocol.exitCondition
 
-    return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
-      case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.exitCondition
-      case ExperimentType.Code =>
-        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).exitCondition
       case _ =>
-        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
+        nameError(context, "noCurrent")
+
         ""
     }
   }
@@ -289,22 +235,15 @@ object GetMetrics extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): LogoList = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
-      BehaviorSpaceExtension.nameError(context, "noCurrent")
-      return LogoList()
-    }
+    getExperimentManager(context).getCurrentExperiment match {
+      case Some(Experiment(protocol, _)) =>
+        LogoList(protocol.metrics*)
 
-    val list = BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
-      case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.metrics
-      case ExperimentType.Code =>
-        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).metrics
       case _ =>
-        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
-        Nil
-    }
+        nameError(context, "noCurrent")
 
-    return LogoList.fromList(list)
+        LogoList()
+    }
   }
 }
 
@@ -314,22 +253,13 @@ object GetVariables extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): String = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
-      BehaviorSpaceExtension.nameError(context, "noCurrent")
-      return ""
-    }
+    getExperimentManager(context).getCurrentExperiment match {
+      case Some(Experiment(protocol, _)) =>
+        LabVariableParser.combineVariables(protocol.constants, protocol.subExperiments)
 
-    return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
-      case ExperimentType.GUI =>
-        LabVariableParser.combineVariables(
-          context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.constants,
-          context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.subExperiments)
-      case ExperimentType.Code =>
-        LabVariableParser.combineVariables(
-          BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).constants,
-          BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).subExperiments)
       case _ =>
-        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
+        nameError(context, "noCurrent")
+
         ""
     }
   }
@@ -341,20 +271,14 @@ object GetParallelRuns extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): java.lang.Double = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
-      BehaviorSpaceExtension.nameError(context, "noCurrent")
-      return LabDefaultValues.getDefaultThreads.toDouble
-    }
+    getExperimentManager(context).getCurrentExperiment match {
+      case Some(Experiment(protocol, _)) =>
+        protocol.threadCount.toDouble
 
-    return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
-      case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment)
-          .get.threadCount.toDouble
-      case ExperimentType.Code =>
-        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).threadCount.toDouble
       case _ =>
-        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
-        LabDefaultValues.getDefaultThreads.toDouble
+        nameError(context, "noCurrent")
+
+        0
     }
   }
 }
@@ -365,19 +289,13 @@ object GetTable extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): String = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
-      BehaviorSpaceExtension.nameError(context, "noCurrent")
-      return ""
-    }
+    getExperimentManager(context).getCurrentExperiment match {
+      case Some(Experiment(protocol, _)) =>
+        protocol.table
 
-    return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
-      case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments
-          .find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.table
-      case ExperimentType.Code =>
-        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).table
       case _ =>
-        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
+        nameError(context, "noCurrent")
+
         ""
     }
   }
@@ -389,19 +307,13 @@ object GetSpreadsheet extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): String = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
-      BehaviorSpaceExtension.nameError(context, "noCurrent")
-      return ""
-    }
+    getExperimentManager(context).getCurrentExperiment match {
+      case Some(Experiment(protocol, _)) =>
+        protocol.spreadsheet
 
-    return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
-      case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments
-          .find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.spreadsheet
-      case ExperimentType.Code =>
-        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).spreadsheet
       case _ =>
-        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
+        nameError(context, "noCurrent")
+
         ""
     }
   }
@@ -413,19 +325,13 @@ object GetStats extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): String = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
-      BehaviorSpaceExtension.nameError(context, "noCurrent")
-      return ""
-    }
+    getExperimentManager(context).getCurrentExperiment match {
+      case Some(Experiment(protocol, _)) =>
+        protocol.stats
 
-    return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
-      case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments
-          .find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.stats
-      case ExperimentType.Code =>
-        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).stats
       case _ =>
-        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
+        nameError(context, "noCurrent")
+
         ""
     }
   }
@@ -437,19 +343,13 @@ object GetLists extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): String = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
-      BehaviorSpaceExtension.nameError(context, "noCurrent")
-      return ""
-    }
+    getExperimentManager(context).getCurrentExperiment match {
+      case Some(Experiment(protocol, _)) =>
+        protocol.lists
 
-    return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
-      case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments
-          .find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.lists
-      case ExperimentType.Code =>
-        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).lists
       case _ =>
-        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
+        nameError(context, "noCurrent")
+
         ""
     }
   }
@@ -481,20 +381,14 @@ object GetMirrorHeadlessOutput extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): java.lang.Boolean = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty) {
-      BehaviorSpaceExtension.nameError(context, "noCurrent")
-      return LabDefaultValues.getDefaultMirrorHeadlessOutput
-    }
+    getExperimentManager(context).getCurrentExperiment match {
+      case Some(Experiment(protocol, _)) =>
+        protocol.mirrorHeadlessOutput
 
-    return BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
-      case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments
-          .find(x => x.name == BehaviorSpaceExtension.currentExperiment).get.mirrorHeadlessOutput
-      case ExperimentType.Code =>
-        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).mirrorHeadlessOutput
       case _ =>
-        BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
-        LabDefaultValues.getDefaultMirrorHeadlessOutput
+        nameError(context, "noCurrent")
+
+        false
     }
   }
 }
