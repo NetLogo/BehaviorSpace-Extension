@@ -25,19 +25,17 @@ object BehaviorSpaceExtension {
   )
 
   def getExperimentManager(context: Context): ExperimentManager =
-    context.asInstanceOf[ExtensionContext].nvmContext.workspace.getPrimaryWorkspace.getExperimentManager
+    context.asInstanceOf[ExtensionContext].workspace.getPrimaryWorkspace.getExperimentManager
 
   def nameError(context: Context, message: String, keys: String*): Unit = {
     if (context.workspace.isHeadless)
       throw new ExtensionException(replaceErrorString(message, keys))
 
-    else {
-      if (new OptionPane(context.workspace.asInstanceOf[GUIWorkspace].getFrame,
-                         I18N.gui.get("tools.behaviorSpace.invalid"), replaceErrorString(message, keys),
-                         Seq(I18N.gui.get("common.buttons.ok"), I18N.gui.get("common.buttons.halt")),
-                         OptionPane.Icons.Error).getSelectedIndex != 0)
-        throw new HaltException(true)
-    }
+    if (new OptionPane(context.workspace.asInstanceOf[GUIWorkspace].getFrame,
+                       I18N.gui.get("tools.behaviorSpace.invalid"), replaceErrorString(message, keys),
+                       Seq(I18N.gui.get("common.buttons.ok"), I18N.gui.get("common.buttons.halt")),
+                       OptionPane.Icons.Error).getSelectedIndex != 0)
+      throw new HaltException(true)
   }
 
   def replaceErrorString(message: String, keys: Seq[String]): String = {
