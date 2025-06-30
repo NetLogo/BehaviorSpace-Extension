@@ -102,7 +102,7 @@ object RunExperiment extends Command {
                                                              protocol.mirrorHeadlessOutput),
                                    protocol, manager.setStackWorker(protocol.name, _),
                                    () => manager.removeExperimentFromStack(protocol.name),
-                                   context.asInstanceOf[ExtensionContext].nvmContext.workspace.getPrimaryWorkspace,
+                                   context.asInstanceOf[ExtensionContext].workspace.getPrimaryWorkspace,
                                    loadedExtensions)
   }
 }
