@@ -20,6 +20,7 @@ object BehaviorSpaceExtension {
     "recursive" -> "Cannot run an experiment recursively.",
     "invalidFormat" -> "Invalid format in \"$0\".",
     "fileExists" -> "File \"$0\" already exists.",
+    "exportFailed" -> "Failed to export experiment.",
     "gui" -> "Experiment \"$0\" is a GUI experiment, it cannot be edited.",
     "noRun" -> "Run \"$0\" does not exist in the specified output file."
   )
