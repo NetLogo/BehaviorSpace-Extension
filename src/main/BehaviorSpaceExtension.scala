@@ -5,24 +5,13 @@ package org.nlogo.extensions.bspace
 import org.nlogo.api.{ AnonymousProcedure, Argument, Command, Context, DefaultClassManager, ExtensionException,
                        ExtensionManager, LabDefaultValues, LabProtocol, PrimitiveManager, RefValueSet }
 import org.nlogo.core.I18N
-import org.nlogo.lab.Worker
-import org.nlogo.nvm.HaltException
+import org.nlogo.nvm.{ ExperimentManager, ExtensionContext, HaltException }
 import org.nlogo.swing.OptionPane
 import org.nlogo.window.GUIWorkspace
 
 import scala.collection.mutable.Map
 
-object ExperimentType extends Enumeration {
-  type ExperimentType = Value
-  val GUI, Code, None = Value
-}
-
 object BehaviorSpaceExtension {
-  val experiments = Map[String, LabProtocol]()
-  val experimentStack = Map[String, Worker]()
-
-  var currentExperiment = ""
-
   private val errors = Map[String, String](
     "alreadyExists" -> "An experiment already exists with the name \"$0\".",
     "emptyName" -> "Experiment name cannot be empty.",
@@ -35,26 +24,8 @@ object BehaviorSpaceExtension {
     "noRun" -> "Run \"$0\" does not exist in the specified output file."
   )
 
-  def experimentType(name: String, context: Context): ExperimentType.ExperimentType = {
-    if (experiments.contains(name))
-      ExperimentType.Code
-    else if (context.workspace.getBehaviorSpaceExperiments.find(x => x.name == name).isDefined)
-      ExperimentType.GUI
-    else
-      ExperimentType.None
-  }
-
-  def validateForEditing(name: String, context: Context): Boolean = {
-    experimentType(name, context) match {
-      case ExperimentType.None =>
-        nameError(context, "noExperiment", name)
-        false
-      case ExperimentType.GUI =>
-        nameError(context, "gui", name)
-        false
-      case ExperimentType.Code => true
-    }
-  }
+  def getExperimentManager(context: Context): ExperimentManager =
+    context.asInstanceOf[ExtensionContext].nvmContext.workspace.getPrimaryWorkspace.getExperimentManager
 
   def nameError(context: Context, message: String, keys: String*): Unit = {
     if (context.workspace.isHeadless)
@@ -151,10 +122,5 @@ class BehaviorSpaceExtension extends DefaultClassManager {
     manager.addPrimitive("get-default-parallel-runs", GetDefaultParallelRuns)
     manager.addPrimitive("get-recommended-max-parallel-runs", GetRecommendedMaxParallelRuns)
     manager.addPrimitive("get-mirror-headless-output", GetMirrorHeadlessOutput)
-  }
-
-  override def runOnce(manager: ExtensionManager): Unit = {
-    BehaviorSpaceExtension.experiments.clear()
-    BehaviorSpaceExtension.currentExperiment = ""
   }
 }

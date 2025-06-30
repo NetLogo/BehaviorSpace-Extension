@@ -10,9 +10,12 @@ import org.nlogo.core.Syntax._
 import org.nlogo.fileformat.{ LabLoader, LabSaver }
 import org.nlogo.headless.Main
 import org.nlogo.lab.Worker
-import org.nlogo.nvm.ExtensionContext
-import org.nlogo.nvm.LabInterface
+import org.nlogo.nvm.{ Experiment, ExperimentType, ExtensionContext, LabInterface }
 import org.nlogo.workspace.AbstractWorkspace
+
+import scala.io.Source
+
+import BehaviorSpaceExtension._
 
 object CreateExperiment extends Command {
   override def getSyntax = {
@@ -21,18 +24,15 @@ object CreateExperiment extends Command {
 
   def perform(args: Array[Argument], context: Context): Unit = {
     val name = args(0).getString.trim
+    val manager = getExperimentManager(context)
 
-    if (!args(1).getBooleanValue &&
-        BehaviorSpaceExtension.experimentType(name, context) != ExperimentType.None)
-      return BehaviorSpaceExtension.nameError(context, "alreadyExists", args(0).getString)
+    if (!args(1).getBooleanValue && manager.getExperiment(name).isDefined)
+      return nameError(context, "alreadyExists", name)
+
     if (name.isEmpty)
-      return BehaviorSpaceExtension.nameError(context, "emptyName")
+      return nameError(context, "emptyName")
 
-    if (BehaviorSpaceExtension.experiments.contains(name)) {
-      BehaviorSpaceExtension.experiments(name) = LabProtocol.defaultCodeProtocol(name)
-    } else {
-      BehaviorSpaceExtension.experiments += ((name, LabProtocol.defaultCodeProtocol(name)))
-    }
+    manager.addExperiment(Experiment(LabProtocol.defaultCodeProtocol(name), ExperimentType.Code))
   }
 }
 
@@ -43,10 +43,16 @@ object DeleteExperiment extends Command {
 
   def perform(args: Array[Argument], context: Context): Unit = {
     val name = args(0).getString.trim
+    val manager = getExperimentManager(context)
+    val experiment = manager.getExperiment(name)
 
-    if (!BehaviorSpaceExtension.validateForEditing(name, context)) return
+    if (experiment.isEmpty)
+      return nameError(context, "noExperiment")
 
-    BehaviorSpaceExtension.experiments -= name
+    if (experiment.exists(_.tpe != ExperimentType.Code))
+      return nameError(context, "gui", name)
+
+    manager.removeExperiment(name)
   }
 }
 
@@ -56,23 +62,16 @@ object RunExperiment extends Command {
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty)
-      return BehaviorSpaceExtension.nameError(context, "noCurrent")
+    val manager = getExperimentManager(context)
+    val current = manager.getCurrentExperiment
 
-    val protocol = BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
-      case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get
-      case ExperimentType.Code =>
-        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment)
-      case _ =>
-        return BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
-    }
+    if (current.isEmpty)
+      return nameError(context, "noCurrent")
 
-    if (BehaviorSpaceExtension.experimentStack.contains(protocol.name)) {
-      return BehaviorSpaceExtension.nameError(context, "recursive")
-    }
+    val protocol = current.get.protocol
 
-    BehaviorSpaceExtension.experimentStack += ((protocol.name, null))
+    if (!manager.addExperimentToStack(protocol.name))
+      return nameError(context, "recursive")
 
     var outputPath = ""
 
@@ -99,19 +98,11 @@ object RunExperiment extends Command {
 
     Main.runExperimentWithProtocol(new LabInterface.Settings(context.workspace.getModelPath, None, None, table,
                                                              spreadsheet, stats, lists, None,
-                                                             protocol.threadCount, false,
-                                                             protocol.updatePlotsAndMonitors), protocol,
-                                   (worker: LabInterface.Worker) => {
-                                     BehaviorSpaceExtension.experimentStack(protocol.name) =
-                                      worker.asInstanceOf[Worker]
-                                   },
-                                   () => {
-                                     BehaviorSpaceExtension.experimentStack -= protocol.name
-                                   }, if (protocol.mirrorHeadlessOutput) {
-                                        context.asInstanceOf[ExtensionContext].nvmContext.workspace.getPrimaryWorkspace
-                                      } else {
-                                        None
-                                      },
+                                                             protocol.threadCount, false, false,
+                                                             protocol.mirrorHeadlessOutput),
+                                   protocol, manager.setStackWorker(protocol.name, _),
+                                   () => manager.removeExperimentFromStack(protocol.name),
+                                   context.asInstanceOf[ExtensionContext].nvmContext.workspace.getPrimaryWorkspace,
                                    loadedExtensions)
   }
 }
@@ -122,25 +113,27 @@ object RenameExperiment extends Command {
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty)
-      return BehaviorSpaceExtension.nameError(context, "noCurrent")
+    val manager = getExperimentManager(context)
+    val current = manager.getCurrentExperiment
+
+    if (current.isEmpty)
+      return nameError(context, "noCurrent")
 
     val name = args(0).getString.trim
 
-    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
-    if (BehaviorSpaceExtension.experimentType(name, context) != ExperimentType.None)
-      return BehaviorSpaceExtension.nameError(context, "noExperiment", name)
     if (name.isEmpty)
-      return BehaviorSpaceExtension.nameError(context, "emptyName")
+      return nameError(context, "emptyName")
 
-    val data = BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment)
+    val protocol = current.get.protocol
 
-    data.name = name
+    if (current.get.tpe != ExperimentType.Code)
+      return nameError(context, "gui", protocol.name)
 
-    BehaviorSpaceExtension.experiments -= BehaviorSpaceExtension.currentExperiment
-    BehaviorSpaceExtension.experiments += ((name, data))
+    manager.removeExperiment(protocol.name)
 
-    BehaviorSpaceExtension.currentExperiment = name
+    protocol.name = name
+
+    manager.addExperiment(Experiment(protocol, ExperimentType.Code))
   }
 }
 
@@ -150,28 +143,21 @@ object DuplicateExperiment extends Command {
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty)
-      return BehaviorSpaceExtension.nameError(context, "noCurrent")
+    val manager = getExperimentManager(context)
+    val current = manager.getCurrentExperiment
+
+    if (current.isEmpty)
+      return nameError(context, "noCurrent")
 
     val name = args(0).getString.trim
 
-    if (BehaviorSpaceExtension.experimentType(name, context) != ExperimentType.None)
-      return BehaviorSpaceExtension.nameError(context, "alreadyExists", name)
     if (name.isEmpty)
-      return BehaviorSpaceExtension.nameError(context, "emptyName")
+      return nameError(context, "emptyName")
 
-    val data = BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
-      case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get
-      case ExperimentType.Code =>
-        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment)
-    }
+    if (manager.getExperiment(name).isDefined)
+      return nameError(context, "alreadyExists", name)
 
-    data.name = name
-
-    BehaviorSpaceExtension.experiments += ((name, data))
-
-    BehaviorSpaceExtension.currentExperiment = name
+    manager.addExperiment(Experiment(current.get.protocol.copy(name), ExperimentType.Code))
   }
 }
 
@@ -182,20 +168,21 @@ object ImportExperiments extends Command {
 
   def perform(args: Array[Argument], context: Context): Unit = {
     val path = args(0).getString.trim
+    val manager = getExperimentManager(context)
 
     try {
       for (protocol <- new LabLoader(context.workspace.asInstanceOf[AbstractWorkspace].compiler.utilities)
-                                    (scala.io.Source.fromFile(path).mkString, true,
-                                     scala.collection.mutable.Set[String]()))
-      {
-        if (BehaviorSpaceExtension.experimentType(protocol.name, context) != ExperimentType.None)
-          BehaviorSpaceExtension.nameError(context, "noExperiment", protocol.name)
-        else
-          BehaviorSpaceExtension.experiments += ((protocol.name, protocol))
+                                    (Source.fromFile(path).mkString, true,
+                                     scala.collection.mutable.Set[String]())) {
+        if (manager.getExperiment(protocol.name).isDefined) {
+          nameError(context, "alreadyExists", protocol.name)
+        } else {
+          manager.addExperiment(Experiment(protocol, ExperimentType.Code))
+        }
       }
     } catch {
       case e: org.xml.sax.SAXParseException =>
-        BehaviorSpaceExtension.nameError(context, "invalidFormat", path)
+        nameError(context, "invalidFormat", path)
     }
   }
 }
@@ -206,27 +193,21 @@ object ExportExperiment extends Command {
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty)
-      return BehaviorSpaceExtension.nameError(context, "noCurrent")
+    val manager = getExperimentManager(context)
+    val current = manager.getCurrentExperiment
+
+    if (current.isEmpty)
+      return nameError(context, "noCurrent")
 
     val path = args(0).getString.trim
 
-    val protocol = BehaviorSpaceExtension.experimentType(BehaviorSpaceExtension.currentExperiment, context) match {
-      case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == BehaviorSpaceExtension.currentExperiment).get
-      case ExperimentType.Code =>
-        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment)
-      case _ =>
-        return BehaviorSpaceExtension.nameError(context, "noExperiment", BehaviorSpaceExtension.currentExperiment)
-    }
+    if (!args(1).getBooleanValue && new File(path).exists)
+      return nameError(context, "fileExists", path)
 
-    if (!args(1).getBooleanValue && new java.io.File(path).exists)
-      return BehaviorSpaceExtension.nameError(context, "fileExists", path)
-
-    val out = new java.io.PrintWriter(path)
+    val out = new PrintWriter(path)
 
     out.write(s"${LabLoader.XMLVER}\n${LabLoader.DOCTYPE}\n")
-    out.write(LabSaver.save(List(protocol)))
+    out.write(LabSaver.save(List(current.get.protocol)))
 
     out.close()
   }
@@ -238,15 +219,7 @@ object ClearExperiments extends Command {
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    for ((_, worker) <- BehaviorSpaceExtension.experimentStack) {
-      if (worker != null)
-        worker.abort()
-    }
-
-    BehaviorSpaceExtension.experiments.clear()
-    BehaviorSpaceExtension.experimentStack.clear()
-
-    BehaviorSpaceExtension.currentExperiment = ""
+    getExperimentManager(context).clearExperiments()
   }
 }
 
@@ -257,13 +230,12 @@ object SetCurrentExperiment extends Command {
 
   def perform(args: Array[Argument], context: Context): Unit = {
     val name = args(0).getString.trim
+    val manager = getExperimentManager(context)
 
-    BehaviorSpaceExtension.experimentType(name, context) match {
-      case ExperimentType.None =>
-        BehaviorSpaceExtension.nameError(context, "noExperiment", name)
-      case _ =>
-        BehaviorSpaceExtension.currentExperiment = name
-    }
+    if (manager.getExperiment(name).isEmpty)
+      return nameError(context, "noExperiment", name)
+
+    manager.setCurrentExperiment(name)
   }
 }
 
@@ -273,16 +245,18 @@ object PrintExperiments extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): String = {
+    val (code, gui) = getExperimentManager(context).allExperiments.partition(_.tpe == ExperimentType.Code)
+
     var result = "Code Experiments:\n"
 
-    for (exp <- BehaviorSpaceExtension.experiments.keys.toSeq.sorted) {
-      result += "\t" + exp + "\n"
+    code.map(_.protocol.name).sorted.foreach {
+      result += "\t" + _ + "\n"
     }
 
     result += "GUI Experiments:\n"
 
-    for (exp <- context.workspace.getBehaviorSpaceExperiments.sortBy(_.name)) {
-      result += "\t" + exp.name + "\n"
+    gui.map(_.protocol.name).sorted.foreach {
+      result += "\t" + _ + "\n"
     }
 
     result
@@ -295,8 +269,7 @@ object GetExperimentList extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): LogoList =
-    LogoList((BehaviorSpaceExtension.experiments.keys.toSeq ++
-              context.workspace.getBehaviorSpaceExperiments.map(_.name)).sorted*)
+    LogoList(getExperimentManager(context).allExperiments.map(_.protocol.name).sorted*)
 }
 
 object GetCurrentExperiment extends Reporter {
@@ -304,9 +277,8 @@ object GetCurrentExperiment extends Reporter {
     reporterSyntax(ret = StringType)
   }
 
-  override def report(args: Array[Argument], context: Context): String = {
-    BehaviorSpaceExtension.currentExperiment
-  }
+  override def report(args: Array[Argument], context: Context): String =
+    getExperimentManager(context).getCurrentExperiment.map(_.protocol.name).getOrElse("")
 }
 
 object GetParameters extends Reporter {
@@ -316,24 +288,22 @@ object GetParameters extends Reporter {
 
   override def report(args: Array[Argument], context: Context): String = {
     val name = args(0).getString.trim
+    val experiment = getExperimentManager(context).getExperiment(name)
 
-    var protocol: LabProtocol = BehaviorSpaceExtension.experimentType(name, context) match {
-      case ExperimentType.GUI =>
-        context.workspace.getBehaviorSpaceExperiments.find(x => x.name == name).get
-      case ExperimentType.Code =>
-        BehaviorSpaceExtension.experiments(name)
-      case _ =>
-        BehaviorSpaceExtension.nameError(context, "noExperiment", name)
+    if (experiment.isEmpty) {
+      nameError(context, "noExperiment", name)
 
-        return ""
+      return ""
     }
+
+    val protocol = experiment.get.protocol
 
     var result = "EXPERIMENT PARAMETERS:\n\n"
 
     result += "Variable values:\n"
 
-    for (variable <- LabVariableParser.combineVariables(protocol.constants, protocol.subExperiments).split("\n")) {
-      result += "\t" + variable + "\n"
+    LabVariableParser.combineVariables(protocol.constants, protocol.subExperiments).split("\n").foreach {
+      result += "\t" + _ + "\n"
     }
 
     result += "Repetitions:\n\t" + protocol.repetitions.toString + "\n"
@@ -369,12 +339,8 @@ object ExperimentExists extends Reporter {
     reporterSyntax(right = List(StringType), ret = BooleanType)
   }
 
-  override def report(args: Array[Argument], context: Context): java.lang.Boolean = {
-    BehaviorSpaceExtension.experimentType(args(0).getString.trim, context) match {
-      case ExperimentType.GUI | ExperimentType.Code => true
-      case _ => false
-    }
-  }
+  override def report(args: Array[Argument], context: Context): java.lang.Boolean =
+    getExperimentManager(context).getExperiment(args(0).getString.trim).isDefined
 }
 
 object ValidExperimentName extends Reporter {
@@ -383,11 +349,8 @@ object ValidExperimentName extends Reporter {
   }
 
   override def report(args: Array[Argument], context: Context): java.lang.Boolean = {
-    if (args(0).getString.trim.isEmpty) return false
+    val name = args(0).getString.trim
 
-    BehaviorSpaceExtension.experimentType(args(0).getString, context) match {
-      case ExperimentType.GUI | ExperimentType.Code => false
-      case _ => true
-    }
+    name.nonEmpty && getExperimentManager(context).getExperiment(name).isEmpty
   }
 }

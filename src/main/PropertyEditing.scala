@@ -4,9 +4,12 @@ package org.nlogo.extensions.bspace
 
 import org.nlogo.api.{ Argument, Command, Context, LabProtocol, LabVariableParser, RefValueSet }
 import org.nlogo.core.Syntax._
-import org.nlogo.nvm.Procedure
+import org.nlogo.nvm.{ ExperimentType, Procedure }
+import org.nlogo.workspace.AbstractWorkspace
 
 import scala.util.{ Failure, Success }
+
+import BehaviorSpaceExtension._
 
 object SetPreExperimentCommands extends Command {
   override def getSyntax = {
@@ -14,13 +17,17 @@ object SetPreExperimentCommands extends Command {
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty)
-      return BehaviorSpaceExtension.nameError(context, "noCurrent")
+    val current = getExperimentManager(context).getCurrentExperiment
 
-    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
+    if (current.isEmpty)
+      return nameError(context, "noCurrent")
 
-    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).preExperimentCommands =
-      BehaviorSpaceExtension.extractSource(args(0).getCommand)
+    val protocol = current.get.protocol
+
+    if (current.get.tpe != ExperimentType.Code)
+      return nameError(context, "gui", protocol.name)
+
+    protocol.preExperimentCommands = extractSource(args(0).getCommand)
   }
 }
 
@@ -30,13 +37,17 @@ object SetSetupCommands extends Command {
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty)
-      return BehaviorSpaceExtension.nameError(context, "noCurrent")
+    val current = getExperimentManager(context).getCurrentExperiment
 
-    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
+    if (current.isEmpty)
+      return nameError(context, "noCurrent")
 
-    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).setupCommands =
-      BehaviorSpaceExtension.extractSource(args(0).getCommand)
+    val protocol = current.get.protocol
+
+    if (current.get.tpe != ExperimentType.Code)
+      return nameError(context, "gui", protocol.name)
+
+    protocol.setupCommands = extractSource(args(0).getCommand)
   }
 }
 
@@ -46,13 +57,17 @@ object SetGoCommands extends Command {
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty)
-      return BehaviorSpaceExtension.nameError(context, "noCurrent")
+    val current = getExperimentManager(context).getCurrentExperiment
 
-    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
+    if (current.isEmpty)
+      return nameError(context, "noCurrent")
 
-    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).goCommands =
-      BehaviorSpaceExtension.extractSource(args(0).getCommand)
+    val protocol = current.get.protocol
+
+    if (current.get.tpe != ExperimentType.Code)
+      return nameError(context, "gui", protocol.name)
+
+    protocol.goCommands = extractSource(args(0).getCommand)
   }
 }
 
@@ -62,13 +77,17 @@ object SetPostRunCommands extends Command {
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty)
-      return BehaviorSpaceExtension.nameError(context, "noCurrent")
+    val current = getExperimentManager(context).getCurrentExperiment
 
-    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
+    if (current.isEmpty)
+      return nameError(context, "noCurrent")
 
-    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).postRunCommands =
-      BehaviorSpaceExtension.extractSource(args(0).getCommand)
+    val protocol = current.get.protocol
+
+    if (current.get.tpe != ExperimentType.Code)
+      return nameError(context, "gui", protocol.name)
+
+    protocol.postRunCommands = extractSource(args(0).getCommand)
   }
 }
 
@@ -78,13 +97,17 @@ object SetPostExperimentCommands extends Command {
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty)
-      return BehaviorSpaceExtension.nameError(context, "noCurrent")
+    val current = getExperimentManager(context).getCurrentExperiment
 
-    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
+    if (current.isEmpty)
+      return nameError(context, "noCurrent")
 
-    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).postExperimentCommands =
-      BehaviorSpaceExtension.extractSource(args(0).getCommand)
+    val protocol = current.get.protocol
+
+    if (current.get.tpe != ExperimentType.Code)
+      return nameError(context, "gui", protocol.name)
+
+    protocol.postExperimentCommands = extractSource(args(0).getCommand)
   }
 }
 
@@ -94,12 +117,17 @@ object SetRepetitions extends Command {
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty)
-      return BehaviorSpaceExtension.nameError(context, "noCurrent")
+    val current = getExperimentManager(context).getCurrentExperiment
 
-    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
+    if (current.isEmpty)
+      return nameError(context, "noCurrent")
 
-    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).repetitions = args(0).getIntValue
+    val protocol = current.get.protocol
+
+    if (current.get.tpe != ExperimentType.Code)
+      return nameError(context, "gui", protocol.name)
+
+    protocol.repetitions = args(0).getIntValue
   }
 }
 
@@ -109,12 +137,17 @@ object SetSequentialRunOrder extends Command {
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty)
-      return BehaviorSpaceExtension.nameError(context, "noCurrent")
+    val current = getExperimentManager(context).getCurrentExperiment
 
-    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
+    if (current.isEmpty)
+      return nameError(context, "noCurrent")
 
-    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).sequentialRunOrder = args(0).getBooleanValue
+    val protocol = current.get.protocol
+
+    if (current.get.tpe != ExperimentType.Code)
+      return nameError(context, "gui", protocol.name)
+
+    protocol.sequentialRunOrder = args(0).getBooleanValue
   }
 }
 
@@ -124,12 +157,17 @@ object SetRunMetricsEveryStep extends Command {
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty)
-      return BehaviorSpaceExtension.nameError(context, "noCurrent")
+    val current = getExperimentManager(context).getCurrentExperiment
 
-    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
+    if (current.isEmpty)
+      return nameError(context, "noCurrent")
 
-    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).runMetricsEveryStep = args(0).getBooleanValue
+    val protocol = current.get.protocol
+
+    if (current.get.tpe != ExperimentType.Code)
+      return nameError(context, "gui", protocol.name)
+
+    protocol.runMetricsEveryStep = args(0).getBooleanValue
   }
 }
 
@@ -139,13 +177,17 @@ object SetRunMetricsCondition extends Command {
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty)
-      return BehaviorSpaceExtension.nameError(context, "noCurrent")
+    val current = getExperimentManager(context).getCurrentExperiment
 
-    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
+    if (current.isEmpty)
+      return nameError(context, "noCurrent")
 
-    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).runMetricsCondition =
-      BehaviorSpaceExtension.extractSource(args(0).getReporter)
+    val protocol = current.get.protocol
+
+    if (current.get.tpe != ExperimentType.Code)
+      return nameError(context, "gui", protocol.name)
+
+    protocol.runMetricsCondition = extractSource(args(0).getReporter)
   }
 }
 
@@ -155,12 +197,17 @@ object SetTimeLimit extends Command {
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty)
-      return BehaviorSpaceExtension.nameError(context, "noCurrent")
+    val current = getExperimentManager(context).getCurrentExperiment
 
-    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
+    if (current.isEmpty)
+      return nameError(context, "noCurrent")
 
-    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).timeLimit = args(0).getIntValue
+    val protocol = current.get.protocol
+
+    if (current.get.tpe != ExperimentType.Code)
+      return nameError(context, "gui", protocol.name)
+
+    protocol.timeLimit = args(0).getIntValue
   }
 }
 
@@ -170,13 +217,17 @@ object SetStopCondition extends Command {
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty)
-      return BehaviorSpaceExtension.nameError(context, "noCurrent")
+    val current = getExperimentManager(context).getCurrentExperiment
 
-    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
+    if (current.isEmpty)
+      return nameError(context, "noCurrent")
 
-    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).exitCondition =
-      BehaviorSpaceExtension.extractSource(args(0).getReporter)
+    val protocol = current.get.protocol
+
+    if (current.get.tpe != ExperimentType.Code)
+      return nameError(context, "gui", protocol.name)
+
+    protocol.exitCondition = extractSource(args(0).getReporter)
   }
 }
 
@@ -186,13 +237,17 @@ object SetMetrics extends Command {
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty)
-      return BehaviorSpaceExtension.nameError(context, "noCurrent")
+    val current = getExperimentManager(context).getCurrentExperiment
 
-    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
+    if (current.isEmpty)
+      return nameError(context, "noCurrent")
 
-    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).metrics =
-      args.map(x => BehaviorSpaceExtension.extractSource(x.getReporter)).toList
+    val protocol = current.get.protocol
+
+    if (current.get.tpe != ExperimentType.Code)
+      return nameError(context, "gui", protocol.name)
+
+    protocol.metrics = args.map(x => extractSource(x.getReporter)).toList
   }
 }
 
@@ -202,20 +257,23 @@ object SetVariables extends Command {
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty)
-      return BehaviorSpaceExtension.nameError(context, "noCurrent")
+    val current = getExperimentManager(context).getCurrentExperiment
 
-    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
+    if (current.isEmpty)
+      return nameError(context, "noCurrent")
 
-    LabVariableParser.parseVariables(args(0).getList.mkString("\n"),
-                                     BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).repetitions,
-                                     context.workspace.world,
-                                     context.workspace.asInstanceOf[org.nlogo.workspace.AbstractWorkspace]) match {
+    val protocol = current.get.protocol
+
+    if (current.get.tpe != ExperimentType.Code)
+      return nameError(context, "gui", protocol.name)
+
+    LabVariableParser.parseVariables(args(0).getList.mkString("\n"), protocol.repetitions, context.workspace.world,
+                                     context.workspace.asInstanceOf[AbstractWorkspace]) match {
       case Success((constants, subExperiments)) =>
-        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).constants = constants
-        BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).subExperiments = subExperiments
+        protocol.constants = constants
+        protocol.subExperiments = subExperiments
       case Failure(t) =>
-        return BehaviorSpaceExtension.nameError(context, t.getMessage)
+        nameError(context, t.getMessage)
     }
   }
 }
@@ -226,12 +284,17 @@ object SetParallelRuns extends Command {
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty)
-      return BehaviorSpaceExtension.nameError(context, "noCurrent")
+    val current = getExperimentManager(context).getCurrentExperiment
 
-    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
+    if (current.isEmpty)
+      return nameError(context, "noCurrent")
 
-    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).threadCount = args(0).getIntValue
+    val protocol = current.get.protocol
+
+    if (current.get.tpe != ExperimentType.Code)
+      return nameError(context, "gui", protocol.name)
+
+    protocol.threadCount = args(0).getIntValue
   }
 }
 
@@ -241,12 +304,17 @@ object SetTable extends Command {
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty)
-      return BehaviorSpaceExtension.nameError(context, "noCurrent")
+    val current = getExperimentManager(context).getCurrentExperiment
 
-    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
+    if (current.isEmpty)
+      return nameError(context, "noCurrent")
 
-    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).table = args(0).getString
+    val protocol = current.get.protocol
+
+    if (current.get.tpe != ExperimentType.Code)
+      return nameError(context, "gui", protocol.name)
+
+    protocol.table = args(0).getString
   }
 }
 
@@ -256,12 +324,17 @@ object SetSpreadsheet extends Command {
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty)
-      return BehaviorSpaceExtension.nameError(context, "noCurrent")
+    val current = getExperimentManager(context).getCurrentExperiment
 
-    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
+    if (current.isEmpty)
+      return nameError(context, "noCurrent")
 
-    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).spreadsheet = args(0).getString
+    val protocol = current.get.protocol
+
+    if (current.get.tpe != ExperimentType.Code)
+      return nameError(context, "gui", protocol.name)
+
+    protocol.spreadsheet = args(0).getString
   }
 }
 
@@ -271,12 +344,17 @@ object SetStats extends Command {
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty)
-      return BehaviorSpaceExtension.nameError(context, "noCurrent")
+    val current = getExperimentManager(context).getCurrentExperiment
 
-    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
+    if (current.isEmpty)
+      return nameError(context, "noCurrent")
 
-    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).stats = args(0).getString
+    val protocol = current.get.protocol
+
+    if (current.get.tpe != ExperimentType.Code)
+      return nameError(context, "gui", protocol.name)
+
+    protocol.stats = args(0).getString
   }
 }
 
@@ -286,12 +364,17 @@ object SetLists extends Command {
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty)
-      return BehaviorSpaceExtension.nameError(context, "noCurrent")
+    val current = getExperimentManager(context).getCurrentExperiment
 
-    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
+    if (current.isEmpty)
+      return nameError(context, "noCurrent")
 
-    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).lists = args(0).getString
+    val protocol = current.get.protocol
+
+    if (current.get.tpe != ExperimentType.Code)
+      return nameError(context, "gui", protocol.name)
+
+    protocol.lists = args(0).getString
   }
 }
 
@@ -301,11 +384,16 @@ object SetMirrorHeadlessOutput extends Command {
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    if (BehaviorSpaceExtension.currentExperiment.isEmpty)
-      return BehaviorSpaceExtension.nameError(context, "noCurrent")
+    val current = getExperimentManager(context).getCurrentExperiment
 
-    if (!BehaviorSpaceExtension.validateForEditing(BehaviorSpaceExtension.currentExperiment, context)) return
+    if (current.isEmpty)
+      return nameError(context, "noCurrent")
 
-    BehaviorSpaceExtension.experiments(BehaviorSpaceExtension.currentExperiment).mirrorHeadlessOutput = args(0).getBooleanValue
+    val protocol = current.get.protocol
+
+    if (current.get.tpe != ExperimentType.Code)
+      return nameError(context, "gui", protocol.name)
+
+    protocol.mirrorHeadlessOutput = args(0).getBooleanValue
   }
 }
