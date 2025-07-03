@@ -314,32 +314,58 @@ object GetParameters extends Reporter {
     result += "Variable values:\n"
 
     LabVariableParser.combineVariables(protocol.constants, protocol.subExperiments).split("\n").foreach {
-      result += "\t" + _ + "\n"
+      result += "  " + _ + "\n"
     }
 
-    result += "Repetitions:\n\t" + protocol.repetitions.toString + "\n"
-    result += "Sequential run order:\n\t" + protocol.sequentialRunOrder.toString + "\n"
-    result += "Metrics:\n\t" + protocol.metrics.toString + "\n"
-    result += "Run metrics every step:\n\t" + protocol.runMetricsEveryStep.toString + "\n"
-    result += "Run metrics condition:\n\t" + protocol.runMetricsCondition + "\n"
-    result += "Pre experiment commands:\n\t" + protocol.preExperimentCommands + "\n"
-    result += "Setup commands:\n\t" + protocol.setupCommands + "\n"
-    result += "Go commands:\n\t" + protocol.goCommands + "\n"
-    result += "Post run commands:\n\t" + protocol.postRunCommands + "\n"
-    result += "Post experiment commands:\n\t" + protocol.postExperimentCommands + "\n"
-    result += "Stop condtion:\n\t" + protocol.exitCondition + "\n"
-    result += "Time limit:\n\t" + protocol.timeLimit.toString + "\n\n"
+    result += s"Repetitions: ${protocol.repetitions}\n"
+    result += s"Sequential run order: ${protocol.sequentialRunOrder}\n"
+
+    if (protocol.metrics.nonEmpty)
+      result += s"Metrics:\n  ${protocol.metrics.mkString("\n  ")}\n"
+
+    result += s"Run metrics every step: ${protocol.runMetricsEveryStep}\n"
+
+    if (protocol.runMetricsCondition.nonEmpty)
+      result += s"Run metrics condition:\n  ${protocol.runMetricsCondition}\n"
+
+    if (protocol.preExperimentCommands.nonEmpty)
+      result += s"Pre experiment commands:\n  ${protocol.preExperimentCommands}\n"
+
+    if (protocol.setupCommands.nonEmpty)
+      result += s"Setup commands:\n  ${protocol.setupCommands}\n"
+
+    if (protocol.goCommands.nonEmpty)
+      result += s"Go commands:\n  ${protocol.goCommands}\n"
+
+    if (protocol.postRunCommands.nonEmpty)
+      result += s"Post run commands:\n  ${protocol.postRunCommands}\n"
+
+    if (protocol.postExperimentCommands.nonEmpty)
+      result += s"Post experiment commands:\n ${protocol.postExperimentCommands}\n"
+
+    if (protocol.exitCondition.nonEmpty)
+      result += s"Stop condtion:\n ${protocol.exitCondition}\n"
+
+    result += s"Time limit: ${protocol.timeLimit}\n\n"
 
     result += "RUN OPTIONS:\n\n"
 
-    result += "Spreadsheet:\n\t" + protocol.spreadsheet + "\n"
-    result += "Table:\n\t" + protocol.table + "\n"
-    result += "Stats:\n\t" + protocol.stats + "\n"
-    result += "Lists:\n\t" + protocol.lists + "\n"
-    result += "Update view:\n\t" + protocol.updateView.toString + "\n"
-    result += "Update plots:\n\t" + protocol.updatePlotsAndMonitors.toString + "\n"
-    result += "Parallel runs:\n\t" + protocol.threadCount.toString + "\n"
-    result += "Mirror headless output:\n\t" + protocol.mirrorHeadlessOutput.toString + "\n"
+    if (protocol.spreadsheet.nonEmpty)
+      result += s"Spreadsheet: ${protocol.spreadsheet}\n"
+
+    if (protocol.table.nonEmpty)
+      result += s"Table: ${protocol.table}\n"
+
+    if (protocol.stats.nonEmpty)
+      result += s"Stats: ${protocol.stats}\n"
+
+    if (protocol.lists.nonEmpty)
+      result += s"Lists: ${protocol.lists}\n"
+
+    result += s"Update view: ${protocol.updateView}\n"
+    result += s"Update plots: ${protocol.updatePlotsAndMonitors}\n"
+    result += s"Parallel runs: ${protocol.threadCount}\n"
+    result += s"Mirror headless output: ${protocol.mirrorHeadlessOutput}\n"
 
     result
   }
