@@ -135,6 +135,7 @@ object RenameExperiment extends Command {
     protocol.name = name
 
     manager.addExperiment(Experiment(protocol, ExperimentType.Code))
+    manager.setCurrentExperiment(protocol.name)
   }
 }
 
