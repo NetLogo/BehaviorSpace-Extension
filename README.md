@@ -1,4 +1,4 @@
-<title>NetLogo {{version}} User Manual: BehaviorSpace Extension</title>
+<title>NetLogo 7.0.0-beta2 User Manual: BehaviorSpace Extension</title>
 <link rel="stylesheet" href="netlogo.css" type="text/css">
 
 # NetLogo BehaviorSpace Extension
@@ -261,7 +261,7 @@ Report the name of the current working experiment.
 #### bspace:get-parameters *string*
 
 Report the parameter values for the experiment with the name specified in the first input. An error will be thrown if
-no experiment exists with the specified name.
+no experiment exists with the specified name. Any empty or unset values will not be included.
 
 Example:
 
@@ -276,51 +276,24 @@ EXPERIMENT PARAMETERS:
 
 Variable values:
 
-Repetitions:
-	1
-Sequential run order:
-	true
+Repetitions: 1
+Sequential run order: true
 Metrics:
-	List("count turtles")
-Run metrics every step:
-	true
-Run metrics condition:
-
-Pre experiment commands:
-
+	count turtles
+Run metrics every step: true
 Setup commands:
     setup
-
 Go commands:
     go
-
-Post run commands:
-
-Post experiment commands:
-
-Stop condtion:
-
-Time limit:
-	0
+Time limit: 0
 
 RUN OPTIONS:
 
-Spreadsheet:
-
-Table:
-
-Stats:
-
-Lists:
-
-Update view:
-	true
-Update plots:
-	true
-Parallel runs:
-	6
-Mirror Headless Output:
-	false
+Spreadsheet: /Users/hacker53/Documents/my-spreadsheet.csv
+Update view: true
+Update plots: true
+Parallel runs: 6
+Mirror Headless Output: false
 ```
 
 ### bspace:experiment-exists
