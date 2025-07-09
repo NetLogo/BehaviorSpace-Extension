@@ -3,7 +3,7 @@ import org.nlogo.build.NetLogoExtension
 enablePlugins(NetLogoExtension)
 
 name       := "bspace"
-version    := "1.0.0"
+version    := "0.1.0"
 isSnapshot := true
 
 scalaVersion          := "3.7.0"
