@@ -9,7 +9,6 @@ import org.nlogo.core.LogoList
 import org.nlogo.core.Syntax
 import org.nlogo.nvm.Experiment
 import org.nlogo.swing.BrowserLauncher
-import org.nlogo.window.GUIWorkspace
 
 import BehaviorSpaceExtension._
 

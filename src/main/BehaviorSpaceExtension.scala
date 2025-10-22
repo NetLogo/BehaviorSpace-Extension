@@ -2,8 +2,7 @@
 
 package org.nlogo.extensions.bspace
 
-import org.nlogo.api.{ AnonymousProcedure, Argument, Command, Context, DefaultClassManager, ExtensionException,
-                       ExtensionManager, LabDefaultValues, LabProtocol, PrimitiveManager, RefValueSet }
+import org.nlogo.api.{ AnonymousProcedure, Context, DefaultClassManager, ExtensionException, PrimitiveManager }
 import org.nlogo.core.I18N
 import org.nlogo.nvm.{ ExperimentManager, ExtensionContext, HaltException }
 import org.nlogo.swing.OptionPane
@@ -29,7 +28,7 @@ object BehaviorSpaceExtension {
     context.asInstanceOf[ExtensionContext].workspace.getPrimaryWorkspace.getExperimentManager
 
   def nameError(context: Context, message: String, keys: String*): Unit = {
-    if (context.workspace.isHeadless)
+    if (!context.workspace.workspaceContext.workspaceGUI)
       throw new ExtensionException(replaceErrorString(message, keys))
 
     if (new OptionPane(context.workspace.asInstanceOf[GUIWorkspace].getFrame,

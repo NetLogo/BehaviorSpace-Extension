@@ -9,12 +9,10 @@ import org.nlogo.core.LogoList
 import org.nlogo.core.Syntax._
 import org.nlogo.fileformat.FileFormat
 import org.nlogo.headless.Main
-import org.nlogo.lab.Worker
 import org.nlogo.nvm.{ Experiment, ExperimentType, ExtensionContext, LabInterface }
-import org.nlogo.workspace.AbstractWorkspace
 
 import scala.io.Source
-import scala.util.{ Failure, Success }
+import scala.util.Success
 
 import BehaviorSpaceExtension._
 
@@ -172,7 +170,7 @@ object ImportExperiments extends Command {
     val path = args(0).getString.trim
     val manager = getExperimentManager(context)
 
-    val loader = FileFormat.standardAnyLoader(context.workspace.isHeadless,
+    val loader = FileFormat.standardAnyLoader(!context.workspace.workspaceContext.workspaceGUI,
                                               context.asInstanceOf[ExtensionContext].workspace.compiler.utilities,
                                               true)
 
@@ -209,7 +207,7 @@ object ExportExperiment extends Command {
     if (!args(1).getBooleanValue && new File(path).exists)
       return nameError(context, "fileExists", path)
 
-    val loader = FileFormat.standardAnyLoader(context.workspace.isHeadless,
+    val loader = FileFormat.standardAnyLoader(!context.workspace.workspaceContext.workspaceGUI,
                                               context.asInstanceOf[ExtensionContext].workspace.compiler.utilities,
                                               true)
 

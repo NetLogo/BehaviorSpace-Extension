@@ -2,9 +2,9 @@
 
 package org.nlogo.extensions.bspace
 
-import org.nlogo.api.{ Argument, Command, Context, LabProtocol, LabVariableParser, RefValueSet }
+import org.nlogo.api.{ Argument, Command, Context, LabProtocol, LabVariableParser }
 import org.nlogo.core.Syntax._
-import org.nlogo.nvm.{ ExperimentType, Procedure }
+import org.nlogo.nvm.ExperimentType
 import org.nlogo.workspace.AbstractWorkspace
 
 import scala.util.{ Failure, Success }
@@ -150,7 +150,7 @@ object SetMetrics extends CurrentGuardCommand {
   }
 
   def perform(args: Array[Argument], context: Context): Unit = {
-    getCurrentExperiment(context).foreach(_.metrics = args.map(x => extractSource(x.getReporter)).toList)
+    getCurrentExperiment(context).foreach(_.metricsForSaving = args.map(x => extractSource(x.getReporter)).toList)
   }
 }
 
